@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/fondo">
+
+    <include layout="@layout/barra_superior" />
+
+    <ScrollView
+android:id="@+id/scrollForm"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="14dp"
+            android:paddingRight="14dp"
+            android:paddingTop="14dp"
+            android:paddingBottom="22dp">
+
+            <LinearLayout
+                style="@style/Tarjeta"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    style="@style/TituloSeccion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Datos del negocio" />
+
+                <TextView
+                    style="@style/Etiqueta"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:labelFor="@+id/etNegocio"
+                    android:text="Nombre del negocio" />
+
+                <EditText
+                    android:id="@+id/etNegocio"
+                    style="@style/Campo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Ej.: Mercado La Esquina"
+                    android:inputType="textCapWords" />
+
+                <TextView
+                    style="@style/Etiqueta"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:labelFor="@+id/etNit"
+                    android:text="NIT o documento (opcional)" />
+
+                <EditText
+                    android:id="@+id/etNit"
+                    style="@style/Campo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Ej.: 900.123.456-7"
+                    android:inputType="text" />
+
+                <TextView
+                    style="@style/Etiqueta"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:labelFor="@+id/etTelefono"
+                    android:text="Teléfono o WhatsApp (opcional)" />
+
+                <EditText
+                    android:id="@+id/etTelefono"
+                    style="@style/Campo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Ej.: 310 555 2211"
+                    android:inputType="phone" />
+
+                <TextView
+                    style="@style/Etiqueta"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:labelFor="@+id/etDireccion"
+                    android:text="Dirección (opcional)" />
+
+                <EditText
+                    android:id="@+id/etDireccion"
+                    style="@style/Campo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Ej.: Calle 45 #12-30, Bogotá"
+                    android:inputType="textPostalAddress" />
+            </LinearLayout>
+
+            <LinearLayout
+                style="@style/Tarjeta"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    style="@style/TituloSeccion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Impuestos y existencias" />
+
+                <Switch
+                    android:id="@+id/swImpuesto"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="56dp"
+                    android:text="Cobrar impuesto por defecto"
+                    android:textColor="@color/texto"
+                    android:textSize="18sp" />
+
+                <TextView
+                    style="@style/Ayuda"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Se puede activar o desactivar en cada venta y en cada compra." />
+
+                <TextView
+                    style="@style/Etiqueta"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:labelFor="@+id/etImpuesto"
+                    android:text="Porcentaje de impuesto por defecto" />
+
+                <EditText
+                    android:id="@+id/etImpuesto"
+                    style="@style/Campo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="19"
+                    android:inputType="numberDecimal"
+                    android:maxLength="5" />
+
+                <TextView
+                    style="@style/Ayuda"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="En Colombia el IVA general es del 19%. Si tu negocio no cobra impuesto, déjalo en 0." />
+
+                <Switch
+                    android:id="@+id/swStockNegativo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:minHeight="56dp"
+                    android:text="Permitir vender sin existencias"
+                    android:textColor="@color/texto"
+                    android:textSize="18sp" />
+
+                <TextView
+                    style="@style/Ayuda"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Si está desactivado, la app avisa cuando un producto no tiene existencias suficientes." />
+            </LinearLayout>
+
+            <LinearLayout
+                style="@style/Tarjeta"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    style="@style/TituloSeccion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Tamaño del texto" />
+
+                <TextView
+                    style="@style/Ayuda"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Elige el tamaño que te resulte más cómodo. También puedes cambiarlo en los ajustes de Android." />
+
+                <RadioGroup
+                    android:id="@+id/grupoTexto"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp">
+
+                    <RadioButton
+                        android:id="@+id/rbSistema"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="52dp"
+                        android:text="Tamaño del sistema"
+                        android:textColor="@color/texto"
+                        android:textSize="18sp" />
+
+                    <RadioButton
+                        android:id="@+id/rbGrande"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="52dp"
+                        android:text="Grande (15% más)"
+                        android:textColor="@color/texto"
+                        android:textSize="18sp" />
+
+                    <RadioButton
+                        android:id="@+id/rbMuyGrande"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="52dp"
+                        android:text="Muy grande (30% más)"
+                        android:textColor="@color/texto"
+                        android:textSize="18sp" />
+                </RadioGroup>
+            </LinearLayout>
+
+            <LinearLayout
+                style="@style/Tarjeta"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    style="@style/TituloSeccion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Copia de seguridad" />
+
+                <TextView
+                    android:id="@+id/txtUltimaCopia"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Última copia: nunca."
+                    android:textColor="@color/texto"
+                    android:textSize="17sp" />
+
+                <TextView
+                    style="@style/Ayuda"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="La copia incluye productos, ventas, compras, clientes y todas las fotos. Guárdala en Google Drive, en una USB o en otro lugar seguro." />
+
+                <Button
+                    android:id="@+id/btnCrearCopia"
+                    style="@style/BotonPrimario"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:text="Crear copia de seguridad" />
+
+                <Button
+                    android:id="@+id/btnRestaurar"
+                    style="@style/BotonSecundario"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="Restaurar una copia" />
+            </LinearLayout>
+
+            <LinearLayout
+                style="@style/Tarjeta"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    style="@style/TituloSeccion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Datos de ejemplo" />
+
+                <TextView
+                    style="@style/Ayuda"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Agrega productos, clientes, proveedores y algunas ventas de prueba para conocer la app. No se cargan automáticamente." />
+
+                <Button
+                    android:id="@+id/btnEjemplo"
+                    style="@style/BotonSecundario"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="Cargar datos de ejemplo" />
+            </LinearLayout>
+
+            <LinearLayout
+                style="@style/Tarjeta"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    style="@style/TituloSeccion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Borrar todos los datos" />
+
+                <TextView
+                    style="@style/Ayuda"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Elimina productos, ventas, compras, clientes, proveedores, gastos y fotos de esta tablet. No se puede deshacer. Crea una copia antes." />
+
+                <Button
+                    android:id="@+id/btnBorrarTodo"
+                    style="@style/BotonPeligro"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="Borrar todos los datos" />
+            </LinearLayout>
+
+            <LinearLayout
+                style="@style/Tarjeta"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    style="@style/TituloSeccion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Acerca de Mi Negocio" />
+
+                <TextView
+                    android:id="@+id/txtVersion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Versión 1.0"
+                    android:textColor="@color/texto"
+                    android:textSize="16sp" />
+
+                <TextView
+                    style="@style/Ayuda"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Funciona sin internet. La app no pide permisos de cámara, ubicación ni contactos y no envía tus datos a ningún servidor. Todo queda en esta tablet hasta que tú decidas compartir una copia." />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/superficie"
+        android:elevation="8dp"
+        android:padding="12dp">
+
+        <Button
+            android:id="@+id/btnGuardar"
+            style="@style/BotonPrimario"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Guardar ajustes" />
+    </LinearLayout>
+</LinearLayout>

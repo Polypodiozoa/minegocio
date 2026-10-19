@@ -1,0 +1,7 @@
+build/
+*.idsig
+*.keystore
+*.jks
+local.properties
+.DS_Store
+__pycache__/
