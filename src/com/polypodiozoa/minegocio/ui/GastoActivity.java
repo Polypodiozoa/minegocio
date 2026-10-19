@@ -75,6 +75,12 @@ public class GastoActivity extends BaseActivity {
                 ver.setOnClickListener(v -> verAdjuntos("gasto", id));
             }
         }
+        marcarInicial(etDescripcion, etCategoria, etMonto, etNotas);
+    }
+
+    @Override
+    public void onBackPressed() {
+        salirSiCambios();
     }
 
     @Override

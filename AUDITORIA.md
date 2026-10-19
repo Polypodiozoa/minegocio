@@ -9,6 +9,25 @@ contrastes WCAG con la fórmula de luminancia relativa y verificación del APK i
 los datos del negocio. Las cifras de cartera salen de ejecutar las consultas reales sobre
 una base con el mismo esquema.
 
+## Estado al 18/10/2026, noche — corregido en la versión 1.4
+
+| Hallazgo | Estado |
+|---|---|
+| C1 · dos «por cobrar» | **Corregido.** `recalcularAplicaciones` reparte de nuevo los abonos al anular una venta, al registrar una venta fiada y al borrar un abono; `porCobrar` suma los saldos por venta. Probado en la tablet: tras anular una venta fiada con abono, Inicio y Deudas dan 0; el abono queda como saldo a favor de $100.000 y una venta fiada nueva de $10.115 lo consume (queda en $89.885). |
+| C2 · restauración no atómica | **Corregido.** Validación con `PRAGMA quick_check`, escritura en `minegocio.db.nueva` y reemplazo con `renameTo`. |
+| C3 · fotos borradas | **Corregido.** Sin carpeta `adjuntos/` en la copia, no se tocan las fotos actuales. |
+| A1 · «borrar todo» deja copias | **Corregido** (incluye `VACUUM`). |
+| A3 · costo al anular compra | **Corregido.** Vuelve al de la última compra vigente. |
+| A4 · salir sin guardar | **Corregido** en cliente, producto, proveedor, gasto y abono. |
+| A5 · sobrepago | **Corregido.** El saldo a favor se aplica a la próxima venta fiada. |
+| AC1 · etiquetas | **Corregido** con `labelFor` en selectores, notas y diálogos. |
+| AC2 · 48 dp | **Corregido** (52 dp reales en diálogos, 48 dp en «Ver comprobante»). |
+| AC3 · borde 1,61:1 | **Corregido** a 3,51:1 (`#7C8B95`). |
+| M3 · borrado sin transacción | **Corregido** en `eliminarPago`. |
+| A2 · base ilegible | **Pendiente** (falta pantalla de recuperación). |
+| A6 · copia > 1 GB | **Parcial**: se borra el archivo a medio escribir, falta avisar del límite al exportar. |
+| M1, M2, M4 | **Pendientes**: confirmación del abono, exportación fuera del hilo principal y bloqueo de doble toque. |
+
 ## Verificado sin hallazgo
 
 - **Ventas y compras:** subtotal, descuento, impuesto (`Math.round(base × pct/100)`), costo,

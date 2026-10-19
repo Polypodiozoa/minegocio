@@ -1,6 +1,8 @@
 package com.polypodiozoa.minegocio.datos;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 
 import com.polypodiozoa.minegocio.util.Archivos;
@@ -28,7 +30,17 @@ public final class Respaldo {
 
     private Respaldo() {}
 
+    /** Copia completa en un ZIP. Si algo falla, borra el archivo a medio escribir. */
     public static void exportar(Context ctx, Uri destino) throws IOException {
+        try {
+            exportarInterno(ctx, destino);
+        } catch (IOException | RuntimeException e) {
+            try { ctx.getContentResolver().delete(destino, null, null); } catch (Exception ignored) { }
+            throw e;
+        }
+    }
+
+    private static void exportarInterno(Context ctx, Uri destino) throws IOException {
         BD bd = BD.get(ctx);
         try (android.database.Cursor c = bd.getWritableDatabase()
                 .rawQuery("PRAGMA wal_checkpoint(FULL)", null)) {
@@ -113,7 +125,7 @@ public final class Respaldo {
         }
 
         File nuevaBase = new File(trabajo, "minegocio.db");
-        if (!nuevaBase.exists() || !esBaseValida(nuevaBase)) {
+        if (!nuevaBase.exists() || !esBaseValida(nuevaBase) || !baseIntegra(nuevaBase)) {
             borrarDirectorio(trabajo);
             throw new IOException("La copia no contiene una base de datos válida de Mi Negocio.");
         }
@@ -122,27 +134,45 @@ public final class Respaldo {
         File previa = new File(ctx.getFilesDir(), "copia-antes-de-restaurar.db");
         File adjuntosActuales = Archivos.dirPermanente(ctx);
         File adjuntosPrevios = new File(ctx.getFilesDir(), "adjuntos-antes-de-restaurar");
+        File nuevosAdjuntos = new File(trabajo, "adjuntos");
         borrarDirectorio(adjuntosPrevios);
         if (previa.exists()) previa.delete();
 
-        BD.reiniciar();
+        /*
+         * La base NUNCA se escribe encima de la viva. Se deja lista al lado, con
+         * nombre temporal, y se reemplaza con un rename atómico: si el proceso
+         * muere antes, la base actual sigue intacta, y si el rename falla, la
+         * copia de seguridad anterior (previa) sirve para volver.
+         */
+        BD.reiniciar();  // cierra la base: SQLite vuelca el WAL y la deja consistente
+        File destino = new File(baseActual.getParentFile(), "minegocio.db.nueva");
+        borrarSiExiste(destino);
         boolean movido = false;
         try {
             if (baseActual.exists()) {
                 copiarArchivo(baseActual, previa);
             }
+            File padre = baseActual.getParentFile();
+            if (padre != null && !padre.exists()) padre.mkdirs();
+            copiarArchivo(nuevaBase, destino);
+            if (!esBaseValida(destino)) {
+                throw new IOException("La copia llegó incompleta.");
+            }
             borrarSiExiste(new File(baseActual.getPath() + "-wal"));
             borrarSiExiste(new File(baseActual.getPath() + "-shm"));
             borrarSiExiste(new File(baseActual.getPath() + "-journal"));
-            File padre = baseActual.getParentFile();
-            if (padre != null && !padre.exists()) padre.mkdirs();
-            if (adjuntosActuales.exists() && !adjuntosActuales.renameTo(adjuntosPrevios)) {
-                copiarDirectorio(adjuntosActuales, adjuntosPrevios);
+            if (!destino.renameTo(baseActual)) {
+                throw new IOException("No se pudo reemplazar la base de datos.");
             }
-            if (adjuntosActuales.exists()) borrarDirectorio(adjuntosActuales);
-            adjuntosActuales.mkdirs();
-            File nuevosAdjuntos = new File(trabajo, "adjuntos");
-            if (nuevosAdjuntos.exists()) {
+            /* Las fotos solo se reemplazan si la copia trae su carpeta: una
+               exportación cortada puede tener la base y no las fotos, y en ese
+               caso es peor borrar las que ya están. */
+            if (nuevosAdjuntos.isDirectory()) {
+                if (adjuntosActuales.exists() && !adjuntosActuales.renameTo(adjuntosPrevios)) {
+                    copiarDirectorio(adjuntosActuales, adjuntosPrevios);
+                    borrarDirectorio(adjuntosActuales);
+                }
+                adjuntosActuales.mkdirs();
                 File[] lista = nuevosAdjuntos.listFiles();
                 if (lista != null) {
                     for (File f : lista) {
@@ -150,11 +180,11 @@ public final class Respaldo {
                     }
                 }
             }
-            copiarArchivo(nuevaBase, baseActual);
             movido = true;
         } catch (IOException e) {
             try {
-                if (previa.exists()) copiarArchivo(previa, baseActual);
+                borrarSiExiste(destino);
+                if (previa.exists() && !baseActual.exists()) copiarArchivo(previa, baseActual);
                 if (adjuntosPrevios.exists()) {
                     borrarDirectorio(adjuntosActuales);
                     adjuntosPrevios.renameTo(adjuntosActuales);
@@ -169,6 +199,23 @@ public final class Respaldo {
         }
         if (movido) {
             Imagen.limpiar();
+        }
+    }
+
+    /** No basta con la cabecera: la base tiene que poder leerse sin errores. */
+    private static boolean baseIntegra(File archivo) {
+        SQLiteDatabase db = null;
+        try {
+            db = SQLiteDatabase.openDatabase(archivo.getPath(), null, SQLiteDatabase.OPEN_READONLY);
+            try (Cursor c = db.rawQuery("PRAGMA quick_check", null)) {
+                return c.moveToFirst() && "ok".equalsIgnoreCase(c.getString(0));
+            }
+        } catch (Exception e) {
+            return false;
+        } finally {
+            if (db != null) {
+                try { db.close(); } catch (Exception ignored) { }
+            }
         }
     }
 

@@ -86,6 +86,12 @@ public class ProveedorActivity extends BaseActivity {
             fotoOriginal = proveedor.foto;
         }
         actualizarFoto();
+        marcarInicial(etNombre, etContacto, etTelefono, etCorreo, etDireccion, etNotas);
+    }
+
+    @Override
+    public void onBackPressed() {
+        salirSiCambios();
     }
 
     private void actualizarFoto() {

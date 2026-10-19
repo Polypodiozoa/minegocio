@@ -1,4 +1,4 @@
-# Mi Negocio 1.3 — inventario, ventas, fiados y reportes para micronegocios colombianos
+# Mi Negocio 1.4 — inventario, ventas, fiados y reportes para micronegocios colombianos
 
 Aplicación Android nativa para llevar el día a día de un negocio pequeño en Colombia:
 inventario con fotos, ventas, compras, clientes, proveedores, gastos, **cartera de fiados**,
@@ -6,14 +6,35 @@ impuestos opcionales, abonos, informes y **reportes en Excel**. Funciona sin int
 permisos de cámara, ubicación, contactos ni almacenamiento.
 
 - **APK instalado en la tablet:** `minegocio.apk` (256 KB)
-- **SHA-256:** `4424f166000eca1d6b2122d8b68c0c12bdbc02b3356c4c7f9b3777b2ad482424`
+- **SHA-256:** `aef585ba891bf3e6f00246645849db3b827521c334a5ecebcc8d4404f4b5c8f7`
 - **Paquete:** `com.polypodiozoa.minegocio`
-- **Versión:** 1.3 (versionCode 4)
+- **Versión:** 1.4 (versionCode 5)
 - **Tablet de prueba:** Amazon Fire HD 8 `KFONWI`, Fire OS 9 / Android 9 (API 28),
   800 × 1280 px, densidad 213 dpi.
 - **Requisito mínimo:** Android 7.0 (API 24).
 - **Estado:** instalada, probada y actualizada el 18 de octubre de 2026. Al final se borraron los datos
   de prueba; la app quedó limpia, con **Ajustes → Cargar datos de ejemplo** para recorrerla.
+
+## Novedades de la versión 1.4 — correcciones de la auditoría
+
+- **Cartera de fiados:** Inicio, Informes y Deudas ya dan la misma cifra. Un abono es plata
+  que entró y no pertenece a una venta concreta: al anular una venta o al registrar otra
+  venta fiada, los abonos se reparten de nuevo entre las deudas abiertas (por vencimiento
+  más próximo) y lo que sobra queda como **saldo a favor**, que la próxima venta fiada
+  consume automáticamente.
+- **Restauración más segura:** la copia se valida con `PRAGMA quick_check` y se reemplaza con
+  un renombrado atómico; si algo falla, la base actual queda intacta. Una copia sin carpeta
+  de fotos ya **no borra** las fotos que están en la tablet.
+- **Copia de seguridad:** si la exportación falla a mitad, se borra el archivo incompleto.
+- **Eliminar todos los datos** borra también las copias internas de una restauración y
+  `errores.log`, y deja la base compactada (`VACUUM`).
+- **Anular una compra** devuelve el costo del producto al de la última compra vigente.
+- **Salir sin guardar:** las pantallas de cliente, producto, proveedor, gasto y abono avisan
+  antes de descartar lo escrito.
+- **Accesibilidad:** los selectores de forma de pago, período, categoría y estado tienen
+  etiqueta asociada; los campos de los diálogos también; los botones de diálogo quedan en
+  52 dp reales (antes 39 dp por un valor en píxeles) y «Ver comprobante» en 48 dp; el borde
+  de los campos pasa a un contraste de 3,5:1.
 
 ## Novedades de la versión 1.3
 

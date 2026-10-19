@@ -256,6 +256,8 @@ public class VentaActivity extends BaseActivity {
         TextView l1 = Ui.texto(this, "Descripción", 16, getColor(R.color.texto_secundario), true);
         caja.addView(l1);
         EditText descripcion = new EditText(this);
+        descripcion.setId(View.generateViewId());
+        l1.setLabelFor(descripcion.getId());
         descripcion.setHint("Ej.: domicilio, mano de obra, servicio");
         descripcion.setTextSize(18);
         descripcion.setBackgroundResource(R.drawable.fondo_campo);
@@ -268,6 +270,8 @@ public class VentaActivity extends BaseActivity {
         l2.setLayoutParams(lp);
         caja.addView(l2);
         EditText monto = new EditText(this);
+        monto.setId(View.generateViewId());
+        l2.setLabelFor(monto.getId());
         monto.setHint("Ej.: 10000");
         monto.setTextSize(18);
         monto.setInputType(android.text.InputType.TYPE_CLASS_NUMBER);

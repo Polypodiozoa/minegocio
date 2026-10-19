@@ -77,6 +77,12 @@ public class PagoActivity extends BaseActivity {
         findViewById(R.id.btnFoto).setOnClickListener(v -> tomarFoto(PEDIR_FOTO));
         findViewById(R.id.btnArchivo).setOnClickListener(v -> elegirArchivo(PEDIR_ARCHIVO));
         findViewById(R.id.btnGuardar).setOnClickListener(v -> guardar());
+        marcarInicial(etMonto, etNotas);
+    }
+
+    @Override
+    public void onBackPressed() {
+        salirSiCambios();
     }
 
     @Override

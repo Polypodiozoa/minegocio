@@ -86,6 +86,13 @@ public class ProductoActivity extends BaseActivity {
         }
         actualizarFoto();
         actualizarRentabilidad();
+        marcarInicial(etNombre, etCategoria, etCodigo, etUnidad, etPrecio, etCosto,
+                etStock, etStockMinimo);
+    }
+
+    @Override
+    public void onBackPressed() {
+        salirSiCambios();
     }
 
     private void actualizarRentabilidad() {

@@ -82,6 +82,12 @@ public class ClienteActivity extends BaseActivity {
             fotoOriginal = cliente.foto;
         }
         actualizarFoto();
+        marcarInicial(etNombre, etTelefono, etCorreo, etDireccion, etNotas, etCupo);
+    }
+
+    @Override
+    public void onBackPressed() {
+        salirSiCambios();
     }
 
     private void actualizarFoto() {

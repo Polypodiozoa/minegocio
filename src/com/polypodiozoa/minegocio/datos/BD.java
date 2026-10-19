@@ -475,9 +475,18 @@ public class BD extends SQLiteOpenHelper {
                 String.valueOf(id), String.valueOf(id));
     }
 
+    /** Total que deben los clientes: la suma del saldo de cada venta fiada.
+     *
+     *  Antes era «ventas fiadas menos todos los abonos». Si un abono quedaba sin
+     *  aplicar (por ejemplo, al anular una venta) o el cliente pagaba de más, la
+     *  cifra de Inicio no coincidía con la lista de Deudas. Ahora es exactamente
+     *  la suma que se ve allí, y nunca queda negativa: el sobrante de un cliente
+     *  es su saldo a favor, no una deuda menos.
+     */
     public long porCobrar() {
-        return suma("SELECT (SELECT COALESCE(SUM(total),0) FROM ventas WHERE anulada=0 AND estado='credito')" +
-                " - (SELECT COALESCE(SUM(monto),0) FROM pagos)");
+        return suma("SELECT COALESCE(SUM(MAX(0, v.total - COALESCE(" +
+                "(SELECT SUM(a.monto) FROM pago_aplicaciones a WHERE a.venta_id=v.id),0))),0) " +
+                "FROM ventas v WHERE v.estado='credito' AND v.anulada=0");
     }
 
     public int totalClientes() {
@@ -706,6 +715,11 @@ public class BD extends SQLiteOpenHelper {
                 }
             }
             insertarAdjuntos(db, "venta", v.id, adjuntos);
+            if ("credito".equals(v.estado) && v.clienteId > 0) {
+                /* Si el cliente tiene plata a favor de una venta anulada o de un
+                   abono mayor que su deuda, esta venta la consume. */
+                recalcularAplicaciones(db, v.clienteId, 0, 0);
+            }
             db.setTransactionSuccessful();
         } finally {
             db.endTransaction();
@@ -731,7 +745,9 @@ public class BD extends SQLiteOpenHelper {
             ContentValues cv = new ContentValues();
             cv.put("anulada", 1);
             db.update("ventas", cv, "id=?", new String[]{String.valueOf(id)});
-            db.delete("pago_aplicaciones", "venta_id=?", new String[]{String.valueOf(id)});
+            /* Los abonos que estaban en esta venta no se pierden: vuelven al
+               reparto del cliente y, si no hay otra deuda, quedan a favor. */
+            recalcularAplicaciones(db, v.clienteId, 0, 0);
             db.setTransactionSuccessful();
         } finally {
             db.endTransaction();
@@ -867,6 +883,18 @@ public class BD extends SQLiteOpenHelper {
         return compra.id;
     }
 
+    /** Último costo de compra vigente del producto, sin contar la compra indicada. */
+    private long costoUltimaCompra(SQLiteDatabase db, long productoId, long excluir) {
+        try (Cursor c = db.rawQuery(
+                "SELECT ci.costo_unitario FROM compra_items ci JOIN compras c ON c.id=ci.compra_id " +
+                        "WHERE ci.producto_id=? AND c.anulada=0 AND c.id<>? AND ci.costo_unitario>0 " +
+                        "ORDER BY c.fecha DESC, ci.id DESC LIMIT 1",
+                new String[]{String.valueOf(productoId), String.valueOf(excluir)})) {
+            if (c.moveToFirst()) return c.getLong(0);
+        }
+        return 0;
+    }
+
     public void anularCompra(long id) {
         SQLiteDatabase db = getWritableDatabase();
         db.beginTransaction();
@@ -880,6 +908,13 @@ public class BD extends SQLiteOpenHelper {
                 if (i.productoId > 0) {
                     db.execSQL("UPDATE productos SET stock=stock-? WHERE id=?",
                             new Object[]{i.cantidad, i.productoId});
+                    /* El costo del producto lo puso esta compra: al anularla vuelve
+                       al de la última compra que siga vigente. */
+                    long costo = costoUltimaCompra(db, i.productoId, id);
+                    if (costo > 0) {
+                        db.execSQL("UPDATE productos SET costo=? WHERE id=?",
+                                new Object[]{costo, i.productoId});
+                    }
                 }
             }
             ContentValues cv = new ContentValues();
@@ -907,7 +942,9 @@ public class BD extends SQLiteOpenHelper {
             cv.put("creado", Fechas.ahora());
             p.id = db.insert("pagos", null, cv);
             insertarAdjuntos(db, "pago", p.id, adjuntos);
-            aplicarPago(db, p.id, p.clienteId, p.monto, p.ventaId);
+            /* Se reparte todo lo que el cliente ha abonado (incluido este pago),
+               respetando la venta que eligió el usuario si la eligió. */
+            recalcularAplicaciones(db, p.clienteId, p.id, p.ventaId);
             db.setTransactionSuccessful();
         } finally {
             db.endTransaction();
@@ -937,10 +974,24 @@ public class BD extends SQLiteOpenHelper {
     }
 
     public void eliminarPago(long id) {
-        getWritableDatabase().delete("pago_aplicaciones", "pago_id=?", new String[]{String.valueOf(id)});
-        getWritableDatabase().delete("pagos", "id=?", new String[]{String.valueOf(id)});
-        getWritableDatabase().delete("adjuntos", "entidad=? AND entidad_id=?",
-                new String[]{"pago", String.valueOf(id)});
+        SQLiteDatabase db = getWritableDatabase();
+        db.beginTransaction();
+        try {
+            long clienteId = 0;
+            try (Cursor c = db.rawQuery("SELECT cliente_id FROM pagos WHERE id=?",
+                    new String[]{String.valueOf(id)})) {
+                if (c.moveToFirst()) clienteId = c.getLong(0);
+            }
+            db.delete("pago_aplicaciones", "pago_id=?", new String[]{String.valueOf(id)});
+            db.delete("pagos", "id=?", new String[]{String.valueOf(id)});
+            db.delete("adjuntos", "entidad=? AND entidad_id=?",
+                    new String[]{"pago", String.valueOf(id)});
+            /* Lo que pagaban los otros abonos se reparte otra vez. */
+            recalcularAplicaciones(db, clienteId, 0, 0);
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
     }
 
     /** Reparte un abono entre las ventas fiadas pendientes, empezando por la indicada o la más urgente. */
@@ -981,6 +1032,35 @@ public class BD extends SQLiteOpenHelper {
             if (c.moveToFirst()) return Math.max(0, c.getLong(0));
         }
         return 0;
+    }
+
+    /** Vuelve a repartir TODOS los abonos del cliente entre sus deudas abiertas.
+     *
+     *  Un abono es plata que ya entró y no pertenece a una venta concreta: las
+     *  aplicaciones son solo cómo se reparte esa plata entre las deudas. Cuando
+     *  una venta se anula, cuando se registra otra venta fiada o cuando se borra
+     *  un abono, el reparto viejo deja de servir; aquí se borra y se hace de
+     *  nuevo, del vencimiento más próximo al más lejano. Lo que sobre queda como
+     *  saldo a favor del cliente y se aplicará a su próxima venta fiada.
+     *
+     *  Sin esto, Inicio («por cobrar» con el total de abonos) y Deudas (saldo por
+     *  venta con lo aplicado) podían dar cifras distintas para el mismo cliente.
+     */
+    private void recalcularAplicaciones(SQLiteDatabase db, long clienteId,
+                                        long pagoPreferido, long ventaPreferida) {
+        if (clienteId <= 0) return;
+        db.delete("pago_aplicaciones",
+                "pago_id IN (SELECT id FROM pagos WHERE cliente_id=?)",
+                new String[]{String.valueOf(clienteId)});
+        List<long[]> pagos = new ArrayList<>();
+        try (Cursor c = db.rawQuery(
+                "SELECT id, monto FROM pagos WHERE cliente_id=? ORDER BY fecha, id",
+                new String[]{String.valueOf(clienteId)})) {
+            while (c.moveToNext()) pagos.add(new long[]{c.getLong(0), c.getLong(1)});
+        }
+        for (long[] p : pagos) {
+            aplicarPago(db, p[0], clienteId, p[1], p[0] == pagoPreferido ? ventaPreferida : 0);
+        }
     }
 
     public long saldoVenta(long ventaId) {
@@ -1331,6 +1411,12 @@ public class BD extends SQLiteOpenHelper {
             db.setTransactionSuccessful();
         } finally {
             db.endTransaction();
+        }
+        /* VACUUM no puede ir dentro de la transacción: deja el archivo sin las
+           páginas de los datos borrados. */
+        try {
+            db.execSQL("VACUUM");
+        } catch (Exception ignored) {
         }
     }
 

@@ -111,6 +111,38 @@ public abstract class BaseActivity extends android.app.Activity {
         d.show();
     }
 
+    /** Texto original de los campos, para detectar cambios sin guardar. */
+    private final java.util.Map<EditText, String> valoresIniciales = new java.util.HashMap<>();
+
+    /** Recuerda cómo estaban los campos al abrir la pantalla. */
+    protected void marcarInicial(EditText... campos) {
+        valoresIniciales.clear();
+        for (EditText c : campos) {
+            if (c != null) {
+                valoresIniciales.put(c, c.getText() == null ? "" : c.getText().toString());
+            }
+        }
+    }
+
+    protected boolean hayCambios() {
+        for (java.util.Map.Entry<EditText, String> e : valoresIniciales.entrySet()) {
+            String actual = e.getKey().getText() == null ? "" : e.getKey().getText().toString();
+            if (!actual.equals(e.getValue())) return true;
+        }
+        return false;
+    }
+
+    /** Sale pidiendo confirmación si quedaron cambios sin guardar. */
+    protected void salirSiCambios() {
+        if (!hayCambios()) {
+            finish();
+            return;
+        }
+        confirmar("Descartar cambios",
+                "Si sales ahora se perderá lo que escribiste.",
+                "Descartar", this::finish);
+    }
+
     protected void confirmar(String titulo, String mensaje, String textoAccion, Runnable accion) {
         AlertDialog d = new AlertDialog.Builder(this)
                 .setTitle(titulo)
@@ -130,15 +162,18 @@ public abstract class BaseActivity extends android.app.Activity {
         }
         Button positivo = d.getButton(AlertDialog.BUTTON_POSITIVE);
         Button negativo = d.getButton(AlertDialog.BUTTON_NEGATIVE);
+        /* MinHeight trabaja en píxeles: hay que convertir los 52 dp o en una
+           pantalla de 213 dpi el botón queda en 39 dp. */
+        int altoBoton = Math.round(52 * getResources().getDisplayMetrics().density);
         if (positivo != null) {
             positivo.setTextSize(17);
             positivo.setAllCaps(false);
-            positivo.setMinHeight(52);
+            positivo.setMinHeight(altoBoton);
         }
         if (negativo != null) {
             negativo.setTextSize(17);
             negativo.setAllCaps(false);
-            negativo.setMinHeight(52);
+            negativo.setMinHeight(altoBoton);
         }
     }
 

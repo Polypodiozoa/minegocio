@@ -264,10 +264,27 @@ public class AjustesActivity extends BaseActivity {
         if (fotos != null) {
             for (File f : fotos) f.delete();
         }
+        /* Las copias que deja una restauración también son datos del negocio:
+           si se borra todo, se borran. */
+        new File(getFilesDir(), "copia-antes-de-restaurar.db").delete();
+        borrarCarpeta(new File(getFilesDir(), "adjuntos-antes-de-restaurar"));
+        new File(getFilesDir(), "errores.log").delete();
         Archivos.limpiarTemporal(this);
         bd.guardarAjuste("ultima_copia", 0);
         cargarUltimaCopia();
         aviso("Se borraron todos los datos.");
         findViewById(R.id.btnBorrarTodo).postDelayed(this::reiniciarApp, 900);
+    }
+
+    private static void borrarCarpeta(File carpeta) {
+        if (carpeta == null || !carpeta.exists()) return;
+        File[] hijos = carpeta.listFiles();
+        if (hijos != null) {
+            for (File h : hijos) {
+                if (h.isDirectory()) borrarCarpeta(h);
+                else h.delete();
+            }
+        }
+        carpeta.delete();
     }
 }

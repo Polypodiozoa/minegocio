@@ -31,6 +31,7 @@ android:id="@+id/scrollForm"
                     style="@style/TituloSeccion"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:labelFor="@+id/spPeriodo"
                     android:text="Período" />
 
                 <Spinner

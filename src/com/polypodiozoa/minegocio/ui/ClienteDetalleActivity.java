@@ -337,7 +337,7 @@ public class ClienteDetalleActivity extends BaseActivity {
             ver.setBackgroundResource(R.drawable.boton_texto);
             ver.setTextColor(getColor(R.color.primario));
             ver.setMinHeight(0);
-            ver.setMinimumHeight(dp(44));
+            ver.setMinimumHeight(dp(48));
             ver.setPadding(0, 0, 0, 0);
             ver.setOnClickListener(v -> verAdjuntos("pago", pago.id));
             exterior.addView(ver);

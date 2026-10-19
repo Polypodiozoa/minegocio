@@ -210,12 +210,20 @@ píxeles) y el de «Ver comprobante» (44 dp); oscurecer el borde de los campos.
 
 Resumen; el detalle con archivo y línea está en [`AUDITORIA.md`](AUDITORIA.md).
 
-- **Cartera con dos fórmulas**: Inicio/Informes usan abonos totales y Deudas usa lo aplicado
-  por venta; al anular una venta fiada con abonos, las dos cifras se contradicen.
-- **Restauración no atómica** y borra las fotos actuales si la copia no las trae.
-- **«Eliminar todos los datos»** deja la base anterior de una restauración en `files/`.
-- Al anular una compra no se restaura el costo anterior del producto.
-- Los formularios de cliente, producto, proveedor, gasto y pago no avisan al salir.
+Corregido en la 1.4:
+
+- **Cartera con dos fórmulas** → ahora los abonos se reparten de nuevo en cada cambio y lo
+  que sobra es un saldo a favor que la próxima venta fiada consume.
+- **Restauración no atómica** y borrado de fotos cuando la copia no las trae.
+- **«Eliminar todos los datos»** deja copias internas.
+- Al anular una compra no se restauraba el costo anterior.
+- Los formularios de cliente, producto, proveedor, gasto y pago no avisaban al salir.
+- Etiquetas y tamaños táctiles de los diálogos, y borde de los campos.
+
+Sigue pendiente:
+
+- Si la base no abre, la app no tiene pantalla de recuperación (hay que borrar datos o
+  reinstalar y restaurar una copia desde Ajustes, que tampoco abre).
 
 ## 10. Historial
 
@@ -225,4 +233,4 @@ Resumen; el detalle con archivo y línea está en [`AUDITORIA.md`](AUDITORIA.md)
 | 1.1 | 2026-10-18 | Cartera de fiados, cupos, abonos, rentabilidad, Excel y alertas. |
 | 1.2 | 2026-10-18 | Iconos de Compras y Proveedores separados. |
 | 1.3 | 2026-10-18 | «Ingresos (con impuesto)» pasa a «Ingreso» en Informes y Excel. |
-| 1.4 | pendiente | Correcciones de la auditoría (cartera, restauración, accesibilidad). |
+| 1.4 | 2026-10-18 | Correcciones de la auditoría: cartera, restauración, copias, costo al anular compra, aviso al salir y accesibilidad. |
