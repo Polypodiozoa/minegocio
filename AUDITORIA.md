@@ -24,9 +24,9 @@ una base con el mismo esquema.
 | AC2 · 48 dp | **Corregido** (52 dp reales en diálogos, 48 dp en «Ver comprobante»). |
 | AC3 · borde 1,61:1 | **Corregido** a 3,51:1 (`#7C8B95`). |
 | M3 · borrado sin transacción | **Corregido** en `eliminarPago`. |
-| A2 · base ilegible | **Pendiente** (falta pantalla de recuperación). |
-| A6 · copia > 1 GB | **Parcial**: se borra el archivo a medio escribir, falta avisar del límite al exportar. |
-| M1, M2, M4 | **Pendientes**: confirmación del abono, exportación fuera del hilo principal y bloqueo de doble toque. |
+| A2 · base ilegible | **Corregido en 1.5.** La base dañada se aparta (no se borra), la app arranca vacía y avisa con acceso a «Restaurar una copia». |
+| A6 · copia > 1 GB | **Corregido en 1.5.** Aviso antes de exportar si el ZIP supera 1 GB o 5.000 archivos; se sigue borrando el archivo a medio escribir. |
+| M1, M2, M4 | **Corregidos en 1.5.** Abono con confirmación, Excel/CSV en segundo plano y bloqueo de doble toque. |
 
 ## Verificado sin hallazgo
 

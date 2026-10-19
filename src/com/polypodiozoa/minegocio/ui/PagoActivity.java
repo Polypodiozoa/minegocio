@@ -96,24 +96,46 @@ public class PagoActivity extends BaseActivity {
         }
     }
 
+    private boolean guardando;
+
     private void guardar() {
         long monto = numero(etMonto);
         if (monto <= 0) {
             error(etMonto, "Escribe el monto del abono.");
             return;
         }
+        final String forma = String.valueOf(spForma.getSelectedItem());
+        long debe = ventaId > 0 && deuda != null ? deuda.saldo : Math.max(0, cliente.saldo);
+        String extra = monto > debe && debe >= 0
+                ? "\n\nEs más de lo que debe (" + Formatos.pesos(debe)
+                + "). El excedente queda como saldo a favor del cliente."
+                : "";
+        confirmar("Registrar abono",
+                "Cliente: " + cliente.nombre + "\nMonto: " + Formatos.pesos(monto)
+                        + "\nForma de pago: " + forma + extra,
+                "Registrar abono", () -> registrar(monto, forma));
+    }
+
+    private void registrar(long monto, String forma) {
+        if (guardando) return;
+        guardando = true;
         Modelo.Pago p = new Modelo.Pago();
         p.clienteId = cliente.id;
         p.fecha = com.polypodiozoa.minegocio.util.Fechas.ahora();
         p.monto = monto;
-        p.formaPago = String.valueOf(spForma.getSelectedItem());
+        p.formaPago = forma;
         p.notas = texto(etNotas);
         p.ventaId = ventaId;
-        List<Modelo.Adjunto> lista = adjuntos.finalizar();
-        bd.registrarPago(p, lista);
-        aviso("Abono registrado por " + Formatos.pesos(monto) + ".");
-        setResult(RESULT_OK);
-        finish();
+        try {
+            bd.registrarPago(p, adjuntos.finalizar());
+            aviso("Abono registrado por " + Formatos.pesos(monto) + ".");
+            setResult(RESULT_OK);
+            finish();
+        } catch (Exception e) {
+            guardando = false;
+            informar("No se pudo registrar el abono",
+                    "Ocurrió un error al guardar: " + e.getMessage());
+        }
     }
 
     @Override

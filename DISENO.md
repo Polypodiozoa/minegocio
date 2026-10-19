@@ -234,3 +234,4 @@ Sigue pendiente:
 | 1.2 | 2026-10-18 | Iconos de Compras y Proveedores separados. |
 | 1.3 | 2026-10-18 | «Ingresos (con impuesto)» pasa a «Ingreso» en Informes y Excel. |
 | 1.4 | 2026-10-18 | Correcciones de la auditoría: cartera, restauración, copias, costo al anular compra, aviso al salir y accesibilidad. |
+| 1.5 | 2026-10-18 | Pendientes: base dañada se aparta y avisa, aviso de copia grande, abono con confirmación, exportación en segundo plano y bloqueo de doble toque. |

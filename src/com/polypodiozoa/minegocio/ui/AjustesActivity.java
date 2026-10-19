@@ -48,7 +48,7 @@ public class AjustesActivity extends BaseActivity {
         btnRestaurar = findViewById(R.id.btnRestaurar);
 
         findViewById(R.id.btnGuardar).setOnClickListener(v -> guardar());
-        btnCrearCopia.setOnClickListener(v -> pedirDestinoCopia());
+        btnCrearCopia.setOnClickListener(v -> crearCopiaConAviso());
         btnRestaurar.setOnClickListener(v -> pedirCopiaRestaurar());
         findViewById(R.id.btnEjemplo).setOnClickListener(v -> cargarEjemplo());
         findViewById(R.id.btnBorrarTodo).setOnClickListener(v -> borrarTodo());
@@ -115,6 +115,16 @@ public class AjustesActivity extends BaseActivity {
         if (Math.abs(nueva - anterior) > 0.001f) {
             recreate();
         }
+    }
+
+    /** Antes de exportar avisa si la copia supera lo que la app puede restaurar. */
+    private void crearCopiaConAviso() {
+        String aviso = Respaldo.avisoDeTamano(this);
+        if (aviso == null) {
+            pedirDestinoCopia();
+            return;
+        }
+        confirmar("La copia es muy grande", aviso, "Guardar igual", this::pedirDestinoCopia);
     }
 
     private void pedirDestinoCopia() {
@@ -269,6 +279,12 @@ public class AjustesActivity extends BaseActivity {
         new File(getFilesDir(), "copia-antes-de-restaurar.db").delete();
         borrarCarpeta(new File(getFilesDir(), "adjuntos-antes-de-restaurar"));
         new File(getFilesDir(), "errores.log").delete();
+        File[] viejas = getFilesDir().listFiles();
+        if (viejas != null) {
+            for (File f : viejas) {
+                if (f.getName().startsWith("base-danada-")) f.delete();
+            }
+        }
         Archivos.limpiarTemporal(this);
         bd.guardarAjuste("ultima_copia", 0);
         cargarUltimaCopia();

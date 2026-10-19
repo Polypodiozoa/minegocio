@@ -3,6 +3,7 @@ package com.polypodiozoa.minegocio;
 import android.app.Application;
 import android.util.Log;
 
+import com.polypodiozoa.minegocio.datos.BD;
 import com.polypodiozoa.minegocio.util.Archivos;
 import com.polypodiozoa.minegocio.util.Formatos;
 
@@ -20,6 +21,16 @@ public class App extends Application {
         super.onCreate();
         Locale.setDefault(Formatos.COLOMBIA);
         Archivos.limpiarTemporal(this);
+        /* Si la base no abre, no se borra: se aparta y se avisa en el inicio,
+           para que el negocio restaure su copia en vez de perder todo. */
+        try {
+            if (BD.archivo(this).exists() && !BD.get(this).sana()) {
+                BD.apartarDanada(this);
+                getSharedPreferences("ui", MODE_PRIVATE).edit()
+                        .putBoolean("base_apartada", true).commit();
+            }
+        } catch (Throwable ignored) {
+        }
         final Thread.UncaughtExceptionHandler anterior = Thread.getDefaultUncaughtExceptionHandler();
         Thread.setDefaultUncaughtExceptionHandler((hilo, error) -> {
             try (PrintWriter salida = new PrintWriter(new FileWriter(

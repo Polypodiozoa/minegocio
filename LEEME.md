@@ -1,4 +1,4 @@
-# Mi Negocio 1.4 — inventario, ventas, fiados y reportes para micronegocios colombianos
+# Mi Negocio 1.5 — inventario, ventas, fiados y reportes para micronegocios colombianos
 
 Aplicación Android nativa para llevar el día a día de un negocio pequeño en Colombia:
 inventario con fotos, ventas, compras, clientes, proveedores, gastos, **cartera de fiados**,
@@ -6,14 +6,28 @@ impuestos opcionales, abonos, informes y **reportes en Excel**. Funciona sin int
 permisos de cámara, ubicación, contactos ni almacenamiento.
 
 - **APK instalado en la tablet:** `minegocio.apk` (256 KB)
-- **SHA-256:** `aef585ba891bf3e6f00246645849db3b827521c334a5ecebcc8d4404f4b5c8f7`
+- **SHA-256:** `5a18787e392e8d477471146fd4daad646a52c508a9f155cc22103cd9dcf6b982`
 - **Paquete:** `com.polypodiozoa.minegocio`
-- **Versión:** 1.4 (versionCode 5)
+- **Versión:** 1.5 (versionCode 6)
 - **Tablet de prueba:** Amazon Fire HD 8 `KFONWI`, Fire OS 9 / Android 9 (API 28),
   800 × 1280 px, densidad 213 dpi.
 - **Requisito mínimo:** Android 7.0 (API 24).
 - **Estado:** instalada, probada y actualizada el 18 de octubre de 2026. Al final se borraron los datos
   de prueba; la app quedó limpia, con **Ajustes → Cargar datos de ejemplo** para recorrerla.
+
+## Novedades de la versión 1.5 — pendientes de la auditoría
+
+- **Base dañada:** si la base no abre o está corrupta, la app **no la borra**: la aparta como
+  `base-danada-<fecha>.db`, arranca vacía y explica qué pasó con un acceso directo a
+  «Restaurar una copia».
+- **Copia muy grande:** antes de exportar avisa si el ZIP va a superar 1 GB o 5.000 archivos
+  (el límite que la app puede restaurar), para que la copia no se descubra inservible después.
+- **Abono con confirmación:** muestra cliente, monto y forma de pago antes de registrar, y
+  avisa si se está pagando más de lo que se debe.
+- **Excel y CSV en segundo plano:** la generación ya no bloquea la pantalla; se ve un aviso
+  de progreso y el resultado aparece al terminar.
+- **Doble toque:** «Aprobar y registrar» y «Guardar abono» no pueden registrar dos veces.
+- **Eliminar todos los datos** borra también las bases apartadas por daño.
 
 ## Novedades de la versión 1.4 — correcciones de la auditoría
 

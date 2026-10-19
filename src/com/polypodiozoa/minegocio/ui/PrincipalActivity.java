@@ -43,6 +43,19 @@ public class PrincipalActivity extends BaseActivity {
         porCobrar.setFocusable(true);
         porCobrar.setOnClickListener(v -> abrir(DeudasActivity.class));
         findViewById(R.id.cardDeudas).setOnClickListener(v -> abrir(DeudasActivity.class));
+        avisarBaseApartada();
+    }
+
+    /** Si la app apartó una base dañada al arrancar, se explica y se ofrece Ajustes. */
+    private void avisarBaseApartada() {
+        android.content.SharedPreferences p = getSharedPreferences(PREFS_UI, MODE_PRIVATE);
+        if (!p.getBoolean("base_apartada", false)) return;
+        p.edit().putBoolean("base_apartada", false).apply();
+        confirmar("La base de datos estaba dañada",
+                "La app no pudo abrir la base de datos y la guardó aparte para no perderla. "
+                        + "Arrancó vacía. Si tienes una copia de seguridad, restáurala en "
+                        + "Ajustes → Restaurar una copia.",
+                "Ir a Ajustes", () -> abrir(AjustesActivity.class));
     }
 
     @Override

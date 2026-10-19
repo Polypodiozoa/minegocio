@@ -386,7 +386,12 @@ public class CompraActivity extends BaseActivity {
         confirmar("Aprobar compra", detalle, "Aprobar y registrar", () -> guardar(v));
     }
 
+    private boolean guardando;
+
     private void guardar(Modelo.Compra v) {
+        /* Un doble toque en «Aprobar» no debe registrar dos veces. */
+        if (guardando) return;
+        guardando = true;
         List<Modelo.Adjunto> archivos = adjuntos.finalizar();
         try {
             long id = bd.guardarCompra(v, items, archivos);
@@ -397,6 +402,7 @@ public class CompraActivity extends BaseActivity {
             startActivity(i);
             finish();
         } catch (Exception e) {
+            guardando = false;
             informar("No se pudo registrar la compra",
                     "Ocurrió un error al guardar: " + e.getMessage());
         }

@@ -183,48 +183,71 @@ public class InformesActivity extends BaseActivity {
         }
     }
 
-    private void exportarCsv(Uri destino) {
-        try {
-            OutputStream salida = getContentResolver().openOutputStream(destino, "w");
-            if (salida == null) throw new Exception("No se pudo abrir el destino.");
-            try (Writer w = new OutputStreamWriter(salida, StandardCharsets.UTF_8)) {
-                w.write('\uFEFF');
-                w.write("Venta;Fecha;Cliente;Forma de pago;Estado;Subtotal;Descuento;Impuesto;Total;Costo;Utilidad;Productos\n");
-                List<Modelo.Venta> ventas = bd.ventas("");
-                for (Modelo.Venta v : ventas) {
-                    if (v.fecha < rangoActual[0] || v.fecha >= rangoActual[1]) continue;
-                    StringBuilder productos = new StringBuilder();
-                    for (Modelo.Item i : bd.itemsVenta(v.id)) {
-                        if (productos.length() > 0) productos.append(" | ");
-                        productos.append(i.cantidad).append(" x ").append(i.descripcion);
-                    }
-                    long utilidad = v.total - v.impuesto - v.costo;
-                    w.write(v.id + ";");
-                    w.write(csv(Fechas.formato("dd/MM/yyyy HH:mm", v.fecha)) + ";");
-                    w.write(csv(v.clienteNombre.isEmpty() ? "Consumidor final" : v.clienteNombre) + ";");
-                    w.write(csv(v.formaPago) + ";");
-                    w.write(csv(Ui.estadoVenta(v)) + ";");
-                    w.write(v.subtotal + ";" + v.descuento + ";" + v.impuesto + ";");
-                    w.write(v.total + ";" + v.costo + ";" + utilidad + ";");
-                    w.write(csv(productos.toString()) + "\n");
-                }
+    /** Tarea que puede fallar: se ejecuta fuera del hilo de la interfaz. */
+    private interface Tarea {
+        void ejecutar() throws Exception;
+    }
+
+    /** Genera el archivo en segundo plano, con aviso de progreso y resultado en la pantalla. */
+    private void enSegundoPlano(String mensaje, Tarea tarea, String exito, String tituloError) {
+        android.app.ProgressDialog progreso = new android.app.ProgressDialog(this);
+        progreso.setMessage(mensaje);
+        progreso.setCancelable(false);
+        progreso.show();
+        new Thread(() -> {
+            String fallo = null;
+            try {
+                tarea.ejecutar();
+            } catch (Exception e) {
+                fallo = e.getMessage() == null ? e.getClass().getSimpleName() : e.getMessage();
             }
-            aviso("Archivo CSV guardado con las ventas del período.");
-        } catch (Exception e) {
-            informar("No se pudo exportar",
-                    "Ocurrió un problema al guardar el CSV: " + e.getMessage());
+            final String error = fallo;
+            runOnUiThread(() -> {
+                if (isFinishing()) return;
+                try { progreso.dismiss(); } catch (Exception ignored) { }
+                if (error == null) aviso(exito);
+                else informar(tituloError, "Ocurrió un problema: " + error);
+            });
+        }).start();
+    }
+
+    private void exportarCsv(Uri destino) {
+        enSegundoPlano("Generando el archivo CSV…", () -> escribirCsv(destino),
+                "Archivo CSV guardado con las ventas del período.", "No se pudo exportar");
+    }
+
+    private void escribirCsv(Uri destino) throws Exception {
+        OutputStream salida = getContentResolver().openOutputStream(destino, "w");
+        if (salida == null) throw new Exception("No se pudo abrir el destino.");
+        try (Writer w = new OutputStreamWriter(salida, StandardCharsets.UTF_8)) {
+            w.write('\uFEFF');
+            w.write("Venta;Fecha;Cliente;Forma de pago;Estado;Subtotal;Descuento;Impuesto;Total;Costo;Utilidad;Productos\n");
+            List<Modelo.Venta> ventas = bd.ventas("");
+            for (Modelo.Venta v : ventas) {
+                if (v.fecha < rangoActual[0] || v.fecha >= rangoActual[1]) continue;
+                StringBuilder productos = new StringBuilder();
+                for (Modelo.Item i : bd.itemsVenta(v.id)) {
+                    if (productos.length() > 0) productos.append(" | ");
+                    productos.append(i.cantidad).append(" x ").append(i.descripcion);
+                }
+                long utilidad = v.total - v.impuesto - v.costo;
+                w.write(v.id + ";");
+                w.write(csv(Fechas.formato("dd/MM/yyyy HH:mm", v.fecha)) + ";");
+                w.write(csv(v.clienteNombre.isEmpty() ? "Consumidor final" : v.clienteNombre) + ";");
+                w.write(csv(v.formaPago) + ";");
+                w.write(csv(Ui.estadoVenta(v)) + ";");
+                w.write(v.subtotal + ";" + v.descuento + ";" + v.impuesto + ";");
+                w.write(v.total + ";" + v.costo + ";" + utilidad + ";");
+                w.write(csv(productos.toString()) + "\n");
+            }
         }
     }
 
     private void exportarExcel(Uri destino) {
-        try {
-            ReporteExcel.generar(this, destino, rangoActual[0], rangoActual[1],
-                    Fechas.nombrePeriodo(periodo()));
-            aviso("Reporte Excel guardado con ventas, productos, deudas y gastos.");
-        } catch (Exception e) {
-            informar("No se pudo generar el Excel",
-                    "Ocurrió un problema: " + e.getMessage());
-        }
+        enSegundoPlano("Generando el reporte Excel…", () -> ReporteExcel.generar(
+                        this, destino, rangoActual[0], rangoActual[1], Fechas.nombrePeriodo(periodo())),
+                "Reporte Excel guardado con ventas, productos, deudas y gastos.",
+                "No se pudo generar el Excel");
     }
 
     private String csv(String texto) {

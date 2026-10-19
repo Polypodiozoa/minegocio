@@ -30,6 +30,26 @@ public final class Respaldo {
 
     private Respaldo() {}
 
+    /** Aviso si la copia va a superar lo que la app puede restaurar. */
+    public static String avisoDeTamano(Context ctx) {
+        long bytes = BD.archivo(ctx).length();
+        int archivos = 1;
+        File[] fotos = Archivos.dirPermanente(ctx).listFiles();
+        if (fotos != null) {
+            for (File f : fotos) {
+                if (f.isFile()) {
+                    bytes += f.length();
+                    archivos++;
+                }
+            }
+        }
+        if (bytes <= LIMITE_TOTAL && archivos <= LIMITE_ARCHIVOS) return null;
+        return "Esta copia va a pesar unos " + (bytes / (1024 * 1024)) + " MB y tener "
+                + archivos + " archivos. La app solo puede restaurar copias de hasta 1 GB y "
+                + "5.000 archivos, así que se guardará pero no se podrá recuperar desde aquí. "
+                + "Conviene archivar los comprobantes viejos o borrar fotos que ya no hagan falta.";
+    }
+
     /** Copia completa en un ZIP. Si algo falla, borra el archivo a medio escribir. */
     public static void exportar(Context ctx, Uri destino) throws IOException {
         try {

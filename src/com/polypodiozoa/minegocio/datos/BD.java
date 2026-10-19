@@ -3,7 +3,9 @@ package com.polypodiozoa.minegocio.datos;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteDatabaseCorruptException;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.polypodiozoa.minegocio.modelo.Modelo;
@@ -42,8 +44,57 @@ public class BD extends SQLiteOpenHelper {
         return contexto.getDatabasePath(ARCHIVO);
     }
 
+    /** Se enciende si SQLite detecta que la base está dañada. */
+    private static volatile boolean danada;
+
     private BD(Context contexto) {
-        super(contexto, ARCHIVO, null, VERSION);
+        super(contexto, ARCHIVO, null, VERSION, new DatabaseErrorHandler() {
+            @Override
+            public void onCorruption(SQLiteDatabase dbObj) {
+                /* El manejador por defecto BORRA la base. Aquí solo se anota: la
+                   app la aparta y avisa, para que el negocio pueda restaurar una
+                   copia en vez de descubrir que perdió todo. */
+                danada = true;
+                try {
+                    dbObj.close();
+                } catch (Exception ignored) {
+                }
+            }
+        });
+    }
+
+    /** ¿La base se puede abrir y está íntegra? Nunca borra nada. */
+    public boolean sana() {
+        danada = false;
+        try {
+            SQLiteDatabase db = getWritableDatabase();
+            try (Cursor c = db.rawQuery("PRAGMA quick_check", null)) {
+                if (c.moveToFirst() && !"ok".equalsIgnoreCase(c.getString(0))) return false;
+            }
+            return !danada;
+        } catch (SQLiteDatabaseCorruptException e) {
+            return false;
+        } catch (Throwable e) {
+            /* Otro problema (bloqueo, disco lleno): no se toca la base. */
+            return !danada;
+        }
+    }
+
+    /** Aparta una base dañada en vez de borrarla, para poder rescatarla después. */
+    public static void apartarDanada(Context contexto) {
+        reiniciar();
+        File base = archivo(contexto);
+        File destino = new File(contexto.getFilesDir(),
+                "base-danada-" + Fechas.formato("yyyyMMdd-HHmm", Fechas.ahora()) + ".db");
+        if (base.exists()) {
+            //noinspection ResultOfMethodCallIgnored
+            base.renameTo(destino);
+        }
+        for (String sufijo : new String[]{"-wal", "-shm", "-journal"}) {
+            //noinspection ResultOfMethodCallIgnored
+            new File(base.getPath() + sufijo).delete();
+        }
+        reiniciar();
     }
 
     @Override
