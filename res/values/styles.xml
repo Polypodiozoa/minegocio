@@ -14,6 +14,9 @@
         <item name="android:textColorHint">@color/texto_secundario</item>
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:windowNoTitle">true</item>
+        <!-- Android 15 dibuja a pantalla completa por obligación; mientras la app
+             no maneje los insets, se mantiene el aspecto de siempre. -->
+        <item name="android:windowOptOutEdgeToEdgeEnforcement">true</item>
     </style>
 
     <style name="Tarjeta">

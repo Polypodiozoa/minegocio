@@ -1,4 +1,4 @@
-# Mi Negocio 1.8 — inventario, ventas, fiados y reportes para micronegocios colombianos
+# Mi Negocio 1.9 — inventario, ventas, fiados y reportes para micronegocios colombianos
 
 Aplicación Android nativa para llevar el día a día de un negocio pequeño en Colombia:
 inventario con fotos, ventas, compras, clientes, proveedores, gastos, **cartera de fiados**,
@@ -6,14 +6,26 @@ impuestos opcionales, abonos, informes y **reportes en Excel**. Funciona sin int
 permisos de cámara, ubicación, contactos ni almacenamiento.
 
 - **APK instalado en el dispositivo de prueba:** `minegocio.apk` (256 KB)
-- **SHA-256:** `4b4d6c17169d578d4659007d3dd93028babe2ef6c86fddc8396d7648d0e5b96d`
+- **SHA-256:** `09440eb7532ab9f295a9bab4c0272d8803765d0fd5fd85e93f11a9d637dea561`
 - **Paquete:** `com.polypodiozoa.minegocio`
-- **Versión:** 1.8 (versionCode 9)
+- **Versión:** 1.9 (versionCode 10)
 - **Tablet de prueba:** Amazon Fire HD 8 `KFONWI`, Fire OS 9 / Android 9 (API 28),
   800 × 1280 px, densidad 213 dpi.
-- **Requisito mínimo:** Android 7.0 (API 24).
+- **Requisito mínimo:** Android 7.0 (API 24) · **targetSdk:** 35 (Android 15).
 - **Estado:** instalada, probada y actualizada el 18 de octubre de 2026. Al final se borraron los datos
   de prueba; la app quedó limpia, con **Ajustes → Cargar datos de ejemplo** para recorrerla.
+
+## Novedades de la versión 1.9 — lista para Google Play
+
+- **Compila contra API 35** (`platforms;android-35` y `build-tools;35.0.0`), el targetSdk que
+  Play exige hoy. En Android 15 se mantiene el aspecto de siempre mientras no se manejen los
+  insets (se dejó el opt-out de edge-to-edge).
+- **AAB:** `./empaquetar-aab.sh` genera `minegocio.aab` con aapt2 en formato proto y
+  bundletool. Validado con `bundletool validate` y probado instalando el APK que sale del
+  bundle.
+- **Carpeta `tienda/`** con la ficha (nombre, descripciones, categoría), la política de
+  privacidad y las respuestas de Seguridad de los datos; más el gráfico destacado de
+  1024 × 500.
 
 ## Novedades de la versión 1.8 — nombre y lenguaje para publicar
 

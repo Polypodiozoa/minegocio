@@ -1,0 +1,198 @@
+
+¸P
+9
+android*http://schemas.android.com/apk/res/androidLinearLayout"h
+*http://schemas.android.com/apk/res/android
+background@color/fondo"(Ô„2
+‹€„øcolor/fondo0"a
+*http://schemas.android.com/apk/res/androidlayout_heightmatch_parent"(õ„2:0ÿÿÿÿÿÿÿÿÿ"`
+*http://schemas.android.com/apk/res/androidlayout_widthmatch_parent"(ô„2:0ÿÿÿÿÿÿÿÿÿ"R
+*http://schemas.android.com/apk/res/androidorientationvertical"(Ä„2:0*
+
+    &*\
+Tinclude"Ilayout@layout/barra_superior"2#
+!‘€ølayout/barra_superior0ÿÿ*
+
+    /*ßK
+ÖK
+ScrollView"O
+*http://schemas.android.com/apk/res/androidfillViewporttrue"
+(ú‚„2:@"e
+*http://schemas.android.com/apk/res/androidid@+id/scrollForm"
+(Ğ„2
+ò€Œøid/scrollForm0"a
+*http://schemas.android.com/apk/res/androidlayout_heightmatch_parent"
+(õ„2:0ÿÿÿÿÿÿÿÿÿ"`
+*http://schemas.android.com/apk/res/androidlayout_widthmatch_parent"
+(ô„2:0ÿÿÿÿÿÿÿÿÿ*
+
+
+        $*¦H
+HLinearLayout"a
+*http://schemas.android.com/apk/res/androidlayout_heightwrap_content"(õ„2:0şÿÿÿÿÿÿÿÿ"`
+*http://schemas.android.com/apk/res/androidlayout_widthmatch_parent"(ô„2:0ÿÿÿÿÿÿÿÿÿ"R
+*http://schemas.android.com/apk/res/androidorientationvertical"(Ä„2:0"Q
+*http://schemas.android.com/apk/res/androidpaddingBottom26dp"(Ù„2:h4"O
+*http://schemas.android.com/apk/res/androidpaddingLeft14dp"(Ö„2:h"P
+*http://schemas.android.com/apk/res/androidpaddingRight14dp"(Ø„2:h"N
+*http://schemas.android.com/apk/res/android
+paddingTop14dp"(×„2:h*
+
+            )*Ñ
+ÈLinearLayout"8style@style/Tarjeta"2
+Š€œøstyle/Tarjeta0ÿÿ"a
+*http://schemas.android.com/apk/res/androidlayout_heightwrap_content"(õ„2:0şÿÿÿÿÿÿÿÿ"`
+*http://schemas.android.com/apk/res/androidlayout_widthmatch_parent"(ô„2:0ÿÿÿÿÿÿÿÿÿ*
+
+                5*Ì
+ÃTextView"Dstyle@style/TituloSeccion"2!
+€œøstyle/TituloSeccion0ÿÿ"i
+*http://schemas.android.com/apk/res/androidlabelFor@+id/spPeriodo"(Æ‡„2
+ô€Œøid/spPeriodo0"a
+*http://schemas.android.com/apk/res/androidlayout_heightwrap_content"(õ„2:0şÿÿÿÿÿÿÿÿ"`
+*http://schemas.android.com/apk/res/androidlayout_widthmatch_parent"(ô„2:0ÿÿÿÿÿÿÿÿÿ"A
+*http://schemas.android.com/apk/res/androidtextPerÃ­odo(Ï‚„*
+
+                #-*š
+‘Spinner"z
+*http://schemas.android.com/apk/res/android
+background@drawable/fondo_campo"%(Ô„2 
+‹€ˆødrawable/fondo_campo0"c
+*http://schemas.android.com/apk/res/androidid@+id/spPeriodo"%(Ğ„2
+ô€Œøid/spPeriodo0"Q
+*http://schemas.android.com/apk/res/androidlayout_height56dp"%(õ„2:hp"`
+*http://schemas.android.com/apk/res/androidlayout_widthmatch_parent"%(ô„2:0ÿÿÿÿÿÿÿÿÿ"M
+*http://schemas.android.com/apk/res/android	minHeight56dp"%(À‚„2:hp"O
+*http://schemas.android.com/apk/res/androidpaddingLeft14dp"%(Ö„2:h"P
+*http://schemas.android.com/apk/res/androidpaddingRight14dp"%(Ø„2:h%*
+            ,/*
+
+            -*Ã
+ºLinearLayout"8style@style/Tarjeta"/2
+Š€œøstyle/Tarjeta0ÿÿ"a
+*http://schemas.android.com/apk/res/androidlayout_heightwrap_content"/(õ„2:0şÿÿÿÿÿÿÿÿ"`
+*http://schemas.android.com/apk/res/androidlayout_widthmatch_parent"/(ô„2:0ÿÿÿÿÿÿÿÿÿ*
+
+                25*í
+äTextView"Dstyle@style/TituloSeccion"42!
+€œøstyle/TituloSeccion0ÿÿ"a
+*http://schemas.android.com/apk/res/androidlayout_heightwrap_content"4(õ„2:0şÿÿÿÿÿÿÿÿ"`
+*http://schemas.android.com/apk/res/androidlayout_widthmatch_parent"4(ô„2:0ÿÿÿÿÿÿÿÿÿ"M
+*http://schemas.android.com/apk/res/androidtextResumen del perÃ­odo(Ï‚„4*
+
+                89*¥
+œLinearLayout"s
+*http://schemas.android.com/apk/res/androidid@+id/containerMetricas":(Ğ„2 
+Æ€Œøid/containerMetricas0"a
+*http://schemas.android.com/apk/res/androidlayout_heightwrap_content":(õ„2:0şÿÿÿÿÿÿÿÿ"`
+*http://schemas.android.com/apk/res/androidlayout_widthmatch_parent":(ô„2:0ÿÿÿÿÿÿÿÿÿ"R
+*http://schemas.android.com/apk/res/androidorientationvertical":(Ä„2:0:*
+
+                >5*¦
+TextView"4style@style/Ayuda"@2
+€€œøstyle/Ayuda0ÿÿ"a
+*http://schemas.android.com/apk/res/androidlayout_heightwrap_content"@(õ„2:0şÿÿÿÿÿÿÿÿ"T
+*http://schemas.android.com/apk/res/androidlayout_marginTop10dp"@(ø„2:h"`
+*http://schemas.android.com/apk/res/androidlayout_widthmatch_parent"@(ô„2:0ÿÿÿÿÿÿÿÿÿ"¿
+*http://schemas.android.com/apk/res/androidtext…La utilidad bruta descuenta el impuesto cobrado y el costo de los productos vendidos. La utilidad neta tambiÃ©n descuenta los gastos.(Ï‚„@*
+            Eª/*
+
+            F*ı
+ôLinearLayout"8style@style/Tarjeta"H2
+Š€œøstyle/Tarjeta0ÿÿ"a
+*http://schemas.android.com/apk/res/androidlayout_heightwrap_content"H(õ„2:0şÿÿÿÿÿÿÿÿ"`
+*http://schemas.android.com/apk/res/androidlayout_widthmatch_parent"H(ô„2:0ÿÿÿÿÿÿÿÿÿ*
+
+                K5*ğ
+çTextView"Dstyle@style/TituloSeccion"M2!
+€œøstyle/TituloSeccion0ÿÿ"a
+*http://schemas.android.com/apk/res/androidlayout_heightwrap_content"M(õ„2:0şÿÿÿÿÿÿÿÿ"`
+*http://schemas.android.com/apk/res/androidlayout_widthmatch_parent"M(ô„2:0ÿÿÿÿÿÿÿÿÿ"P
+*http://schemas.android.com/apk/res/androidtextProductos mÃ¡s vendidos(Ï‚„M*
+
+                Q<*è
+ßTextView"g
+*http://schemas.android.com/apk/res/androidid@+id/txtVacioTop"S(Ğ„2
+©Œøid/txtVacioTop0"a
+*http://schemas.android.com/apk/res/androidlayout_heightwrap_content"S(õ„2:0şÿÿÿÿÿÿÿÿ"`
+*http://schemas.android.com/apk/res/androidlayout_widthmatch_parent"S(ô„2:0ÿÿÿÿÿÿÿÿÿ"X
+*http://schemas.android.com/apk/res/androidtextNo hay ventas en este perÃ­odo.(Ï‚„"}
+*http://schemas.android.com/apk/res/android	textColor@color/texto_secundario"S(˜„2"
+ •€„øcolor/texto_secundario0"L
+*http://schemas.android.com/apk/res/androidtextSize16sp"S(•„2:h‚ S*
+
+                Y.*›
+’LinearLayout"i
+*http://schemas.android.com/apk/res/androidid@+id/containerTop"[(Ğ„2
+È€Œøid/containerTop0"a
+*http://schemas.android.com/apk/res/androidlayout_heightwrap_content"[(õ„2:0şÿÿÿÿÿÿÿÿ"`
+*http://schemas.android.com/apk/res/androidlayout_widthmatch_parent"[(ô„2:0ÿÿÿÿÿÿÿÿÿ"R
+*http://schemas.android.com/apk/res/androidorientationvertical"[(Ä„2:0[*
+            _5H*
+
+            `*Š
+LinearLayout"8style@style/Tarjeta"b2
+Š€œøstyle/Tarjeta0ÿÿ"a
+*http://schemas.android.com/apk/res/androidlayout_heightwrap_content"b(õ„2:0şÿÿÿÿÿÿÿÿ"`
+*http://schemas.android.com/apk/res/androidlayout_widthmatch_parent"b(ô„2:0ÿÿÿÿÿÿÿÿÿ*
+
+                e5*ñ
+èTextView"Dstyle@style/TituloSeccion"g2!
+€œøstyle/TituloSeccion0ÿÿ"a
+*http://schemas.android.com/apk/res/androidlayout_heightwrap_content"g(õ„2:0şÿÿÿÿÿÿÿÿ"`
+*http://schemas.android.com/apk/res/androidlayout_widthmatch_parent"g(ô„2:0ÿÿÿÿÿÿÿÿÿ"Q
+*http://schemas.android.com/apk/res/androidtextVentas por forma de pago(Ï‚„g*
+
+                k>*î
+åTextView"m
+*http://schemas.android.com/apk/res/androidid@+id/txtVacioFormas"m(Ğ„2
+§Œøid/txtVacioFormas0"a
+*http://schemas.android.com/apk/res/androidlayout_heightwrap_content"m(õ„2:0şÿÿÿÿÿÿÿÿ"`
+*http://schemas.android.com/apk/res/androidlayout_widthmatch_parent"m(ô„2:0ÿÿÿÿÿÿÿÿÿ"X
+*http://schemas.android.com/apk/res/androidtextNo hay ventas en este perÃ­odo.(Ï‚„"}
+*http://schemas.android.com/apk/res/android	textColor@color/texto_secundario"m(˜„2"
+ •€„øcolor/texto_secundario0"L
+*http://schemas.android.com/apk/res/androidtextSize16sp"m(•„2:h‚ m*
+
+                s.*¡
+˜LinearLayout"o
+*http://schemas.android.com/apk/res/androidid@+id/containerFormas"u(Ğ„2
+Ä€Œøid/containerFormas0"a
+*http://schemas.android.com/apk/res/androidlayout_heightwrap_content"u(õ„2:0şÿÿÿÿÿÿÿÿ"`
+*http://schemas.android.com/apk/res/androidlayout_widthmatch_parent"u(ô„2:0ÿÿÿÿÿÿÿÿÿ"R
+*http://schemas.android.com/apk/res/androidorientationvertical"u(Ä„2:0u*
+            y5b*
+
+            z*ß
+ÖButton"Dstyle@style/BotonPrimario"|2!
+‚€œøstyle/BotonPrimario0ÿÿ"a
+*http://schemas.android.com/apk/res/androidid@+id/btnExcel"|(Ğ„2
+›€Œøid/btnExcel0"a
+*http://schemas.android.com/apk/res/androidlayout_heightwrap_content"|(õ„2:0şÿÿÿÿÿÿÿÿ"`
+*http://schemas.android.com/apk/res/androidlayout_widthmatch_parent"|(ô„2:0ÿÿÿÿÿÿÿÿÿ"^
+*http://schemas.android.com/apk/res/androidtext%Exportar informe del perÃ­odo a Excel(Ï‚„|*
+
+            F*°
+¦Button"Istyle@style/BotonSecundario"ƒ2#
+!ƒ€œøstyle/BotonSecundario0ÿÿ"^
+*http://schemas.android.com/apk/res/androidid@+id/btnCsv"ƒ(Ğ„2
+–€Œø	id/btnCsv0"b
+*http://schemas.android.com/apk/res/androidlayout_heightwrap_content"ƒ(õ„2:0şÿÿÿÿÿÿÿÿ"U
+*http://schemas.android.com/apk/res/androidlayout_marginTop10dp"ƒ(ø„2:h"a
+*http://schemas.android.com/apk/res/androidlayout_widthmatch_parent"ƒ(ô„2:0ÿÿÿÿÿÿÿÿÿ"S
+*http://schemas.android.com/apk/res/androidtextExportar solo ventas (CSV)(Ï‚„ƒ*
+
+            ‰<*³
+©Button"Istyle@style/BotonSecundario"‹2#
+!ƒ€œøstyle/BotonSecundario0ÿÿ"j
+*http://schemas.android.com/apk/res/androidid@+id/btnCompartir"‹(Ğ„2
+‘€Œøid/btnCompartir0"b
+*http://schemas.android.com/apk/res/androidlayout_heightwrap_content"‹(õ„2:0şÿÿÿÿÿÿÿÿ"U
+*http://schemas.android.com/apk/res/androidlayout_marginTop10dp"‹(ø„2:h"a
+*http://schemas.android.com/apk/res/androidlayout_widthmatch_parent"‹(ô„2:0ÿÿÿÿÿÿÿÿÿ"J
+*http://schemas.android.com/apk/res/androidtextCompartir resumen(Ï‚„‹*	
+        ‘3*
+    ’
+*
+
+“

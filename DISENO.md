@@ -231,11 +231,11 @@ La app se va a publicar en Play después de los ciclos de prueba. Lo que falta p
 
 | Requisito | Estado |
 |---|---|
-| **targetSdk** | Hoy compila contra **API 28**; Play exige apuntar a una versión reciente (hoy API 35). Hay que instalar `platforms;android-35`, subir el target y probar el comportamiento nuevo (bordes a pantalla completa, insets y barra de estado). |
+| **targetSdk** | **Hecho en 1.9**: compila y apunta a **API 35**. Falta probarlo en un equipo con Android 15 (aquí solo hay uno con Android 9). |
 | **Firma** | El APK va firmado con la llave de **desarrollo**. Para Play hace falta una llave de subida propia (la crea el dueño, no el agente) y activar Play App Signing. |
-| **Formato** | Play recibe **AAB**, no APK. El script actual genera APK; hay que añadir el empaquetado en AAB. |
-| **Ficha** | Nombre, icono de 512 px (`herramientas/icono-512.png`), capturas (hay 23 en `capturas/`) y descripción corta y larga. |
-| **Privacidad** | La app no recoge ni envía datos: la declaración de Seguridad de los datos es «no recopila ni comparte». Hace falta la política de privacidad publicada (URL). |
+| **Formato** | **Hecho en 1.9**: `./empaquetar-aab.sh` produce `minegocio.aab`, validado con bundletool. |
+| **Ficha** | Textos y gráfico listos en `tienda/` (nombre, descripciones, categoría, gráfico 1024 × 500). Faltan capturas de teléfono y el correo de soporte. |
+| **Privacidad** | Texto listo en `tienda/privacidad.md` y respuestas en `tienda/seguridad-datos.md`. Falta publicarlo en una URL. |
 | **Clasificación** | Cuestionario de contenido y público objetivo (negocios y adultos; no es para niños). |
 | **Pruebas cerradas** | Las cuentas nuevas deben pasar una prueba cerrada con testers antes de publicar. |
 
@@ -252,3 +252,4 @@ La app se va a publicar en Play después de los ciclos de prueba. Lo que falta p
 | 1.6 | 2026-10-18 | Restauración sin tope fijo: se compara con el espacio libre real. Menos espacio en caché al restaurar. |
 | 1.7 | 2026-10-18 | Claridad de cliente y concepto libre, tamaño de texto en toda la app, formas de pago sin Nequi/Daviplata y costo unitario visible. |
 | 1.8 | 2026-10-18 | «Mi Negocio» con mayúsculas en app y PDF; «dispositivo» en vez de «tablet»; checklist de Google Play. |
+| 1.9 | 2026-10-18 | targetSdk 35, empaquetado AAB y textos de tienda y privacidad. |

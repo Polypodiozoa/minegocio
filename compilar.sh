@@ -4,8 +4,8 @@
 set -euo pipefail
 
 SDK="${ANDROID_SDK:-$HOME/android-sdk}"
-BT="$SDK/build-tools/34.0.0"
-JAR="$SDK/platforms/android-28/android.jar"
+BT="$SDK/build-tools/35.0.0"
+JAR="$SDK/platforms/android-35/android.jar"
 PROY="$(cd "$(dirname "$0")" && pwd)"
 SALIDA="$PROY/build"
 CLAVE="${MINEGOCIO_KEYSTORE:-$HOME/.android/debug.keystore}"
@@ -15,7 +15,7 @@ VERSION_CODE="${VERSION_CODE:-2}"
 VERSION_NAME="${VERSION_NAME:-1.1}"
 
 for f in "$BT/d8" "$BT/aapt2" "$BT/zipalign" "$BT/apksigner" "$JAR"; do
-    [ -e "$f" ] || { echo "FALTA: $f (instala platforms;android-28 y build-tools;34.0.0)"; exit 1; }
+    [ -e "$f" ] || { echo "FALTA: $f (instala platforms;android-35 y build-tools;35.0.0)"; exit 1; }
 done
 
 rm -rf "$SALIDA"
@@ -28,7 +28,7 @@ echo "[2/7] aapt2 link (apk base + R.java)"
 "$BT/aapt2" link -o "$SALIDA/base.apk" -I "$JAR" \
     --manifest "$PROY/AndroidManifest.xml" \
     --java "$SALIDA/gen" \
-    --min-sdk-version 24 --target-sdk-version 28 \
+    --min-sdk-version 24 --target-sdk-version 35 \
     --version-code "$VERSION_CODE" --version-name "$VERSION_NAME" \
     "$SALIDA/res.zip"
 
