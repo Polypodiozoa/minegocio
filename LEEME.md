@@ -1,4 +1,4 @@
-# Mi Negocio 1.5 — inventario, ventas, fiados y reportes para micronegocios colombianos
+# Mi Negocio 1.6 — inventario, ventas, fiados y reportes para micronegocios colombianos
 
 Aplicación Android nativa para llevar el día a día de un negocio pequeño en Colombia:
 inventario con fotos, ventas, compras, clientes, proveedores, gastos, **cartera de fiados**,
@@ -6,14 +6,25 @@ impuestos opcionales, abonos, informes y **reportes en Excel**. Funciona sin int
 permisos de cámara, ubicación, contactos ni almacenamiento.
 
 - **APK instalado en la tablet:** `minegocio.apk` (256 KB)
-- **SHA-256:** `5a18787e392e8d477471146fd4daad646a52c508a9f155cc22103cd9dcf6b982`
+- **SHA-256:** `6eb4d9edc930f441591855584f65329df625b4a39031390b99f2bd76665c41fd`
 - **Paquete:** `com.polypodiozoa.minegocio`
-- **Versión:** 1.5 (versionCode 6)
+- **Versión:** 1.6 (versionCode 7)
 - **Tablet de prueba:** Amazon Fire HD 8 `KFONWI`, Fire OS 9 / Android 9 (API 28),
   800 × 1280 px, densidad 213 dpi.
 - **Requisito mínimo:** Android 7.0 (API 24).
 - **Estado:** instalada, probada y actualizada el 18 de octubre de 2026. Al final se borraron los datos
   de prueba; la app quedó limpia, con **Ajustes → Cargar datos de ejemplo** para recorrerla.
+
+## Novedades de la versión 1.6 — la copia siempre se puede restaurar
+
+- **Sin tope fijo de tamaño.** Una copia que la app no puede restaurar no sirve: se quitó el
+  límite de 1 GB / 5.000 archivos. Ahora, antes de restaurar, la app mira cuánto ocupa la
+  copia y cuánto espacio libre hay, y si no alcanza lo dice con números («necesita 850 MB y
+  quedan 400 MB») sin tocar nada. El tope de 50.000 archivos queda solo contra un ZIP
+  malicioso.
+- **Menos espacio al restaurar:** las fotos se mueven desde la caché en vez de copiarse, y al
+  terminar se borra la copia de las fotos anteriores (antes quedaba ocupando el doble).
+- Se quitó el aviso de «copia demasiado grande» de la exportación, porque ya no hay límite.
 
 ## Novedades de la versión 1.5 — pendientes de la auditoría
 

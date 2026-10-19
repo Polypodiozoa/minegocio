@@ -48,7 +48,7 @@ public class AjustesActivity extends BaseActivity {
         btnRestaurar = findViewById(R.id.btnRestaurar);
 
         findViewById(R.id.btnGuardar).setOnClickListener(v -> guardar());
-        btnCrearCopia.setOnClickListener(v -> crearCopiaConAviso());
+        btnCrearCopia.setOnClickListener(v -> pedirDestinoCopia());
         btnRestaurar.setOnClickListener(v -> pedirCopiaRestaurar());
         findViewById(R.id.btnEjemplo).setOnClickListener(v -> cargarEjemplo());
         findViewById(R.id.btnBorrarTodo).setOnClickListener(v -> borrarTodo());
@@ -115,16 +115,6 @@ public class AjustesActivity extends BaseActivity {
         if (Math.abs(nueva - anterior) > 0.001f) {
             recreate();
         }
-    }
-
-    /** Antes de exportar avisa si la copia supera lo que la app puede restaurar. */
-    private void crearCopiaConAviso() {
-        String aviso = Respaldo.avisoDeTamano(this);
-        if (aviso == null) {
-            pedirDestinoCopia();
-            return;
-        }
-        confirmar("La copia es muy grande", aviso, "Guardar igual", this::pedirDestinoCopia);
     }
 
     private void pedirDestinoCopia() {

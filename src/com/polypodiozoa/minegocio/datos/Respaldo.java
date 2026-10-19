@@ -25,29 +25,27 @@ import java.util.zip.ZipOutputStream;
 /** Copia de seguridad completa (base de datos + fotos) en un solo archivo ZIP. */
 public final class Respaldo {
 
-    private static final long LIMITE_TOTAL = 1024L * 1024L * 1024L;
-    private static final int LIMITE_ARCHIVOS = 5000;
+    /* No hay un tope fijo de tamaño: una copia que la app no puede restaurar no
+       sirve de nada. El límite real es el espacio libre del equipo, y se avisa
+       con números antes de tocar la base. El tope de archivos queda alto solo
+       para cortar un ZIP malicioso con millones de entradas. */
+    private static final int LIMITE_ARCHIVOS = 50000;
+    private static final long MARGEN_BYTES = 32L * 1024L * 1024L;
 
     private Respaldo() {}
 
-    /** Aviso si la copia va a superar lo que la app puede restaurar. */
-    public static String avisoDeTamano(Context ctx) {
-        long bytes = BD.archivo(ctx).length();
-        int archivos = 1;
-        File[] fotos = Archivos.dirPermanente(ctx).listFiles();
-        if (fotos != null) {
-            for (File f : fotos) {
-                if (f.isFile()) {
-                    bytes += f.length();
-                    archivos++;
-                }
-            }
+    /** Espacio libre en el almacenamiento interno de la app, en bytes. */
+    private static long espacioLibre(Context ctx) {
+        try {
+            android.os.StatFs e = new android.os.StatFs(ctx.getFilesDir().getPath());
+            return e.getAvailableBytes();
+        } catch (Exception e) {
+            return 0;
         }
-        if (bytes <= LIMITE_TOTAL && archivos <= LIMITE_ARCHIVOS) return null;
-        return "Esta copia va a pesar unos " + (bytes / (1024 * 1024)) + " MB y tener "
-                + archivos + " archivos. La app solo puede restaurar copias de hasta 1 GB y "
-                + "5.000 archivos, así que se guardará pero no se podrá recuperar desde aquí. "
-                + "Conviene archivar los comprobantes viejos o borrar fotos que ya no hagan falta.";
+    }
+
+    private static String megas(long bytes) {
+        return String.format(java.util.Locale.US, "%.0f MB", bytes / (1024.0 * 1024.0));
     }
 
     /** Copia completa en un ZIP. Si algo falla, borra el archivo a medio escribir. */
@@ -102,6 +100,31 @@ public final class Respaldo {
         borrarDirectorio(trabajo);
         if (!trabajo.mkdirs()) throw new IOException("No se pudo preparar la restauración.");
 
+        /* Primera pasada: cuánto va a ocupar de verdad, para no llenar el disco a
+           medias. Los tamaños vienen en la cabecera de cada entrada del ZIP. */
+        long necesario = 0;
+        int entradas = 0;
+        try (InputStream sonda = ctx.getContentResolver().openInputStream(origen)) {
+            if (sonda == null) throw new IOException("No se pudo abrir la copia.");
+            try (ZipInputStream zip = new ZipInputStream(new BufferedInputStream(sonda))) {
+                ZipEntry e;
+                while ((e = zip.getNextEntry()) != null) {
+                    if (e.isDirectory()) continue;
+                    entradas++;
+                    if (entradas > LIMITE_ARCHIVOS) {
+                        throw new IOException("La copia tiene demasiados archivos.");
+                    }
+                    if (e.getSize() > 0) necesario += e.getSize();
+                }
+            }
+        }
+        long libre = espacioLibre(ctx);
+        if (necesario > 0 && necesario + MARGEN_BYTES > libre) {
+            throw new IOException("No hay espacio para restaurar: la copia necesita "
+                    + megas(necesario) + " y quedan " + megas(libre)
+                    + ". Libera espacio en la tablet y vuelve a intentarlo.");
+        }
+
         long total = 0;
         int archivos = 0;
         InputStream entradaCopia = ctx.getContentResolver().openInputStream(origen);
@@ -134,7 +157,10 @@ public final class Respaldo {
                     int leidos;
                     while ((leidos = zip.read(buffer)) > 0) {
                         total += leidos;
-                        if (total > LIMITE_TOTAL) throw new IOException("La copia es demasiado grande.");
+                        if (total + MARGEN_BYTES > espacioLibre(ctx)) {
+                            throw new IOException("La tablet se quedó sin espacio a mitad de la "
+                                    + "restauración (" + megas(total) + "). No se cambiaron los datos.");
+                        }
                         out.write(buffer, 0, leidos);
                     }
                 }
@@ -196,7 +222,11 @@ public final class Respaldo {
                 File[] lista = nuevosAdjuntos.listFiles();
                 if (lista != null) {
                     for (File f : lista) {
-                        if (f.isFile()) copiarArchivo(f, new File(adjuntosActuales, f.getName()));
+                        if (!f.isFile()) continue;
+                        File destinoFoto = new File(adjuntosActuales, f.getName());
+                        /* Caché y archivos están en la misma partición: mover no
+                           gasta el doble de espacio. */
+                        if (!f.renameTo(destinoFoto)) copiarArchivo(f, destinoFoto);
                     }
                 }
             }
@@ -218,6 +248,9 @@ public final class Respaldo {
             borrarDirectorio(trabajo);
         }
         if (movido) {
+            /* Las fotos anteriores ya fueron reemplazadas: quedarse con una copia
+               ocupaba el doble y dejaba datos viejos en la tablet. */
+            borrarDirectorio(adjuntosPrevios);
             Imagen.limpiar();
         }
     }

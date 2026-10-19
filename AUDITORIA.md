@@ -9,7 +9,7 @@ contrastes WCAG con la fórmula de luminancia relativa y verificación del APK i
 los datos del negocio. Las cifras de cartera salen de ejecutar las consultas reales sobre
 una base con el mismo esquema.
 
-## Estado al 18/10/2026, noche — corregido en la versión 1.4
+## Estado al 18/10/2026, noche — corregido hasta la versión 1.6
 
 | Hallazgo | Estado |
 |---|---|
@@ -25,7 +25,7 @@ una base con el mismo esquema.
 | AC3 · borde 1,61:1 | **Corregido** a 3,51:1 (`#7C8B95`). |
 | M3 · borrado sin transacción | **Corregido** en `eliminarPago`. |
 | A2 · base ilegible | **Corregido en 1.5.** La base dañada se aparta (no se borra), la app arranca vacía y avisa con acceso a «Restaurar una copia». |
-| A6 · copia > 1 GB | **Corregido en 1.5.** Aviso antes de exportar si el ZIP supera 1 GB o 5.000 archivos; se sigue borrando el archivo a medio escribir. |
+| A6 · copia > 1 GB | **Corregido en 1.6.** Se quitó el tope fijo: la restauración compara el tamaño real de la copia con el espacio libre y avisa con números si no alcanza. |
 | M1, M2, M4 | **Corregidos en 1.5.** Abono con confirmación, Excel/CSV en segundo plano y bloqueo de doble toque. |
 
 ## Verificado sin hallazgo
