@@ -25,7 +25,7 @@
                 android:id="@+id/txtNegocio"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Mi negocio"
+                android:text="Mi Negocio"
                 android:textColor="@color/blanco"
                 android:textSize="29sp"
                 android:textStyle="bold"

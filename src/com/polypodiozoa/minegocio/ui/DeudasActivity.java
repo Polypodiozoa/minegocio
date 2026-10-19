@@ -151,7 +151,7 @@ public class DeudasActivity extends BaseActivity {
         try {
             startActivityForResult(i, PEDIR_XLSX);
         } catch (ActivityNotFoundException e) {
-            aviso("No hay una aplicación para guardar el archivo en esta tablet.");
+            aviso("No hay una aplicación para guardar el archivo en este dispositivo.");
         }
     }
 

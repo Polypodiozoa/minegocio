@@ -324,7 +324,7 @@ public class BD extends SQLiteOpenHelper {
 
     public String nombreNegocio() {
         String n = ajuste("negocio_nombre", "").trim();
-        return n.isEmpty() ? "Mi negocio" : n;
+        return n.isEmpty() ? "Mi Negocio" : n;
     }
 
     // --------------------------------------------------------------- productos

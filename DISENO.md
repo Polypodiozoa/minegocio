@@ -15,14 +15,14 @@ Lo que esa persona necesita del sistema, en sus palabras:
 - «Que no se me pierda la plata»: saber qué vendió hoy, cuánto ganó y quién le debe.
 - «Que no me toque escribir mucho»: precios y cantidades grandes, sin fórmulas.
 - «Que el fiado quede anotado»: a quién le fió, cuánto, para cuándo y cuánto ha abonado.
-- «Que no me pida internet ni permisos raros»: la tablet es del negocio, no de Google.
+- «Que no me pida internet ni permisos raros»: el dispositivo es del negocio, no de Google.
 
 Dispositivo de referencia: **Amazon Fire HD 8** (800 × 1280 px, 213 dpi, Android 9), en
 horizontal y vertical, con letra del sistema hasta 1,3×.
 
 ## 2. Principios de diseño
 
-1. **Todo pasa en la tablet.** Sin cuentas, sin nube, sin permisos. La base SQLite y las fotos
+1. **Todo pasa en el dispositivo.** Sin cuentas, sin nube, sin permisos. La base SQLite y las fotos
    viven en el almacenamiento privado de la app. La única salida son las copias que el
    usuario decide guardar y los informes que decide compartir.
 2. **Pesos enteros, sin centavos.** En Colombia el peso no se usa con centavos en el día a
@@ -203,7 +203,7 @@ píxeles) y el de «Ver comprobante» (44 dp); oscurecer el borde de los campos.
 | Pesos enteros | Evita errores de coma flotante en dinero. |
 | Impuesto opcional por venta | Muchos micronegocios no cobran IVA; el que lo cobra lo activa. |
 | Anular en vez de borrar | El historial es la contabilidad del negocio. |
-| Copia en un `.zip` que elige el usuario | La tablet puede perderse o venderse; la copia sale del dispositivo. |
+| Copia en un `.zip` que elige el usuario | El dispositivo puede perderse o venderse; la copia sale de él. |
 | Iconos propios de 24 dp | Sin librerías de iconos: el APK pesa 255 KB y no hay dependencias. |
 
 ## 9. Problemas conocidos
@@ -225,7 +225,21 @@ Sigue pendiente:
 - Si la base no abre, la app no tiene pantalla de recuperación (hay que borrar datos o
   reinstalar y restaurar una copia desde Ajustes, que tampoco abre).
 
-## 10. Historial
+## 10. Publicación en Google Play (pendiente)
+
+La app se va a publicar en Play después de los ciclos de prueba. Lo que falta para eso:
+
+| Requisito | Estado |
+|---|---|
+| **targetSdk** | Hoy compila contra **API 28**; Play exige apuntar a una versión reciente (hoy API 35). Hay que instalar `platforms;android-35`, subir el target y probar el comportamiento nuevo (bordes a pantalla completa, insets y barra de estado). |
+| **Firma** | El APK va firmado con la llave de **desarrollo**. Para Play hace falta una llave de subida propia (la crea el dueño, no el agente) y activar Play App Signing. |
+| **Formato** | Play recibe **AAB**, no APK. El script actual genera APK; hay que añadir el empaquetado en AAB. |
+| **Ficha** | Nombre, icono de 512 px (`herramientas/icono-512.png`), capturas (hay 23 en `capturas/`) y descripción corta y larga. |
+| **Privacidad** | La app no recoge ni envía datos: la declaración de Seguridad de los datos es «no recopila ni comparte». Hace falta la política de privacidad publicada (URL). |
+| **Clasificación** | Cuestionario de contenido y público objetivo (negocios y adultos; no es para niños). |
+| **Pruebas cerradas** | Las cuentas nuevas deben pasar una prueba cerrada con testers antes de publicar. |
+
+## 11. Historial
 
 | Versión | Fecha | Cambio |
 |---|---|---|
@@ -237,3 +251,4 @@ Sigue pendiente:
 | 1.5 | 2026-10-18 | Pendientes: base dañada se aparta y avisa, aviso de copia grande, abono con confirmación, exportación en segundo plano y bloqueo de doble toque. |
 | 1.6 | 2026-10-18 | Restauración sin tope fijo: se compara con el espacio libre real. Menos espacio en caché al restaurar. |
 | 1.7 | 2026-10-18 | Claridad de cliente y concepto libre, tamaño de texto en toda la app, formas de pago sin Nequi/Daviplata y costo unitario visible. |
+| 1.8 | 2026-10-18 | «Mi Negocio» con mayúsculas en app y PDF; «dispositivo» en vez de «tablet»; checklist de Google Play. |

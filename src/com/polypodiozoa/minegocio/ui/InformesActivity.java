@@ -152,7 +152,7 @@ public class InformesActivity extends BaseActivity {
         try {
             startActivityForResult(i, PEDIR_XLSX);
         } catch (ActivityNotFoundException e) {
-            aviso("No hay una aplicación para guardar el archivo en esta tablet.");
+            aviso("No hay una aplicación para guardar el archivo en este dispositivo.");
         }
     }
 
@@ -167,7 +167,7 @@ public class InformesActivity extends BaseActivity {
         try {
             startActivityForResult(i, PEDIR_CSV);
         } catch (ActivityNotFoundException e) {
-            aviso("No hay una aplicación para guardar el archivo en esta tablet.");
+            aviso("No hay una aplicación para guardar el archivo en este dispositivo.");
         }
     }
 
@@ -275,7 +275,7 @@ public class InformesActivity extends BaseActivity {
         try {
             startActivity(Intent.createChooser(enviar, "Compartir informe"));
         } catch (ActivityNotFoundException e) {
-            aviso("No hay una aplicación para compartir en esta tablet.");
+            aviso("No hay una aplicación para compartir en este dispositivo.");
         }
     }
 }

@@ -164,7 +164,7 @@ public class CompraDetalleActivity extends BaseActivity {
         try {
             startActivity(Intent.createChooser(enviar, "Compartir resumen"));
         } catch (ActivityNotFoundException e) {
-            aviso("No hay una aplicación para compartir en esta tablet.");
+            aviso("No hay una aplicación para compartir en este dispositivo.");
         }
     }
 

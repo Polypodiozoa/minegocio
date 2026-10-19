@@ -9,7 +9,7 @@ import com.polypodiozoa.minegocio.R;
 
 import java.io.File;
 
-/** Miniaturas con caché para no llenar la memoria de la tablet. */
+/** Miniaturas con caché para no llenar la memoria de el dispositivo. */
 public final class Imagen {
 
     private static final LruCache<String, Bitmap> CACHE;

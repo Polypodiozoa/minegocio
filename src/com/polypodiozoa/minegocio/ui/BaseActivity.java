@@ -246,7 +246,7 @@ public abstract class BaseActivity extends android.app.Activity {
         } catch (ActivityNotFoundException e) {
             fotoPendiente.delete();
             fotoPendiente = null;
-            aviso("Esta tablet no tiene aplicación de cámara. Usa el botón Elegir archivo.");
+            aviso("Este dispositivo no tiene aplicación de cámara. Usa el botón Elegir archivo.");
         }
     }
 
@@ -282,7 +282,7 @@ public abstract class BaseActivity extends android.app.Activity {
         try {
             startActivityForResult(i, codigo);
         } catch (ActivityNotFoundException e) {
-            aviso("Esta tablet no tiene una aplicación para elegir archivos.");
+            aviso("Este dispositivo no tiene una aplicación para elegir archivos.");
         }
     }
 

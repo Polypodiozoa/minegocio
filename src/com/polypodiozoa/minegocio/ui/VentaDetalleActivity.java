@@ -200,7 +200,7 @@ public class VentaDetalleActivity extends BaseActivity {
         try {
             startActivityForResult(i, PEDIR_PDF);
         } catch (ActivityNotFoundException e) {
-            aviso("No hay una aplicación para guardar el PDF en esta tablet.");
+            aviso("No hay una aplicación para guardar el PDF en este dispositivo.");
         }
     }
 
@@ -252,7 +252,7 @@ public class VentaDetalleActivity extends BaseActivity {
         try {
             startActivity(Intent.createChooser(enviar, "Compartir comprobante"));
         } catch (ActivityNotFoundException e) {
-            aviso("No hay una aplicación para compartir en esta tablet.");
+            aviso("No hay una aplicación para compartir en este dispositivo.");
         }
     }
 

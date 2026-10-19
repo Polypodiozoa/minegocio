@@ -1,21 +1,30 @@
-# Mi Negocio 1.7 — inventario, ventas, fiados y reportes para micronegocios colombianos
+# Mi Negocio 1.8 — inventario, ventas, fiados y reportes para micronegocios colombianos
 
 Aplicación Android nativa para llevar el día a día de un negocio pequeño en Colombia:
 inventario con fotos, ventas, compras, clientes, proveedores, gastos, **cartera de fiados**,
 impuestos opcionales, abonos, informes y **reportes en Excel**. Funciona sin internet y no pide
 permisos de cámara, ubicación, contactos ni almacenamiento.
 
-- **APK instalado en la tablet:** `minegocio.apk` (256 KB)
-- **SHA-256:** `72632ce06c90795c8dbb4c768f3343e17fd49657bc7a160ffcea0d75fa171510`
+- **APK instalado en el dispositivo de prueba:** `minegocio.apk` (256 KB)
+- **SHA-256:** `4b4d6c17169d578d4659007d3dd93028babe2ef6c86fddc8396d7648d0e5b96d`
 - **Paquete:** `com.polypodiozoa.minegocio`
-- **Versión:** 1.7 (versionCode 8)
+- **Versión:** 1.8 (versionCode 9)
 - **Tablet de prueba:** Amazon Fire HD 8 `KFONWI`, Fire OS 9 / Android 9 (API 28),
   800 × 1280 px, densidad 213 dpi.
 - **Requisito mínimo:** Android 7.0 (API 24).
 - **Estado:** instalada, probada y actualizada el 18 de octubre de 2026. Al final se borraron los datos
   de prueba; la app quedó limpia, con **Ajustes → Cargar datos de ejemplo** para recorrerla.
 
-## Novedades de la versión 1.7 — lo que pidió la prueba en la tablet
+## Novedades de la versión 1.8 — nombre y lenguaje para publicar
+
+- **«Mi Negocio»** con las dos mayúsculas, en la app y en el comprobante en PDF (antes el
+  nombre por defecto era «Mi negocio»).
+- **«Dispositivo» en vez de «tablet»** en todos los textos de la app: la aplicación no es solo
+  para tabletas, también corre en teléfonos.
+- Se agregó al registro de diseño la lista de lo que falta para **Google Play** (targetSdk,
+  firma, AAB, ficha y privacidad).
+
+## Novedades de la versión 1.7 — lo que pidió la prueba en el dispositivo
 
 - **Cliente de la venta:** la sección se llama así, el botón dice **«Elegir cliente»** (antes
   «Consumidor final») y debajo explica el estado: sin cliente «Ahora es consumidor final…»;
@@ -65,7 +74,7 @@ permisos de cámara, ubicación, contactos ni almacenamiento.
   consume automáticamente.
 - **Restauración más segura:** la copia se valida con `PRAGMA quick_check` y se reemplaza con
   un renombrado atómico; si algo falla, la base actual queda intacta. Una copia sin carpeta
-  de fotos ya **no borra** las fotos que están en la tablet.
+  de fotos ya **no borra** las fotos que están en el dispositivo.
 - **Copia de seguridad:** si la exportación falla a mitad, se borra el archivo incompleto.
 - **Eliminar todos los datos** borra también las copias internas de una restauración y
   `errores.log`, y deja la base compactada (`VACUUM`).
@@ -229,7 +238,7 @@ LibreOffice. El informe de prueba tenía 5 hojas y 7.510 bytes; la cartera, 2.76
 - La restauración reemplaza todos los datos y reinicia la app. Antes guarda una copia interna
   del estado anterior por si falla.
 - Firma con la **llave de desarrollo estándar de Android** (`~/.android/debug.keystore`,
-  `androiddebugkey`). Sirve para esta tablet; para Play Store genera una llave de producción.
+  `androiddebugkey`). Sirve para este dispositivo; para Play Store genera una llave de producción.
 - Para distribuir, ajusta `MINEGOCIO_KEYSTORE`, `MINEGOCIO_KEY_PASS` y `MINEGOCIO_KEY_ALIAS`.
 
 ### Copia y restauración
@@ -258,7 +267,7 @@ LibreOffice. El informe de prueba tenía 5 hojas y 7.510 bytes; la cartera, 2.76
 
 ## Verificación realizada (18-10-2026)
 
-En la tablet por USB:
+En el dispositivo por USB:
 
 - Instalación `adb install -r` → `Success`; versión 1.1, versionCode 2, actualizada a las 19:43.
 - Inicio con alerta de deuda vencida de **$ 36.850** y “Por cobrar $ 36.850”.
@@ -347,7 +356,7 @@ minegocio-tablet/
 ## Límites conocidos
 
 - **No facturación electrónica DIAN** ni retenciones/nómina.
-- **No sincronización en la nube** ni multiusuario; una tablet, una base local.
+- **No sincronización en la nube** ni multiusuario; un dispositivo, una base local.
 - **No lector de códigos de barras**.
 - **Compras a crédito no generan cuentas por pagar**; sí se controlan ventas fiadas y abonos.
 - Los abonos se reparten por vencimiento (o por la venta elegida), no con un plan de cuotas
@@ -357,7 +366,7 @@ minegocio-tablet/
 
 ## Cómo revertir
 
-- Desinstalar la app borra sus datos locales; no afecta al resto de la tablet.
+- Desinstalar la app borra sus datos locales; no afecta al resto del dispositivo.
 - Guarda el APK anterior y una copia ZIP; instala con la misma llave de firma y restaura.
 - No se modifican ajustes del sistema ni archivos del usuario. Los únicos archivos externos
   son los que el usuario exporta (PDF, CSV, XLSX, ZIP).

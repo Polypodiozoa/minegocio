@@ -296,7 +296,7 @@ android:id="@+id/scrollForm"
                     style="@style/Ayuda"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Elimina productos, ventas, compras, clientes, proveedores, gastos y fotos de esta tablet. No se puede deshacer. Crea una copia antes." />
+                    android:text="Elimina productos, ventas, compras, clientes, proveedores, gastos y fotos de este dispositivo. No se puede deshacer. Crea una copia antes." />
 
                 <Button
                     android:id="@+id/btnBorrarTodo"
@@ -331,7 +331,7 @@ android:id="@+id/scrollForm"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="Funciona sin internet. La app no pide permisos de cámara, ubicación ni contactos y no envía tus datos a ningún servidor. Todo queda en esta tablet hasta que tú decidas compartir una copia." />
+                    android:text="Funciona sin internet. La app no pide permisos de cámara, ubicación ni contactos y no envía tus datos a ningún servidor. Todo queda en este dispositivo hasta que tú decidas compartir una copia." />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

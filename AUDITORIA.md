@@ -5,7 +5,7 @@ datos y fallas**. Método: lectura completa del código (8.729 líneas Java, 75 
 manifiesto), reproducción de la lógica de saldos contra el mismo SQL de la app, cálculo de
 contrastes WCAG con la fórmula de luminancia relativa y verificación del APK instalado.
 
-**No se cargaron datos de ejemplo ni se usó TalkBack real** sobre la tablet, para no tocar
+**No se cargaron datos de ejemplo ni se usó TalkBack real** sobre el dispositivo, para no tocar
 los datos del negocio. Las cifras de cartera salen de ejecutar las consultas reales sobre
 una base con el mismo esquema.
 
@@ -13,7 +13,7 @@ una base con el mismo esquema.
 
 | Hallazgo | Estado |
 |---|---|
-| C1 · dos «por cobrar» | **Corregido.** `recalcularAplicaciones` reparte de nuevo los abonos al anular una venta, al registrar una venta fiada y al borrar un abono; `porCobrar` suma los saldos por venta. Probado en la tablet: tras anular una venta fiada con abono, Inicio y Deudas dan 0; el abono queda como saldo a favor de $100.000 y una venta fiada nueva de $10.115 lo consume (queda en $89.885). |
+| C1 · dos «por cobrar» | **Corregido.** `recalcularAplicaciones` reparte de nuevo los abonos al anular una venta, al registrar una venta fiada y al borrar un abono; `porCobrar` suma los saldos por venta. Probado en el dispositivo: tras anular una venta fiada con abono, Inicio y Deudas dan 0; el abono queda como saldo a favor de $100.000 y una venta fiada nueva de $10.115 lo consume (queda en $89.885). |
 | C2 · restauración no atómica | **Corregido.** Validación con `PRAGMA quick_check`, escritura en `minegocio.db.nueva` y reemplazo con `renameTo`. |
 | C3 · fotos borradas | **Corregido.** Sin carpeta `adjuntos/` en la copia, no se tocan las fotos actuales. |
 | A1 · «borrar todo» deja copias | **Corregido** (incluye `VACUUM`). |
@@ -92,7 +92,7 @@ una base con el mismo esquema.
 
 | # | Hallazgo | Dónde | Corrección |
 |---|---|---|---|
-| A1 | **«Eliminar todos los datos» no borra** `copia-antes-de-restaurar.db`, `adjuntos-antes-de-restaurar/` ni `errores.log`: quedan datos del negocio en una tablet que se cree limpia. | `AjustesActivity.java:252-272`, `Respaldo.java:122-124` | Borrarlos en `borrarTodo()` y hacer `VACUUM`. |
+| A1 | **«Eliminar todos los datos» no borra** `copia-antes-de-restaurar.db`, `adjuntos-antes-de-restaurar/` ni `errores.log`: quedan datos del negocio en un dispositivo que se cree limpio. | `AjustesActivity.java:252-272`, `Respaldo.java:122-124` | Borrarlos en `borrarTodo()` y hacer `VACUUM`. |
 | A2 | **Base ilegible = app inutilizable**: si la base no abre, falla también Ajustes y no se llega a «Restaurar una copia». | `BaseActivity.java:58` | Envolver la apertura; si falla, pantalla con «Restaurar copia» o «Empezar de cero». |
 | A3 | **Anular una compra no restaura el costo**: `guardarCompra` pisa el costo del producto y la anulación no lo revierte. | `BD.java:857` vs `:870-892` | Guardar el costo anterior o recalcularlo con la última compra no anulada. |
 | A4 | **Salir a mitad de un formulario pierde lo escrito** en Cliente, Producto, Proveedor, Gasto y Pago: solo Venta y Compra confirman. | `onBackPressed` ausente; p. ej. `ClienteActivity`, `GastoActivity` | Confirmar al salir si hay cambios. |
@@ -118,6 +118,6 @@ una base con el mismo esquema.
 
 ## Lo que falta probar
 
-- TalkBack real en la tablet (recorrido completo de una venta y un fiado).
+- TalkBack real en el dispositivo (recorrido completo de una venta y un fiado).
 - Rotación y letra del sistema al máximo en las pantallas con más campos.
 - Restauración real de una copia y borrado posterior (requiere datos de ejemplo).

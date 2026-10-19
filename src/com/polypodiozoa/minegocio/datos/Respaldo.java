@@ -122,7 +122,7 @@ public final class Respaldo {
         if (necesario > 0 && necesario + MARGEN_BYTES > libre) {
             throw new IOException("No hay espacio para restaurar: la copia necesita "
                     + megas(necesario) + " y quedan " + megas(libre)
-                    + ". Libera espacio en la tablet y vuelve a intentarlo.");
+                    + ". Libera espacio en el dispositivo y vuelve a intentarlo.");
         }
 
         long total = 0;
@@ -158,7 +158,7 @@ public final class Respaldo {
                     while ((leidos = zip.read(buffer)) > 0) {
                         total += leidos;
                         if (total + MARGEN_BYTES > espacioLibre(ctx)) {
-                            throw new IOException("La tablet se quedó sin espacio a mitad de la "
+                            throw new IOException("El dispositivo se quedó sin espacio a mitad de la "
                                     + "restauración (" + megas(total) + "). No se cambiaron los datos.");
                         }
                         out.write(buffer, 0, leidos);
@@ -249,7 +249,7 @@ public final class Respaldo {
         }
         if (movido) {
             /* Las fotos anteriores ya fueron reemplazadas: quedarse con una copia
-               ocupaba el doble y dejaba datos viejos en la tablet. */
+               ocupaba el doble y dejaba datos viejos en el dispositivo. */
             borrarDirectorio(adjuntosPrevios);
             Imagen.limpiar();
         }

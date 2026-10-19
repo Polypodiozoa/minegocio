@@ -128,7 +128,7 @@ public class AjustesActivity extends BaseActivity {
         } catch (Exception e) {
             informar("Sin aplicación de archivos",
                     "No se encontró una aplicación para elegir dónde guardar la copia. "
-                            + "Puedes instalarla desde la tienda de la tablet.");
+                            + "Puedes instalarla desde la tienda de el dispositivo.");
         }
     }
 
