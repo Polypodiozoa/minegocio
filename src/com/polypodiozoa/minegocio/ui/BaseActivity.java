@@ -40,16 +40,32 @@ public abstract class BaseActivity extends android.app.Activity {
     protected String nombreArchivoPendiente = "";
     protected String mimeArchivoPendiente = "";
 
+    /** Escala con la que se creó esta pantalla, para detectar cambios de tamaño. */
+    private float escalaAplicada = 1f;
+
     @Override
     protected void attachBaseContext(Context base) {
         SharedPreferences p = base.getSharedPreferences(PREFS_UI, Context.MODE_PRIVATE);
         float factor = p.getFloat(CLAVE_ESCALA, 1f);
+        escalaAplicada = factor;
         if (factor > 0.01f && Math.abs(factor - 1f) > 0.001f) {
             Configuration config = new Configuration(base.getResources().getConfiguration());
             config.fontScale = config.fontScale * factor;
             base = base.createConfigurationContext(config);
         }
         super.attachBaseContext(base);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        /* Si el tamaño de texto cambió en Ajustes, esta pantalla se vuelve a
+           crear para que lo tome. Antes solo cambiaba dentro de Ajustes. */
+        SharedPreferences p = getSharedPreferences(PREFS_UI, MODE_PRIVATE);
+        float actual = p.getFloat(CLAVE_ESCALA, 1f);
+        if (Math.abs(actual - escalaAplicada) > 0.001f) {
+            recreate();
+        }
     }
 
     @Override

@@ -41,7 +41,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp"
         android:orientation="horizontal"
-        android:gravity="center_vertical">
+        android:gravity="top">
 
         <ImageButton
             android:id="@+id/btnMenosItem"
@@ -70,32 +70,39 @@
             android:tint="@color/primario"
             android:contentDescription="Agregar una unidad" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:text="Costo c/u:"
-            android:textColor="@color/texto_secundario"
-            android:textSize="15sp" />
-
-        <EditText
-            android:id="@+id/etCostoUnitario"
-            style="@style/Campo"
+        <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_marginStart="6dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
             android:layout_weight="1"
-            android:minHeight="48dp"
-            android:paddingTop="6dp"
-            android:paddingBottom="6dp"
-            android:textSize="16sp"
-            android:inputType="number"
-            android:hint="0" />
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/etCostoUnitario"
+                style="@style/Campo"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:minHeight="48dp"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp"
+                android:textSize="16sp"
+                android:inputType="number"
+                android:hint="0" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="Costo unitario"
+                android:textColor="@color/texto_secundario"
+                android:textSize="13sp" />
+        </LinearLayout>
 
         <ImageButton
             android:id="@+id/btnQuitarItem"
             android:layout_width="48dp"
             android:layout_height="48dp"
+            android:layout_marginStart="6dp"
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_basura"
             android:tint="@color/error"

@@ -64,7 +64,7 @@ public class CompraActivity extends BaseActivity {
         etNotas = findViewById(R.id.etNotas);
         spForma = findViewById(R.id.spForma);
 
-        String[] formas = {"Efectivo", "Transferencia", "Nequi / Daviplata", "Tarjeta"};
+        String[] formas = {"Efectivo", "Transferencia", "Tarjeta"};
         ArrayAdapter<String> adaptador = new ArrayAdapter<>(this, R.layout.item_spinner, formas);
         adaptador.setDropDownViewResource(R.layout.item_spinner);
         spForma.setAdapter(adaptador);
@@ -140,8 +140,8 @@ public class CompraActivity extends BaseActivity {
             btnProveedor.setContentDescription("Proveedor seleccionado: " + proveedorNombre
                     + ". Toca para cambiar.");
         } else {
-            btnProveedor.setText("Sin proveedor");
-            btnProveedor.setContentDescription("Sin proveedor asociado. Toca para elegir uno.");
+            btnProveedor.setText("Elegir proveedor");
+            btnProveedor.setContentDescription("Sin proveedor. Toca para elegir el proveedor de la compra.");
         }
     }
 

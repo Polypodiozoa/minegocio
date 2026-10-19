@@ -1500,7 +1500,7 @@ public class BD extends SQLiteOpenHelper {
         Modelo.Venta v1 = new Modelo.Venta();
         v1.fecha = ahora - 3L * 60L * 60L * 1000L;
         v1.clienteId = c1.id;
-        v1.formaPago = "Nequi / Daviplata";
+        v1.formaPago = "Transferencia";
         v1.estado = "pagada";
         v1.impuestoPct = 19;
         List<Modelo.Item> i1 = new ArrayList<>();

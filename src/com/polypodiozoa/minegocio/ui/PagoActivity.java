@@ -68,7 +68,7 @@ public class PagoActivity extends BaseActivity {
             saldoActual.setText("Este cliente está al día.");
         }
 
-        String[] formas = {"Efectivo", "Transferencia", "Nequi / Daviplata", "Tarjeta"};
+        String[] formas = {"Efectivo", "Transferencia", "Tarjeta"};
         ArrayAdapter<String> adaptador = new ArrayAdapter<>(this, R.layout.item_spinner, formas);
         adaptador.setDropDownViewResource(R.layout.item_spinner);
         spForma.setAdapter(adaptador);

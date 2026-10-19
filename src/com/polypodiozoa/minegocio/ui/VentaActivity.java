@@ -76,7 +76,7 @@ public class VentaActivity extends BaseActivity {
         etNotas = findViewById(R.id.etNotas);
         spForma = findViewById(R.id.spForma);
 
-        String[] formas = {"Efectivo", "Transferencia", "Nequi / Daviplata", "Tarjeta", "Crédito"};
+        String[] formas = {"Efectivo", "Transferencia", "Tarjeta", "Crédito"};
         ArrayAdapter<String> adaptador = new ArrayAdapter<>(this, R.layout.item_spinner, formas);
         adaptador.setDropDownViewResource(R.layout.item_spinner);
         spForma.setAdapter(adaptador);
@@ -189,13 +189,20 @@ public class VentaActivity extends BaseActivity {
     }
 
     private void actualizarBotonCliente() {
+        TextView ayuda = findViewById(R.id.ayudaCliente);
         if (clienteId > 0) {
             btnCliente.setText(clienteNombre);
-            btnCliente.setContentDescription("Cliente seleccionado: " + clienteNombre
-                    + ". Toca para cambiar.");
+            btnCliente.setContentDescription("Cliente de la venta: " + clienteNombre
+                    + ". Toca para cambiarlo.");
+            if (ayuda != null) {
+                ayuda.setText("Este es el cliente de la venta. Toca el nombre para cambiarlo.");
+            }
         } else {
-            btnCliente.setText("Consumidor final");
-            btnCliente.setContentDescription("Consumidor final, sin cliente asociado. Toca para elegir un cliente.");
+            btnCliente.setText("Elegir cliente");
+            btnCliente.setContentDescription("Sin cliente. Toca para elegir el cliente de la venta.");
+            if (ayuda != null) {
+                ayuda.setText("Ahora es consumidor final. Toca «Elegir cliente» para asociar la venta a un cliente.");
+            }
         }
     }
 

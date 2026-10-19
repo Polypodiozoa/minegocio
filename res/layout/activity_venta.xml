@@ -32,20 +32,21 @@ android:id="@+id/scrollForm"
                     style="@style/TituloSeccion"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Cliente" />
+                    android:text="Cliente de la venta" />
 
                 <Button
                     android:id="@+id/btnCliente"
                     style="@style/BotonSecundario"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Consumidor final" />
+                    android:text="Elegir cliente" />
 
                 <TextView
+                    android:id="@+id/ayudaCliente"
                     style="@style/Ayuda"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Puedes asociar la venta a un cliente o dejarla como consumidor final." />
+                    android:text="Ahora es consumidor final. Toca «Elegir cliente» para asociar la venta a un cliente." />
             </LinearLayout>
 
             <LinearLayout
@@ -88,6 +89,12 @@ android:id="@+id/scrollForm"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
                     android:text="Agregar concepto libre (sin inventario)" />
+
+                <TextView
+                    style="@style/Ayuda"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Un concepto es algo que cobras y no está en el inventario: un domicilio, la mano de obra, un servicio. No descuenta existencias." />
             </LinearLayout>
 
             <LinearLayout

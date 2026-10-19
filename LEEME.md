@@ -1,4 +1,4 @@
-# Mi Negocio 1.6 — inventario, ventas, fiados y reportes para micronegocios colombianos
+# Mi Negocio 1.7 — inventario, ventas, fiados y reportes para micronegocios colombianos
 
 Aplicación Android nativa para llevar el día a día de un negocio pequeño en Colombia:
 inventario con fotos, ventas, compras, clientes, proveedores, gastos, **cartera de fiados**,
@@ -6,14 +6,30 @@ impuestos opcionales, abonos, informes y **reportes en Excel**. Funciona sin int
 permisos de cámara, ubicación, contactos ni almacenamiento.
 
 - **APK instalado en la tablet:** `minegocio.apk` (256 KB)
-- **SHA-256:** `6eb4d9edc930f441591855584f65329df625b4a39031390b99f2bd76665c41fd`
+- **SHA-256:** `72632ce06c90795c8dbb4c768f3343e17fd49657bc7a160ffcea0d75fa171510`
 - **Paquete:** `com.polypodiozoa.minegocio`
-- **Versión:** 1.6 (versionCode 7)
+- **Versión:** 1.7 (versionCode 8)
 - **Tablet de prueba:** Amazon Fire HD 8 `KFONWI`, Fire OS 9 / Android 9 (API 28),
   800 × 1280 px, densidad 213 dpi.
 - **Requisito mínimo:** Android 7.0 (API 24).
 - **Estado:** instalada, probada y actualizada el 18 de octubre de 2026. Al final se borraron los datos
   de prueba; la app quedó limpia, con **Ajustes → Cargar datos de ejemplo** para recorrerla.
+
+## Novedades de la versión 1.7 — lo que pidió la prueba en la tablet
+
+- **Cliente de la venta:** la sección se llama así, el botón dice **«Elegir cliente»** (antes
+  «Consumidor final») y debajo explica el estado: sin cliente «Ahora es consumidor final…»;
+  con cliente «Este es el cliente de la venta. Toca el nombre para cambiarlo».
+- **Concepto libre:** el botón dice «Agregar concepto libre (sin inventario)» y explica qué es
+  («algo que cobras y no está en el inventario: un domicilio, la mano de obra, un servicio»).
+  En compras, «Agregar gasto o concepto (sin inventario)» con su propia explicación.
+- **Tamaño del texto en toda la app:** antes solo cambiaba dentro de Ajustes; ahora cada
+  pantalla se vuelve a crear al cambiar el tamaño y el menú principal también lo toma.
+- **Formas de pago:** «Nequi / Daviplata» se quitó; quedan Efectivo, Transferencia, Tarjeta y
+  Crédito (una transferencia cubre Nequi y Daviplata).
+- **Costo unitario en la compra:** el rótulo «Costo c/u» se cortaba; ahora el campo lleva
+  debajo un texto pequeño «Costo unitario», siempre visible.
+- **Proveedor:** el botón vacío dice «Elegir proveedor» (antes «Sin proveedor»).
 
 ## Novedades de la versión 1.6 — la copia siempre se puede restaurar
 

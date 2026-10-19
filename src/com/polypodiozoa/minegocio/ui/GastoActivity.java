@@ -39,7 +39,7 @@ public class GastoActivity extends BaseActivity {
         etNotas = findViewById(R.id.etNotas);
         spForma = findViewById(R.id.spForma);
 
-        String[] formas = {"Efectivo", "Transferencia", "Nequi / Daviplata", "Tarjeta"};
+        String[] formas = {"Efectivo", "Transferencia", "Tarjeta"};
         ArrayAdapter<String> adaptador = new ArrayAdapter<>(this, R.layout.item_spinner, formas);
         adaptador.setDropDownViewResource(R.layout.item_spinner);
         spForma.setAdapter(adaptador);

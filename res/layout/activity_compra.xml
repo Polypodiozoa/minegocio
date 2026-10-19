@@ -39,7 +39,7 @@ android:id="@+id/scrollForm"
                     style="@style/BotonSecundario"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Sin proveedor" />
+                    android:text="Elegir proveedor" />
 
                 <TextView
                     style="@style/Ayuda"
@@ -87,7 +87,13 @@ android:id="@+id/scrollForm"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
-                    android:text="Agregar gasto o concepto libre" />
+                    android:text="Agregar gasto o concepto (sin inventario)" />
+
+                <TextView
+                    style="@style/Ayuda"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Sirve para un gasto de la compra que no es un producto: el transporte, el empaque, una comisión. No suma existencias." />
             </LinearLayout>
 
             <LinearLayout

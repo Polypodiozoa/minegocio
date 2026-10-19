@@ -236,3 +236,4 @@ Sigue pendiente:
 | 1.4 | 2026-10-18 | Correcciones de la auditoría: cartera, restauración, copias, costo al anular compra, aviso al salir y accesibilidad. |
 | 1.5 | 2026-10-18 | Pendientes: base dañada se aparta y avisa, aviso de copia grande, abono con confirmación, exportación en segundo plano y bloqueo de doble toque. |
 | 1.6 | 2026-10-18 | Restauración sin tope fijo: se compara con el espacio libre real. Menos espacio en caché al restaurar. |
+| 1.7 | 2026-10-18 | Claridad de cliente y concepto libre, tamaño de texto en toda la app, formas de pago sin Nequi/Daviplata y costo unitario visible. |
