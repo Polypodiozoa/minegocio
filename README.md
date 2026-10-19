@@ -3,42 +3,55 @@
 App Android para llevar el día a día de un negocio pequeño en Colombia: inventario con
 fotos, ventas (de contado y fiadas), compras, clientes, proveedores, gastos, cartera de
 fiados, informes y reportes en Excel. **Funciona sin internet** y no pide permisos de
-cámara, ubicación, contactos ni almacenamiento: todo queda en la tablet.
+cámara, ubicación, contactos ni almacenamiento: todo queda en el dispositivo.
 
-- **Versión:** 1.3 (versionCode 4)
+- **Versión:** 1.9 (versionCode 10) · **targetSdk 35**
 - **Paquete:** `com.polypodiozoa.minegocio`
-- **APK:** [`minegocio.apk`](minegocio.apk) — 255 KB
-- **SHA-256:** `4424f166000eca1d6b2122d8b68c0c12bdbc02b3356c4c7f9b3777b2ad482424`
-- **Android:** 7.0 (API 24) o superior; probada en una Amazon Fire HD 8 (Fire OS 9 / API 28).
+- **Android:** 7.0 (API 24) o superior. Probada en una tablet Amazon Fire HD 8 (API 28).
+- **Privacidad:** no recoge ni envía datos; no declara el permiso de internet.
+
+## Qué se comparte y qué se sube a Play
+
+| Archivo | Para qué | Cómo se usa |
+|---|---|---|
+| [`minegocio.apk`](minegocio.apk) · 262 KB | **Instalar a mano o compartir** con alguien (WhatsApp, Drive, USB). | Se abre en el dispositivo y se acepta el origen desconocido. |
+| [`minegocio.aab`](minegocio.aab) · 260 KB | **Subir a Google Play Console.** Es un *Android App Bundle*: un paquete de entrega, no un instalador. | Play lo convierte en el APK que corresponde a cada dispositivo. **No se puede instalar directamente.** |
+
+- APK SHA-256: `09440eb7532ab9f295a9bab4c0272d8803765d0fd5fd85e93f11a9d637dea561`
+- AAB SHA-256: `b4469c4094a648edd675b563736c1b10c9ee37125ce385d1fa68bf23f43923a2`
+
+El APK del repositorio va firmado con la llave de **desarrollo** (sirve para probar y para
+compartir). La versión de Play la firma la llave de subida del dueño; si se instala encima de
+la de desarrollo, Android pide desinstalar antes (y eso borra los datos): hacer copia primero.
 
 ## Documentos
 
 | Archivo | Qué contiene |
 |---|---|
-| [`DISENO.md`](DISENO.md) | Registro de diseño: usuarios, principios, pantallas, sistema visual, flujos, modelo de datos y decisiones. |
-| [`AUDITORIA.md`](AUDITORIA.md) | Revisión del 18/10/2026: cálculos, accesibilidad, robustez y seguridad de datos, con lo que falta corregir. |
+| [`DISENO.md`](DISENO.md) | Registro de diseño: usuarios, principios, pantallas, sistema visual, flujos, modelo de datos, decisiones y estado de la publicación en Play. |
+| [`AUDITORIA.md`](AUDITORIA.md) | Revisión del 18/10/2026: cálculos, accesibilidad, robustez y seguridad de datos, con el estado de cada hallazgo. |
 | [`LEEME.md`](LEEME.md) | Manual completo: instalación, cada módulo, compilación y restauración. |
-
-## Instalar
-
-1. Copiar `minegocio.apk` a la tablet (cable, Bluetooth, Drive o Telegram).
-2. Abrir el archivo desde **Archivos** y aceptar la instalación de origen desconocido.
-3. La primera vez la app abre vacía; en **Ajustes → Cargar datos de ejemplo** se puede
-   recorrer con datos de prueba, y luego borrarlos con **Eliminar todos los datos**.
-
-> El APK está firmado con la llave de desarrollo. Si algún día se firma con otra llave,
-> Android no deja actualizar encima: hay que desinstalar (y eso borra los datos), así que
-> **hacer una copia antes**.
+| [`tienda/`](tienda/) | Ficha para Play (nombre, descripciones), política de privacidad, respuestas de Seguridad de los datos y gráfico destacado 1024 × 500. |
 
 ## Compilar
 
-Requiere el SDK de Android (build-tools 34.0.0 y plataforma android-28) y JDK. No usa Gradle:
+Requiere el SDK de Android (**platforms;android-35** y **build-tools;35.0.0**) y JDK. No usa
+Gradle.
 
 ```bash
-VERSION_CODE=4 VERSION_NAME=1.3 ./compilar.sh
+VERSION_CODE=10 VERSION_NAME=1.9 ./compilar.sh        # → minegocio.apk (firmado)
+VERSION_CODE=10 VERSION_NAME=1.9 ./empaquetar-aab.sh  # → minegocio.aab (para Play)
 ```
 
-El resultado queda en `minegocio.apk`.
+El AAB se arma con `aapt2` en formato proto y `herramientas/bundletool.jar`; se valida con
+`bundletool validate`.
+
+## Instalar el APK
+
+1. Copiar `minegocio.apk` al dispositivo.
+2. Abrirlo desde **Archivos** y aceptar la instalación de origen desconocido.
+3. La primera vez abre vacía; en **Ajustes → Cargar datos de ejemplo** se puede recorrer con
+   datos de prueba y luego borrarlos con **Eliminar todos los datos**.
 
 ## Datos
 
