@@ -86,6 +86,15 @@
                     android:text="Toca el QR para verlo en grande"
                     android:textColor="@color/texto_secundario"
                     android:textSize="15sp" />
+
+                <Button
+                    android:id="@+id/btnConfigurarQr"
+                    style="@style/BotonSecundario"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Configurar QR"
+                    android:visibility="gone" />
             </LinearLayout>
 
             <LinearLayout

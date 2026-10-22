@@ -53,7 +53,7 @@ horizontal y vertical, con letra del sistema hasta 1,3×.
 | Gastos | `GastosActivity` → `GastoActivity` | Gastos del negocio con comprobante. |
 | Informes | `InformesActivity` | Períodos, utilidad, cartera, exportación a Excel/CSV. |
 | Perfil | `PerfilActivity` | Cuenta actual, resumen de ventas/gastos, edición y menú propio. |
-| Datos / Mostrador | `MostradorActivity` | QR, llave Bre-B, cuenta, banco y titular. |
+| Datos / Mostrador | `MostradorActivity` | QR con configuración única, llave Bre-B, cuenta, banco y titular. |
 | Ajustes | `AjustesActivity` | Datos del negocio, impuesto, tamaño de texto, modo del lector, datos de pago, copia y borrado. |
 
 Apoyo: `SelectorActivity` (elegir producto, cliente o proveedor), `EscanerActivity`
@@ -318,3 +318,4 @@ La app se va a publicar en Play después de los ciclos de prueba. Lo que falta p
 | 1.19 | 2026-10-22 | Se quita «aaaaaa» del banco de ejemplo. |
 | 1.20 | 2026-10-22 | Se retiran Métodos, Nequi y Daviplata; solo QR, llave y cuenta de respaldo. |
 | 1.21 | 2026-10-22 | El QR se titula solo «QR»; se retira «de Bre-B» del código. |
+| 1.22 | 2026-10-22 | Configurar QR desde El mostrador una sola vez, con limpieza; después en Ajustes. |

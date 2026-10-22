@@ -1,4 +1,4 @@
-# Auditoría de Mi Negocio — base 1.3, actualizaciones 1.10 a 1.21 (22/10/2026)
+# Auditoría de Mi Negocio — base 1.3, actualizaciones 1.10 a 1.22 (22/10/2026)
 
 
 
@@ -9,6 +9,15 @@
 
 
 
+
+
+## Actualización 1.22 — QR una vez desde El mostrador (22/10/2026)
+
+- **Onboarding:** si no hay QR propio, aparece “Configurar QR” con cámara o imagen; se procesa
+  con el mismo limpiador local y se guarda de inmediato. El botón desaparece.
+- **Después:** el QR se cambia solo desde Ajustes → Datos para recibir pagos.
+- **Fallo controlado:** si la imagen no contiene un QR legible, no se guarda ni se reemplaza.
+- **Privacidad:** la foto se procesa localmente; no se envía.
 
 ## Actualización 1.21 — QR sin “Bre-B” (22/10/2026)
 

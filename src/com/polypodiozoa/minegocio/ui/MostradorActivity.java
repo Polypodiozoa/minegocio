@@ -1,9 +1,11 @@
 package com.polypodiozoa.minegocio.ui;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -16,9 +18,14 @@ import com.google.zxing.EncodeHintType;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.common.BitMatrix;
 import com.polypodiozoa.minegocio.R;
+import com.polypodiozoa.minegocio.util.Archivos;
 import com.polypodiozoa.minegocio.util.Imagen;
+import com.polypodiozoa.minegocio.util.QrPago;
 import com.polypodiozoa.minegocio.util.Ui;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
@@ -31,11 +38,14 @@ public class MostradorActivity extends BaseActivity {
     private static final String CUENTA_EJEMPLO = "#4004EJEMPLO2145";
     private static final String BANCO_EJEMPLO = "Banco de ejemplo";
     private static final String TITULAR_EJEMPLO = "Titular de ejemplo";
+    private static final int PEDIR_QR_CAMARA = 401;
+    private static final int PEDIR_QR_IMAGEN = 402;
 
     private ImageView imgQr;
     private TextView txtQrTitulo, txtQrAyuda, txtLlave, txtCuenta, txtBanco, txtTitular;
     private TextView txtAviso, btnEditarLlave, btnEditarCuenta, btnEditarBanco,
             btnEditarTitular;
+    private android.widget.Button btnConfigurarQr;
     private String rutaQr = "";
 
     @Override
@@ -51,6 +61,7 @@ public class MostradorActivity extends BaseActivity {
         btnEditarCuenta = findViewById(R.id.btnEditarCuenta);
         btnEditarBanco = findViewById(R.id.btnEditarBanco);
         btnEditarTitular = findViewById(R.id.btnEditarTitular);
+        btnConfigurarQr = findViewById(R.id.btnConfigurarQr);
         txtLlave = findViewById(R.id.txtLlave);
         txtCuenta = findViewById(R.id.txtCuenta);
         txtBanco = findViewById(R.id.txtBanco);
@@ -63,6 +74,7 @@ public class MostradorActivity extends BaseActivity {
                 "pago_banco", "Banco o identificador", "Bancolombia · 0001"));
         btnEditarTitular.setOnClickListener(v -> editarDato(
                 "pago_titular", "Titular", "Papelería Somor"));
+        btnConfigurarQr.setOnClickListener(v -> ofrecerConfigurarQr());
         cargar();
     }
 
@@ -105,10 +117,12 @@ public class MostradorActivity extends BaseActivity {
         btnEditarTitular.setContentDescription("Editar titular. El botón desaparece al confirmar.");
 
         Bitmap foto = Imagen.cargar(rutaQr, 1200);
+        btnConfigurarQr.setVisibility(foto == null ? View.VISIBLE : View.GONE);
         if (foto != null) {
             imgQr.setImageBitmap(foto);
             imgQr.setScaleType(ImageView.ScaleType.FIT_CENTER);
             txtQrTitulo.setText("QR");
+            txtQrAyuda.setText("Toca el QR para verlo en grande");
             txtQrAyuda.setVisibility(View.VISIBLE);
             imgQr.setClickable(true);
             imgQr.setFocusable(true);
@@ -127,13 +141,97 @@ public class MostradorActivity extends BaseActivity {
             else imgQr.setImageResource(R.drawable.ic_qr);
             imgQr.setScaleType(ImageView.ScaleType.FIT_CENTER);
             txtQrTitulo.setText(llaveVacia ? "QR de ejemplo" : "QR");
-            txtQrAyuda.setVisibility(View.GONE);
+            txtQrAyuda.setText("Configúralo una vez aquí; después se cambia en Ajustes.");
+            txtQrAyuda.setVisibility(View.VISIBLE);
             imgQr.setClickable(false);
             imgQr.setFocusable(false);
             imgQr.setContentDescription(llaveVacia
                     ? "Código QR de ejemplo" : "Código QR");
             imgQr.setOnClickListener(null);
         }
+    }
+
+    private void ofrecerConfigurarQr() {
+        new AlertDialog.Builder(this)
+                .setTitle("Configurar QR")
+                .setMessage("La app limpia la foto y la guarda. Se configura una sola vez desde "
+                        + "El mostrador; para cambiarlo después, entra a Ajustes → Datos para "
+                        + "recibir pagos.")
+                .setPositiveButton("Tomar foto", (d, w) -> tomarFoto(PEDIR_QR_CAMARA))
+                .setNeutralButton("Elegir imagen", (d, w) -> elegirQr())
+                .setNegativeButton("Cancelar", null)
+                .show();
+    }
+
+    private void elegirQr() {
+        Intent i = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        i.addCategory(Intent.CATEGORY_OPENABLE);
+        i.setType("image/*");
+        try {
+            startActivityForResult(i, PEDIR_QR_IMAGEN);
+        } catch (Exception e) {
+            aviso("No hay una aplicación para elegir imágenes.");
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PEDIR_QR_CAMARA) {
+            String ruta = resultadoFoto(resultCode, data);
+            if (ruta != null) procesarQrOnboarding(ruta);
+            return;
+        }
+        if (requestCode == PEDIR_QR_IMAGEN) {
+            if (resultCode != RESULT_OK || data == null || data.getData() == null) return;
+            String ruta = resultadoArchivo(resultCode, data);
+            if (ruta == null) return;
+            if (!Archivos.esImagen(ruta, mimeArchivoPendiente)) {
+                Archivos.borrar(ruta);
+                aviso("Elige una imagen del código QR.");
+                return;
+            }
+            procesarQrOnboarding(ruta);
+        }
+    }
+
+    private void procesarQrOnboarding(String origen) {
+        if (origen == null || origen.isEmpty()) return;
+        ProgressDialog progreso = new ProgressDialog(this);
+        progreso.setMessage("Limpiando el QR…");
+        progreso.setCancelable(false);
+        progreso.show();
+        btnConfigurarQr.setEnabled(false);
+        new Thread(() -> {
+            Bitmap limpio = QrPago.limpiar(origen);
+            String rutaFinal = null;
+            if (limpio != null) {
+                File temp = Archivos.nuevoArchivoTemporal(this, "qr", "png");
+                try (FileOutputStream out = new FileOutputStream(temp)) {
+                    limpio.compress(Bitmap.CompressFormat.PNG, 100, out);
+                    String permanente = Archivos.moverAPermanente(this, temp.getAbsolutePath());
+                    if (!permanente.isEmpty()) {
+                        bd.guardarAjuste("pago_qr_foto", permanente);
+                        rutaFinal = permanente;
+                    }
+                } catch (IOException e) {
+                    Archivos.borrar(temp.getAbsolutePath());
+                }
+            }
+            Archivos.borrar(origen);
+            final String guardada = rutaFinal;
+            runOnUiThread(() -> {
+                progreso.dismiss();
+                if (isFinishing()) return;
+                btnConfigurarQr.setEnabled(true);
+                if (guardada == null) {
+                    aviso("No se pudo leer el QR. Acércalo, evita reflejos y muestra los cuatro bordes.");
+                    return;
+                }
+                cargar();
+                aviso("QR configurado. Ya puedes cambiarlo en Ajustes.");
+            });
+        }).start();
     }
 
     private void editarDato(String clave, String titulo, String ejemplo) {
