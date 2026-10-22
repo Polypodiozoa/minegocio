@@ -30,6 +30,7 @@ public class PrincipalActivity extends BaseActivity {
         setContentView(R.layout.activity_principal);
         gridAcciones = findViewById(R.id.gridAcciones);
         listaRecientes = findViewById(R.id.listaRecientes);
+        findViewById(R.id.btnDatos).setOnClickListener(v -> abrir(MostradorActivity.class));
         findViewById(R.id.btnUsuario).setOnClickListener(v -> abrir(AccesosActivity.class));
         prepararAcciones();
         findViewById(R.id.btnVerVentas).setOnClickListener(v -> abrir(VentasActivity.class));

@@ -345,6 +345,169 @@ android:id="@+id/scrollForm"
                     style="@style/TituloSeccion"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:text="Datos para recibir pagos" />
+
+                <TextView
+                    style="@style/Ayuda"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Se muestran en El mostrador, el botón Datos del inicio. Si no los llenas, la app usa datos de ejemplo." />
+
+                <ImageView
+                    android:id="@+id/imgQrPago"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/fondo_campo"
+                    android:contentDescription="Vista previa del código QR de pagos"
+                    android:padding="6dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_qr" />
+
+                <Button
+                    android:id="@+id/btnElegirQr"
+                    style="@style/BotonSecundario"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Elegir imagen del QR" />
+
+                <Button
+                    android:id="@+id/btnQuitarQr"
+                    style="@style/BotonTexto"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Quitar QR"
+                    android:visibility="gone" />
+
+                <TextView
+                    style="@style/Etiqueta"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:labelFor="@+id/etBreB"
+                    android:text="Llave Bre-B" />
+
+                <EditText
+                    android:id="@+id/etBreB"
+                    style="@style/Campo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Ej.: a1b2c3d4-e5f6-7890-abcd-111111111111"
+                    android:inputType="text" />
+
+                <TextView
+                    style="@style/Etiqueta"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:labelFor="@+id/etCuenta"
+                    android:text="Número de cuenta" />
+
+                <EditText
+                    android:id="@+id/etCuenta"
+                    style="@style/Campo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Ej.: 1111 2222 3333 4444"
+                    android:inputType="text" />
+
+                <TextView
+                    style="@style/Etiqueta"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:labelFor="@+id/etBanco"
+                    android:text="Banco o identificador" />
+
+                <EditText
+                    android:id="@+id/etBanco"
+                    style="@style/Campo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Ej.: Bancolombia · 0001"
+                    android:inputType="text" />
+
+                <TextView
+                    style="@style/Etiqueta"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:labelFor="@+id/etTitular"
+                    android:text="Titular (opcional)" />
+
+                <EditText
+                    android:id="@+id/etTitular"
+                    style="@style/Campo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Ej.: Papelería Somor"
+                    android:inputType="textCapWords" />
+
+                <TextView
+                    style="@style/Etiqueta"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Métodos disponibles" />
+
+                <CheckBox
+                    android:id="@+id/cbBreB"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="48dp"
+                    android:text="Bre-B"
+                    android:textColor="@color/texto"
+                    android:textSize="17sp" />
+
+                <CheckBox
+                    android:id="@+id/cbNequi"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="48dp"
+                    android:text="Nequi"
+                    android:textColor="@color/texto"
+                    android:textSize="17sp" />
+
+                <CheckBox
+                    android:id="@+id/cbDaviplata"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="48dp"
+                    android:text="Daviplata"
+                    android:textColor="@color/texto"
+                    android:textSize="17sp" />
+
+                <CheckBox
+                    android:id="@+id/cbTransferencia"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="48dp"
+                    android:text="Transferencia bancaria"
+                    android:textColor="@color/texto"
+                    android:textSize="17sp" />
+
+                <TextView
+                    style="@style/Etiqueta"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:labelFor="@+id/etOtrosMetodos"
+                    android:text="Otros métodos (opcional)" />
+
+                <EditText
+                    android:id="@+id/etOtrosMetodos"
+                    style="@style/Campo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Sepáralos con coma"
+                    android:inputType="text" />
+            </LinearLayout>
+
+            <LinearLayout
+                style="@style/Tarjeta"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    style="@style/TituloSeccion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:text="Borrar todos los datos" />
 
                 <TextView

@@ -20,6 +20,8 @@ Solo la que tú escribes, en la base de datos local de la app:
 - Datos del negocio: nombre, NIT, teléfono y dirección (opcionales).
 - Personas que comparten el dispositivo: nombre y rol. La app guarda qué persona registró
   cada venta, compra, abono o gasto.
+- Datos para recibir pagos: llave Bre-B, número de cuenta, banco, titular, métodos y la foto
+  del QR que el negocio elija. Se usan solo para mostrarlos en la página El mostrador.
 - Productos, precios, costos y existencias.
 - Ventas, compras, gastos y abonos.
 - Clientes y proveedores: nombre, teléfono, correo, dirección y notas, si los escribes.
@@ -35,6 +37,8 @@ salen del dispositivo solo cuando tú lo decides:
 
 - **Compartir un informe o un comprobante:** se envía con la app que elijas (WhatsApp, correo,
   etc.).
+- **El mostrador:** los datos de pago y el QR se muestran en la pantalla del dispositivo; no
+  se envían a ningún servidor.
 - **Copia de seguridad:** se guarda el archivo donde tú escojas (Google Drive, una USB, el
   correo). Desde ese momento queda bajo las condiciones del servicio que uses.
 - **Restaurar una copia:** lee el archivo que tú elijas y lo aplica en el dispositivo.

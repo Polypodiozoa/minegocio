@@ -3,10 +3,13 @@ package com.polypodiozoa.minegocio.ui;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -16,6 +19,7 @@ import com.polypodiozoa.minegocio.datos.Respaldo;
 import com.polypodiozoa.minegocio.util.Archivos;
 import com.polypodiozoa.minegocio.util.Fechas;
 import com.polypodiozoa.minegocio.util.Formatos;
+import com.polypodiozoa.minegocio.util.Imagen;
 
 import java.io.File;
 
@@ -23,6 +27,7 @@ public class AjustesActivity extends BaseActivity {
 
     private static final int PEDIR_DESTINO_COPIA = 301;
     private static final int PEDIR_COPIA_RESTAURAR = 302;
+    private static final int PEDIR_QR = 303;
 
     private EditText etNegocio, etNit, etTelefono, etDireccion, etImpuesto;
     private Switch swImpuesto, swStockNegativo;
@@ -30,6 +35,12 @@ public class AjustesActivity extends BaseActivity {
     private RadioGroup grupoEscaner;
     private TextView txtUltimaCopia;
     private Button btnCrearCopia, btnRestaurar;
+    private EditText etBreB, etCuenta, etBanco, etTitular, etOtrosMetodos;
+    private CheckBox cbBreB, cbNequi, cbDaviplata, cbTransferencia;
+    private ImageView imgQrPago;
+    private Button btnQuitarQr;
+    private String rutaQr = "", qrOriginal = "", qrTemporal = "";
+    private boolean quitarQr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +59,19 @@ public class AjustesActivity extends BaseActivity {
         txtUltimaCopia = findViewById(R.id.txtUltimaCopia);
         btnCrearCopia = findViewById(R.id.btnCrearCopia);
         btnRestaurar = findViewById(R.id.btnRestaurar);
+        etBreB = findViewById(R.id.etBreB);
+        etCuenta = findViewById(R.id.etCuenta);
+        etBanco = findViewById(R.id.etBanco);
+        etTitular = findViewById(R.id.etTitular);
+        etOtrosMetodos = findViewById(R.id.etOtrosMetodos);
+        cbBreB = findViewById(R.id.cbBreB);
+        cbNequi = findViewById(R.id.cbNequi);
+        cbDaviplata = findViewById(R.id.cbDaviplata);
+        cbTransferencia = findViewById(R.id.cbTransferencia);
+        imgQrPago = findViewById(R.id.imgQrPago);
+        btnQuitarQr = findViewById(R.id.btnQuitarQr);
+        findViewById(R.id.btnElegirQr).setOnClickListener(v -> elegirQr());
+        btnQuitarQr.setOnClickListener(v -> quitarQr());
 
         findViewById(R.id.btnGuardar).setOnClickListener(v -> guardar());
         btnCrearCopia.setOnClickListener(v -> pedirDestinoCopia());
@@ -66,6 +90,15 @@ public class AjustesActivity extends BaseActivity {
         etImpuesto.setText(Formatos.decimal(bd.ajusteDecimal("impuesto_pct", 19)));
         swImpuesto.setChecked(bd.ajusteSi("impuesto_activado", true));
         swStockNegativo.setChecked(bd.ajusteSi("permitir_stock_negativo", false));
+        etBreB.setText(bd.ajuste("pago_bre_b", ""));
+        etCuenta.setText(bd.ajuste("pago_cuenta", ""));
+        etBanco.setText(bd.ajuste("pago_banco", ""));
+        etTitular.setText(bd.ajuste("pago_titular", ""));
+        cargarMetodos(bd.ajuste("pago_metodos", ""));
+        rutaQr = bd.ajuste("pago_qr_foto", "");
+        qrOriginal = rutaQr;
+        quitarQr = false;
+        mostrarQr();
         if ("qr".equals(bd.ajuste("escaner_formato", "barras"))) {
             grupoEscaner.check(R.id.rbEscanerQr);
         } else {
@@ -112,6 +145,28 @@ public class AjustesActivity extends BaseActivity {
         bd.guardarAjuste("permitir_stock_negativo", swStockNegativo.isChecked());
         bd.guardarAjuste("escaner_formato",
                 grupoEscaner.getCheckedRadioButtonId() == R.id.rbEscanerQr ? "qr" : "barras");
+        bd.guardarAjuste("pago_bre_b", texto(etBreB));
+        bd.guardarAjuste("pago_cuenta", texto(etCuenta));
+        bd.guardarAjuste("pago_banco", texto(etBanco));
+        bd.guardarAjuste("pago_titular", texto(etTitular));
+        bd.guardarAjuste("pago_metodos", metodosSeleccionados());
+
+        if (quitarQr) {
+            if (!qrOriginal.isEmpty()) Archivos.borrar(qrOriginal);
+            rutaQr = "";
+            qrOriginal = "";
+            quitarQr = false;
+        } else if (!qrTemporal.isEmpty()) {
+            String nueva = Archivos.moverAPermanente(this, qrTemporal);
+            qrTemporal = "";
+            if (!nueva.isEmpty()) {
+                if (!qrOriginal.isEmpty() && !qrOriginal.equals(nueva)) Archivos.borrar(qrOriginal);
+                rutaQr = nueva;
+                qrOriginal = nueva;
+            }
+        }
+        bd.guardarAjuste("pago_qr_foto", rutaQr);
+        mostrarQr();
 
         float nueva = 1f;
         if (grupoTexto.getCheckedRadioButtonId() == R.id.rbGrande) nueva = 1.15f;
@@ -123,6 +178,78 @@ public class AjustesActivity extends BaseActivity {
         aviso("Ajustes guardados.");
         if (Math.abs(nueva - anterior) > 0.001f) {
             recreate();
+        }
+    }
+
+    private void cargarMetodos(String guardados) {
+        cbBreB.setChecked(false);
+        cbNequi.setChecked(false);
+        cbDaviplata.setChecked(false);
+        cbTransferencia.setChecked(false);
+        StringBuilder otros = new StringBuilder();
+        for (String m : guardados.split(",")) {
+            String nombre = m.trim();
+            if (nombre.equalsIgnoreCase("Bre-B")) cbBreB.setChecked(true);
+            else if (nombre.equalsIgnoreCase("Nequi")) cbNequi.setChecked(true);
+            else if (nombre.equalsIgnoreCase("Daviplata")) cbDaviplata.setChecked(true);
+            else if (nombre.equalsIgnoreCase("Transferencia bancaria")) cbTransferencia.setChecked(true);
+            else if (!nombre.isEmpty()) {
+                if (otros.length() > 0) otros.append(", ");
+                otros.append(nombre);
+            }
+        }
+        etOtrosMetodos.setText(otros.toString());
+    }
+
+    private String metodosSeleccionados() {
+        StringBuilder s = new StringBuilder();
+        if (cbBreB.isChecked()) agregarMetodo(s, "Bre-B");
+        if (cbNequi.isChecked()) agregarMetodo(s, "Nequi");
+        if (cbDaviplata.isChecked()) agregarMetodo(s, "Daviplata");
+        if (cbTransferencia.isChecked()) agregarMetodo(s, "Transferencia bancaria");
+        String otros = texto(etOtrosMetodos);
+        for (String m : otros.split(",")) {
+            if (!m.trim().isEmpty()) agregarMetodo(s, m.trim());
+        }
+        return s.toString();
+    }
+
+    private void agregarMetodo(StringBuilder s, String metodo) {
+        if (s.length() > 0) s.append(", ");
+        s.append(metodo);
+    }
+
+    private void elegirQr() {
+        Intent i = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        i.addCategory(Intent.CATEGORY_OPENABLE);
+        i.setType("image/*");
+        try {
+            startActivityForResult(i, PEDIR_QR);
+        } catch (Exception e) {
+            aviso("No hay una aplicación para elegir imágenes.");
+        }
+    }
+
+    private void quitarQr() {
+        if (!qrTemporal.isEmpty()) {
+            Archivos.borrar(qrTemporal);
+            qrTemporal = "";
+        }
+        quitarQr = true;
+        rutaQr = "";
+        mostrarQr();
+    }
+
+    private void mostrarQr() {
+        Bitmap b = Imagen.cargar(rutaQr, 800);
+        if (b != null) {
+            imgQrPago.setImageBitmap(b);
+            imgQrPago.setScaleType(ImageView.ScaleType.FIT_CENTER);
+            btnQuitarQr.setVisibility(android.view.View.VISIBLE);
+        } else {
+            imgQrPago.setImageResource(R.drawable.ic_qr);
+            imgQrPago.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+            btnQuitarQr.setVisibility(android.view.View.GONE);
         }
     }
 
@@ -158,6 +285,21 @@ public class AjustesActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PEDIR_QR) {
+            if (resultCode != RESULT_OK || data == null || data.getData() == null) return;
+            String ruta = resultadoArchivo(resultCode, data);
+            if (ruta == null) return;
+            if (!Archivos.esImagen(ruta, mimeArchivoPendiente)) {
+                Archivos.borrar(ruta);
+                aviso("Elige una imagen del código QR.");
+                return;
+            }
+            qrTemporal = ruta;
+            rutaQr = ruta;
+            quitarQr = false;
+            mostrarQr();
+            return;
+        }
         if (resultCode != RESULT_OK || data == null || data.getData() == null) return;
         Uri uri = data.getData();
         if (requestCode == PEDIR_DESTINO_COPIA) {
@@ -256,6 +398,15 @@ public class AjustesActivity extends BaseActivity {
                     bd.cargarEjemplo();
                     aviso("Datos de ejemplo cargados. Ve al inicio para verlos.");
                 });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (isFinishing() && !qrTemporal.isEmpty()) {
+            Archivos.borrar(qrTemporal);
+            qrTemporal = "";
+        }
     }
 
     private void borrarTodo() {

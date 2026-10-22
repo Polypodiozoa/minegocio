@@ -61,6 +61,30 @@
             </LinearLayout>
 
             <Button
+                android:id="@+id/btnDatos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:minHeight="52dp"
+                android:minWidth="52dp"
+                android:maxWidth="120dp"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:background="@drawable/fondo_boton_usuario"
+                android:backgroundTint="@null"
+                android:stateListAnimator="@null"
+                android:drawableStart="@drawable/ic_qr"
+                android:drawableTint="@color/blanco"
+                android:drawablePadding="6dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="Datos"
+                android:textAllCaps="false"
+                android:textColor="@color/blanco"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <Button
                 android:id="@+id/btnUsuario"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

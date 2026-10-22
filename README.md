@@ -6,7 +6,7 @@ fiados, informes, reportes en Excel y **varias personas en el mismo dispositivo*
 sin internet. Solo pide permiso de **cámara** cuando se abre el lector de códigos; no usa
 ubicación, contactos ni almacenamiento general.
 
-- **Versión:** 1.11 (versionCode 12) · **targetSdk 35**
+- **Versión:** 1.12 (versionCode 13) · **targetSdk 35**
 - **Paquete:** `com.polypodiozoa.minegocio`
 - **Android:** 7.0 (API 24) o superior. Probada en una tablet Amazon Fire HD 8 (API 28).
 - **Privacidad:** no recoge ni envía datos; no declara el permiso de internet.
@@ -15,11 +15,11 @@ ubicación, contactos ni almacenamiento general.
 
 | Archivo | Para qué | Cómo se usa |
 |---|---|---|
-| [`minegocio.apk`](minegocio.apk) · 556 KB | **Instalar a mano o compartir** con alguien (WhatsApp, Drive, USB). | Se abre en el dispositivo y se acepta el origen desconocido. |
-| [`minegocio.aab`](minegocio.aab) · 553 KB | **Subir a Google Play Console.** Es un *Android App Bundle*: un paquete de entrega, no un instalador. | Play lo convierte en el APK que corresponde a cada dispositivo. **No se puede instalar directamente.** |
+| [`minegocio.apk`](minegocio.apk) · 564 KB | **Instalar a mano o compartir** con alguien (WhatsApp, Drive, USB). | Se abre en el dispositivo y se acepta el origen desconocido. |
+| [`minegocio.aab`](minegocio.aab) · 562 KB | **Subir a Google Play Console.** Es un *Android App Bundle*: un paquete de entrega, no un instalador. | Play lo convierte en el APK que corresponde a cada dispositivo. **No se puede instalar directamente.** |
 
-- APK SHA-256: `c8a3a68b99162373e93abfecb84062778c438b8cffaecd6bc8b7206970116429`
-- AAB SHA-256: `321927d9c8c41157da945bd7cbb789c19fde095646cc6d224ec91694a0ebfbee`
+- APK SHA-256: `b3886033d4b9bab5112df55d2d0da70b9cda7a06311fd1ba2ce124211d40f2f4`
+- AAB SHA-256: `2fa1ae83965a3938ce9c09f728e69539bec45fc63c13d6dc4093b0805e21921b`
 
 El APK del repositorio va firmado con la llave de **desarrollo** (sirve para probar y para
 compartir). La versión de Play la firma la llave de subida del dueño; si se instala encima de
@@ -44,6 +44,19 @@ la de desarrollo, Android pide desinstalar antes (y eso borra los datos): hacer 
   queda vacío, el inicio muestra «Mi Negocio».
 - **Historial:** las personas con ventas no se borran; se desactivan para conservar el
   historial. La autoría se ve en las listas, en los detalles y en el Excel.
+
+## El mostrador (botón Datos)
+
+- En la parte superior, al lado de **Administrador**, está el botón **Datos**.
+- Muestra primero el **QR de pagos**; si no hay foto, genera un QR de ejemplo claramente
+  marcado.
+- Al bajar: **llave Bre-B**, **número de cuenta**, **banco/identificador** y **titular**.
+- Lista los **métodos disponibles** configurados (Bre-B, Nequi, Daviplata, transferencia y
+  otros) y una guía de tres pasos para pagar.
+- Todo se configura en **Ajustes → Datos para recibir pagos**, antes de “Borrar todos los
+  datos”. Si falta información, se muestran valores de ejemplo:
+  `11111111-2222-3333-aaaa-a1b2c3d4e5f6`, `1111 2222 3333 4444`, `Banco de ejemplo`.
+- La foto del QR se guarda en el almacenamiento privado y no se envía a ningún servidor.
 
 ## Lector de códigos
 
@@ -75,8 +88,8 @@ Requiere el SDK de Android (**platforms;android-35** y **build-tools;35.0.0**) y
 Gradle. ZXing está en `herramientas/zxing-core-3.5.3.jar` y se incluye solo en el DEX.
 
 ```bash
-VERSION_CODE=12 VERSION_NAME=1.11 ./compilar.sh        # → minegocio.apk (firmado)
-VERSION_CODE=12 VERSION_NAME=1.11 ./empaquetar-aab.sh  # → minegocio.aab (para Play)
+VERSION_CODE=13 VERSION_NAME=1.12 ./compilar.sh        # → minegocio.apk (firmado)
+VERSION_CODE=13 VERSION_NAME=1.12 ./empaquetar-aab.sh  # → minegocio.aab (para Play)
 ```
 
 El AAB se arma con `aapt2` en formato proto y `herramientas/bundletool.jar`; se valida con

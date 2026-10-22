@@ -39,6 +39,8 @@ cupo de fiado por cliente y aviso de deudas vencidas.
   productos a la venta sin teclear la referencia.
 • **Varias personas en la misma tablet o teléfono**, con cambio rápido de cuenta, perfil y
   menú propio; cada venta queda a nombre de quien la atendió.
+• **El mostrador:** un botón Datos muestra el QR de pagos, la llave Bre-B, la cuenta, el banco
+  y los métodos disponibles; todo configurable en Ajustes.
 • Copia de seguridad en un archivo que tú guardas donde quieras (Drive, USB, correo).
 
 **Pensada para Colombia**
@@ -72,7 +74,7 @@ Android 7.0 o superior. Funciona en celular y en tableta.
 
 ## Qué hay de nuevo (versión 1.11)
 
-> Versión 1.11: varias personas en el mismo dispositivo con perfil, cambio rápido de cuenta,
-> menú propio y autoría de cada operación; lector de códigos de barras y QR (local);
+> Versión 1.12: El mostrador con QR, llave Bre-B, cuenta, banco y métodos de pago;
+> varias personas con perfil y menú propio; lector de códigos de barras y QR (local);
 > inventario, ventas, fiados con abonos y vencimientos, compras, clientes, proveedores,
 > gastos, informes con Excel y comprobante en PDF. Sin internet.

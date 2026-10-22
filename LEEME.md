@@ -1,21 +1,35 @@
-# Mi Negocio 1.11 — inventario, ventas, fiados, personas, lector y reportes para micronegocios colombianos
+# Mi Negocio 1.12 — inventario, ventas, fiados, personas, mostrador y reportes para micronegocios colombianos
 
 Aplicación Android nativa para llevar el día a día de un negocio pequeño en Colombia:
 inventario con fotos, ventas, compras, clientes, proveedores, gastos, **cartera de fiados**,
 impuestos opcionales, abonos, informes, **reportes en Excel** y **lector de códigos de barras
 o QR** y **varias personas en el mismo dispositivo**. Funciona sin internet. Solo pide permiso de cámara al abrir el lector; no usa ubicación, contactos ni almacenamiento general.
 
-- **APK instalado en el dispositivo de prueba:** `minegocio.apk` (556 KB)
-- **SHA-256 del APK:** `c8a3a68b99162373e93abfecb84062778c438b8cffaecd6bc8b7206970116429`
-- **AAB de Play:** `minegocio.aab` (553 KB), SHA-256
-  `321927d9c8c41157da945bd7cbb789c19fde095646cc6d224ec91694a0ebfbee`
+- **APK instalado en el dispositivo de prueba:** `minegocio.apk` (564 KB)
+- **SHA-256 del APK:** `b3886033d4b9bab5112df55d2d0da70b9cda7a06311fd1ba2ce124211d40f2f4`
+- **AAB de Play:** `minegocio.aab` (562 KB), SHA-256
+  `2fa1ae83965a3938ce9c09f728e69539bec45fc63c13d6dc4093b0805e21921b`
 - **Paquete:** `com.polypodiozoa.minegocio`
-- **Versión:** 1.11 (versionCode 12)
+- **Versión:** 1.12 (versionCode 13)
 - **Tablet de prueba:** Amazon Fire HD 8 `KFONWI`, Fire OS 9 / Android 9 (API 28),
   800 × 1280 px, densidad 213 dpi.
 - **Requisito mínimo:** Android 7.0 (API 24) · **targetSdk:** 35 (Android 15).
 - **Estado:** instalada, probada y actualizada el 21 de octubre de 2026. Al final se borraron los datos
   de prueba; la app quedó limpia, con **Ajustes → Cargar datos de ejemplo** para recorrerla.
+
+## Novedades de la versión 1.12 — El mostrador
+
+- **Botón Datos** en la parte superior, al lado de Administrador. Abre **El mostrador**, una
+  página deslizable para mostrarle al cliente cómo pagar.
+- **Primero el QR de pagos**, con foto personalizable; si no hay foto se genera un QR de
+  ejemplo marcado como tal.
+- Debajo: **llave Bre-B**, **número de cuenta**, **banco/identificador** y **titular**.
+- **Métodos disponibles** configurables: Bre-B, Nequi, Daviplata, transferencia bancaria y
+  otros métodos escritos por el negocio.
+- **Ajustes → Datos para recibir pagos**, antes de “Borrar todos los datos”: campos, foto del
+  QR, métodos y ayuda. Si falta información, El mostrador muestra datos de ejemplo evidentes
+  (`11111111-2222-3333-aaaa-a1b2c3d4e5f6`, `1111 2222 3333 4444`, `Banco de ejemplo`).
+- La foto del QR y los datos se guardan solo en el dispositivo; no se envían.
 
 ## Novedades de la versión 1.11 — personas y accesos
 
@@ -234,6 +248,22 @@ La ficha del cliente muestra:
   menús; así el negocio no tiene que volver a crear a su gente.
 - **Privacidad:** las cuentas son locales; no hay nube, login remoto ni envío de nombres.
 
+## El mostrador
+
+- **Entrada:** botón **Datos** en la cabecera del inicio, al lado de **Administrador**.
+- **Orden de la página:** QR primero; al deslizar, llave Bre-B, cuenta, banco, titular,
+  métodos disponibles y “Cómo pagar”.
+- **QR:** se elige una imagen desde Ajustes; se guarda en el almacenamiento privado. Si no
+  hay foto, se genera un QR de ejemplo con la llave de ejemplo o con la llave real si ya está
+  configurada. Si hay foto, se puede tocar para verla en grande.
+- **Datos de ejemplo:** cuando falta llave, cuenta, banco o métodos, se muestran valores
+  visibles de ejemplo y un aviso que indica configurarlos en Ajustes.
+- **Configuración:** Ajustes → **Datos para recibir pagos**. Incluye vista previa del QR,
+  “Elegir imagen del QR”, “Quitar QR”, llave Bre-B, cuenta, banco, titular, casillas de
+  métodos y un campo para otros métodos separados por coma.
+- **Privacidad:** no se pide cámara para esta página; la foto elegida se copia a la carpeta
+  privada de la app y no se comparte.
+
 ## Inventario actualizado
 
 - **Todos (N)**, **Agotados (N)** y **Por agotarse (N)** son botones de filtro.
@@ -358,6 +388,19 @@ LibreOffice. El informe de prueba tenía 5 hojas y 7.510 bytes; la cartera, 2.76
 - **Nota honesta:** esta Fire OS no tiene TalkBack instalado; se validaron etiquetas con
   `uiautomator`, contraste calculado y prueba de texto grande, no con lector de pantalla real.
 
+## Verificación 1.12 (21-10-2026)
+
+- **El mostrador** abierto desde el botón **Datos**; QR primero y datos de ejemplo visibles:
+  llave `11111111-2222-3333-aaaa-a1b2c3d4e5f6`, cuenta `1111 2222 3333 4444`,
+  banco `Banco de ejemplo · aaaaaa` y aviso de configuración.
+- **Ajustes → Datos para recibir pagos** visible antes de “Borrar todos los datos”, con
+  vista previa del QR, campos de Bre-B/cuenta/banco/titular, cuatro métodos y “Otros métodos”.
+- Se guardó la llave `MI-LLAVE-123` y una **foto QR** de prueba: El mostrador mostró la foto,
+  la llave y el aviso de que los demás campos seguían en ejemplo.
+- APK 1.12 (13) firmado; AAB validado; solo permiso de cámara; sin internet.
+- **Limpieza final:** datos de prueba borrados; la app quedó con la cuenta Administrador y
+  sin datos de negocio.
+
 ## Verificación 1.11 (21-10-2026)
 
 - Migración real v2 → v3 sobre una copia de la versión 1.10 con 3 ventas, 1 compra, 1 pago y
@@ -449,6 +492,8 @@ En el dispositivo por USB:
 | ![Lector sin permiso de cámara](capturas/27-escaner-sin-permiso.png) | ![Administrador de Accesos](capturas/28-accesos.png) |
 | ![Perfil de la cuenta](capturas/29-perfil.png) | ![Orden del menú por cuenta](capturas/30-menu-cuenta.png) |
 | ![Inicio con nombre del negocio](capturas/31-inicio-negocio.png) | ![Venta con la persona que atendió](capturas/32-venta-atendio.png) |
+| ![El mostrador con QR y datos](capturas/33-mostrador.png) | ![Datos para recibir pagos](capturas/34-ajustes-pagos.png) |
+| ![Inicio con el botón Datos](capturas/35-inicio-datos.png) | |
 
 ## Compilar e instalar
 
@@ -458,18 +503,18 @@ Requisitos: Android SDK en `~/android-sdk` con **build-tools/35.0.0** y
 
 ```bash
 cd ~/proyectos/minegocio-tablet
-VERSION_CODE=12 VERSION_NAME=1.11 ./compilar.sh
+VERSION_CODE=13 VERSION_NAME=1.12 ./compilar.sh
 adb install -r minegocio.apk
 ```
 
 El script compila recursos, Java, DEX (incluye ZXing), alinea, firma con la llave de
 desarrollo y verifica. Para cambiar la versión:
-`VERSION_CODE=13 VERSION_NAME=1.12 ./compilar.sh`.
+`VERSION_CODE=14 VERSION_NAME=1.13 ./compilar.sh`.
 
 Para Play:
 
 ```bash
-VERSION_CODE=12 VERSION_NAME=1.11 ./empaquetar-aab.sh
+VERSION_CODE=13 VERSION_NAME=1.12 ./empaquetar-aab.sh
 ```
 
 Genera `minegocio.aab` y lo valida con `bundletool`.

@@ -1,6 +1,24 @@
-# Auditoría de Mi Negocio — base 1.3, actualizaciones 1.10 y 1.11 (21/10/2026)
+# Auditoría de Mi Negocio — base 1.3, actualizaciones 1.10 a 1.12 (21/10/2026)
 
 
+
+
+## Actualización 1.12 — El mostrador (21/10/2026)
+
+- **Datos locales:** la llave Bre-B, cuenta, banco, titular, métodos y la foto del QR se guardan
+  en la base y en la carpeta privada de la app. No se agregó internet ni permisos nuevos; la
+  imagen se elige con el selector del sistema (SAF), sin permiso de almacenamiento.
+- **Datos de ejemplo:** si faltan campos, la página muestra valores ficticios visibles y un
+  aviso; no se presentan como datos reales.
+- **QR:** si no hay foto se genera localmente con ZXing a partir de la llave configurada o de
+  la llave de ejemplo. La foto se muestra con `FIT_CENTER` y se puede abrir en grande.
+- **Copia de seguridad:** el QR y los datos de pago forman parte de la copia; el ZIP debe
+  tratarse como información sensible.
+- **Riesgo aceptado:** no hay PIN para ver El mostrador; está pensado para mostrar al cliente.
+  Cualquier persona con el dispositivo puede abrirlo.
+- **Verificación:** página abierta desde Datos con QR y valores de ejemplo; formulario de
+  Ajustes antes de Borrar todos los datos; se guardó una llave de prueba y una imagen QR local,
+  y El mostrador mostró ambas. No se probó una foto real de QR de banco.
 
 ## Actualización 1.11 — personas y accesos (21/10/2026)
 

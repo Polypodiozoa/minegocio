@@ -38,8 +38,7 @@ horizontal y vertical, con letra del sistema hasta 1,3×.
 
 ## 3. Mapa de pantallas
 
-29 actividades. El inicio es un tablero con **12 accesos grandes** (dos columnas, icono de
-34 dp y etiqueta de 18 sp):
+30 actividades. El inicio es un tablero con **12 accesos grandes** en dos columnas (icono de 34 dp y etiqueta de 18 sp) y dos botones de cabecera: **Datos** y **Administrador**.
 
 | Acceso | Pantalla | Para qué |
 |---|---|---|
@@ -54,7 +53,8 @@ horizontal y vertical, con letra del sistema hasta 1,3×.
 | Gastos | `GastosActivity` → `GastoActivity` | Gastos del negocio con comprobante. |
 | Informes | `InformesActivity` | Períodos, utilidad, cartera, exportación a Excel/CSV. |
 | Perfil | `PerfilActivity` | Cuenta actual, resumen de ventas/gastos, edición y menú propio. |
-| Ajustes | `AjustesActivity` | Datos del negocio, impuesto, tamaño de texto, modo del lector, copia y borrado. |
+| Datos / Mostrador | `MostradorActivity` | QR de pagos, llave Bre-B, cuenta, banco, titular y métodos disponibles. |
+| Ajustes | `AjustesActivity` | Datos del negocio, impuesto, tamaño de texto, modo del lector, datos de pago, copia y borrado. |
 
 Apoyo: `SelectorActivity` (elegir producto, cliente o proveedor), `EscanerActivity`
 (leer un código de barras o QR), `AccesosActivity` (selector verde de personas),
@@ -79,7 +79,22 @@ persona y el nombre actual que abre el **Administrador de Accesos**.
 - **Inicio:** el nombre del negocio aparece debajo de la fecha; el texto fijo de módulos se
   retiró. El botón de usuario queda arriba a la derecha.
 
-## 3.2 Lector de códigos
+## 3.2 El mostrador
+
+El botón **Datos** de la cabecera abre una página para mostrarle al cliente cómo pagar. Es
+una página deslizable, con el QR primero y los datos después:
+
+1. **QR de pagos** grande, con foto elegida por el negocio o un QR de ejemplo generado.
+2. **Llave Bre-B**, número de cuenta, banco/identificador y titular.
+3. **Métodos disponibles** y una guía de tres pasos.
+
+Los datos se configuran en **Ajustes → Datos para recibir pagos**, antes de “Borrar todos los
+datos”: foto del QR, llave, cuenta, banco, titular, casillas de Bre-B/Nequi/Daviplata/
+transferencia y un campo para otros métodos. Si faltan, se muestran valores de ejemplo
+evidentes (`11111111-2222-3333-aaaa-a1b2c3d4e5f6`, `1111 2222 3333 4444`,
+`Banco de ejemplo`). La foto se guarda en la carpeta privada; no se envía.
+
+## 3.3 Lector de códigos
 
 El lector nace de dos tareas concretas: **cargar el inventario** sin teclear cada referencia y
 **agregar un producto a la venta** sin buscarlo en una lista. Por eso aparece en la ficha del
@@ -293,3 +308,4 @@ La app se va a publicar en Play después de los ciclos de prueba. Lo que falta p
 | 1.9 | 2026-10-18 | targetSdk 35, empaquetado AAB y textos de tienda y privacidad. |
 | 1.10 | 2026-10-21 | Lector de códigos de barras (predeterminado) y QR, integrado en producto, inventario y venta; permiso de cámara acotado al lector. |
 | 1.11 | 2026-10-21 | Personas y accesos con selector verde, perfil, autoría de ventas/compras/pagos/gastos, menú propio por cuenta, nombre del negocio bajo la fecha y bordes principales. |
+| 1.12 | 2026-10-21 | El mostrador con QR, llave Bre-B, cuenta, banco, titular, métodos configurables y datos de ejemplo. |
