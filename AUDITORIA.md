@@ -1,4 +1,4 @@
-# Auditoría de Mi Negocio — base 1.3, actualizaciones 1.10 a 1.26 (22/10/2026)
+# Auditoría de Mi Negocio — base 1.3, actualizaciones 1.10 a 1.27 (22/10/2026)
 
 
 
@@ -14,6 +14,13 @@
 
 
 
+
+
+## Actualización 1.27 — ejemplos unificados (22/10/2026)
+
+- Ajustes y Mostrador usan los mismos ejemplos: `@EJEMPLO2567` para llave y
+  `#4004EJEMPLO2145` para cuenta.
+- Se eliminaron los ejemplos antiguos (UUID y número con espacios) que confundían.
 
 ## Actualización 1.26 — QR desde PDF (22/10/2026)
 

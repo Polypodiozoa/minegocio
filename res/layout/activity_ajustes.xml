@@ -415,7 +415,7 @@ android:id="@+id/scrollForm"
                     style="@style/Campo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Ej.: a1b2c3d4-e5f6-7890-abcd-111111111111"
+                    android:hint="Ej.: @EJEMPLO2567"
                     android:inputType="text" />
 
                 <TextView
@@ -430,7 +430,7 @@ android:id="@+id/scrollForm"
                     style="@style/Campo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Ej.: 1111 2222 3333 4444"
+                    android:hint="Ej.: #4004EJEMPLO2145"
                     android:inputType="text" />
 
                 <TextView

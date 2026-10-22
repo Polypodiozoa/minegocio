@@ -6,7 +6,7 @@ fiados, informes, reportes en Excel y **varias personas en el mismo dispositivo*
 sin internet. Solo pide permiso de **cámara** cuando se abre el lector de códigos; no usa
 ubicación, contactos ni almacenamiento general.
 
-- **Versión:** 1.26 (versionCode 27) · **targetSdk 35**
+- **Versión:** 1.27 (versionCode 28) · **targetSdk 35**
 - **Paquete:** `com.polypodiozoa.minegocio`
 - **Android:** 7.0 (API 24) o superior. Probada en una tablet Amazon Fire HD 8 (API 28).
 - **Privacidad:** no recoge ni envía datos; no declara el permiso de internet.
@@ -18,8 +18,8 @@ ubicación, contactos ni almacenamiento general.
 | [`minegocio.apk`](minegocio.apk) · 568 KB | **Instalar a mano o compartir** con alguien (WhatsApp, Drive, USB). | Se abre en el dispositivo y se acepta el origen desconocido. |
 | [`minegocio.aab`](minegocio.aab) · 570 KB | **Subir a Google Play Console.** Es un *Android App Bundle*: un paquete de entrega, no un instalador. | Play lo convierte en el APK que corresponde a cada dispositivo. **No se puede instalar directamente.** |
 
-- APK SHA-256: `19534c6c6d2ff8ce6b0b10598ea48ecfddc8e6a1a4b3edd2830ff30d4177b83d`
-- AAB SHA-256: `3d84dbf3468cbeafb9dba500dac8cb0d327f2e355aef5d805bdc38f26ce1cd91`
+- APK SHA-256: `55c391b54ec5ef5281eaacce11acd5bcd8083566731a0dac4cc419d5601f5887`
+- AAB SHA-256: `800c4304c0bb66a535726a851f515de0131ca0bc8a017853a81fac489733ad09`
 
 El APK del repositorio va firmado con la llave de **desarrollo** (sirve para probar y para
 compartir). La versión de Play la firma la llave de subida del dueño; si se instala encima de
@@ -62,7 +62,7 @@ la de desarrollo, Android pide desinstalar antes (y eso borra los datos): hacer 
 - Una guía breve explica escanear el QR, dictar la llave y usar la cuenta como respaldo.
 - Todo se configura en **Ajustes → Datos para recibir pagos**, antes de “Borrar todos los
   datos”. Si falta información, se muestran valores de ejemplo:
-  `@EJEMPLO2567`, `#4004EJEMPLO2145`, `Banco de ejemplo`.
+  `@EJEMPLO2567`, `#4004EJEMPLO2145`; banco y titular solo si se llenan.
 - La foto del QR se guarda en el almacenamiento privado y no se envía a ningún servidor.
 - Si falta algún dato, arriba aparece **“Tienes datos de ejemplo”** y cada dato tiene un
   botón **Editar** a la derecha. Al confirmar el dato, ese botón desaparece y el valor queda
@@ -101,8 +101,8 @@ Requiere el SDK de Android (**platforms;android-35** y **build-tools;35.0.0**) y
 Gradle. ZXing está en `herramientas/zxing-core-3.5.3.jar` y se incluye solo en el DEX.
 
 ```bash
-VERSION_CODE=27 VERSION_NAME=1.26 ./compilar.sh        # → minegocio.apk (firmado)
-VERSION_CODE=27 VERSION_NAME=1.26 ./empaquetar-aab.sh  # → minegocio.aab (para Play)
+VERSION_CODE=28 VERSION_NAME=1.27 ./compilar.sh        # → minegocio.apk (firmado)
+VERSION_CODE=28 VERSION_NAME=1.27 ./empaquetar-aab.sh  # → minegocio.aab (para Play)
 ```
 
 El AAB se arma con `aapt2` en formato proto y `herramientas/bundletool.jar`; se valida con

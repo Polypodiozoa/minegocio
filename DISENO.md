@@ -323,3 +323,4 @@ La app se va a publicar en Play después de los ciclos de prueba. Lo que falta p
 | 1.24 | 2026-10-22 | Permiso de cámara para el QR y corrección de «desde el mostrador». |
 | 1.25 | 2026-10-22 | Sin banco/titular ficticios; subir foto del QR como opción principal. |
 | 1.26 | 2026-10-22 | Subida de PDF y extracción local del QR. |
+| 1.27 | 2026-10-22 | Ejemplos de llave y cuenta unificados entre Ajustes y Mostrador. |
