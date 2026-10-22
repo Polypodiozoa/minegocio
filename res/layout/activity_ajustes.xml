@@ -463,62 +463,7 @@ android:id="@+id/scrollForm"
                     android:hint="Ej.: Papelería Somor"
                     android:inputType="textCapWords" />
 
-                <TextView
-                    style="@style/Etiqueta"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Métodos disponibles" />
 
-                <CheckBox
-                    android:id="@+id/cbBreB"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:minHeight="48dp"
-                    android:text="Bre-B"
-                    android:textColor="@color/texto"
-                    android:textSize="17sp" />
-
-                <CheckBox
-                    android:id="@+id/cbNequi"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:minHeight="48dp"
-                    android:text="Nequi"
-                    android:textColor="@color/texto"
-                    android:textSize="17sp" />
-
-                <CheckBox
-                    android:id="@+id/cbDaviplata"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:minHeight="48dp"
-                    android:text="Daviplata"
-                    android:textColor="@color/texto"
-                    android:textSize="17sp" />
-
-                <CheckBox
-                    android:id="@+id/cbTransferencia"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:minHeight="48dp"
-                    android:text="Transferencia bancaria"
-                    android:textColor="@color/texto"
-                    android:textSize="17sp" />
-
-                <TextView
-                    style="@style/Etiqueta"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:labelFor="@+id/etOtrosMetodos"
-                    android:text="Otros métodos (opcional)" />
-
-                <EditText
-                    android:id="@+id/etOtrosMetodos"
-                    style="@style/Campo"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Sepáralos con coma"
-                    android:inputType="text" />
             </LinearLayout>
 
             <LinearLayout

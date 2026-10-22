@@ -5,9 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -33,13 +31,11 @@ public class MostradorActivity extends BaseActivity {
     private static final String CUENTA_EJEMPLO = "#4004EJEMPLO2145";
     private static final String BANCO_EJEMPLO = "Banco de ejemplo";
     private static final String TITULAR_EJEMPLO = "Titular de ejemplo";
-    private static final String METODOS_EJEMPLO = "Bre-B, Nequi, Daviplata, Transferencia bancaria";
 
     private ImageView imgQr;
     private TextView txtQrTitulo, txtQrAyuda, txtLlave, txtCuenta, txtBanco, txtTitular;
     private TextView txtAviso, btnEditarLlave, btnEditarCuenta, btnEditarBanco,
-            btnEditarTitular, btnEditarMetodos;
-    private LinearLayout listaMetodos;
+            btnEditarTitular;
     private String rutaQr = "";
 
     @Override
@@ -55,12 +51,10 @@ public class MostradorActivity extends BaseActivity {
         btnEditarCuenta = findViewById(R.id.btnEditarCuenta);
         btnEditarBanco = findViewById(R.id.btnEditarBanco);
         btnEditarTitular = findViewById(R.id.btnEditarTitular);
-        btnEditarMetodos = findViewById(R.id.btnEditarMetodos);
         txtLlave = findViewById(R.id.txtLlave);
         txtCuenta = findViewById(R.id.txtCuenta);
         txtBanco = findViewById(R.id.txtBanco);
         txtTitular = findViewById(R.id.txtTitular);
-        listaMetodos = findViewById(R.id.listaMetodos);
         btnEditarLlave.setOnClickListener(v -> editarDato(
                 "pago_bre_b", "Llave Bre-B", "@EJEMPLO2567"));
         btnEditarCuenta.setOnClickListener(v -> editarDato(
@@ -69,8 +63,6 @@ public class MostradorActivity extends BaseActivity {
                 "pago_banco", "Banco o identificador", "Bancolombia · 0001"));
         btnEditarTitular.setOnClickListener(v -> editarDato(
                 "pago_titular", "Titular", "Papelería Somor"));
-        btnEditarMetodos.setOnClickListener(v -> editarDato(
-                "pago_metodos", "Métodos disponibles", "Bre-B, Nequi, Daviplata"));
         cargar();
     }
 
@@ -85,20 +77,17 @@ public class MostradorActivity extends BaseActivity {
         String cuenta = bd.ajuste("pago_cuenta", "").trim();
         String banco = bd.ajuste("pago_banco", "").trim();
         String titular = bd.ajuste("pago_titular", "").trim();
-        String metodos = bd.ajuste("pago_metodos", "").trim();
         rutaQr = bd.ajuste("pago_qr_foto", "").trim();
 
         boolean llaveVacia = llave.isEmpty();
         boolean cuentaVacia = cuenta.isEmpty();
         boolean bancoVacio = banco.isEmpty();
-        boolean metodosVacios = metodos.isEmpty();
         boolean titularVacio = titular.isEmpty();
-        boolean ejemplo = llaveVacia || cuentaVacia || bancoVacio || metodosVacios;
+        boolean ejemplo = llaveVacia || cuentaVacia || bancoVacio;
         if (llaveVacia) llave = LLAVE_EJEMPLO;
         if (cuentaVacia) cuenta = CUENTA_EJEMPLO;
         if (bancoVacio) banco = BANCO_EJEMPLO;
         if (titularVacio) titular = ejemplo ? TITULAR_EJEMPLO : "";
-        if (metodosVacios) metodos = METODOS_EJEMPLO;
 
         txtLlave.setText(llave);
         txtCuenta.setText(cuenta);
@@ -109,13 +98,11 @@ public class MostradorActivity extends BaseActivity {
         btnEditarCuenta.setVisibility(cuentaVacia ? View.VISIBLE : View.GONE);
         btnEditarBanco.setVisibility(bancoVacio ? View.VISIBLE : View.GONE);
         btnEditarTitular.setVisibility(titularVacio && ejemplo ? View.VISIBLE : View.GONE);
-        btnEditarMetodos.setVisibility(metodosVacios ? View.VISIBLE : View.GONE);
         txtAviso.setVisibility(ejemplo ? View.VISIBLE : View.GONE);
         btnEditarLlave.setContentDescription("Editar llave Bre-B. El botón desaparece al confirmar.");
         btnEditarCuenta.setContentDescription("Editar número de cuenta. El botón desaparece al confirmar.");
         btnEditarBanco.setContentDescription("Editar banco. El botón desaparece al confirmar.");
         btnEditarTitular.setContentDescription("Editar titular. El botón desaparece al confirmar.");
-        btnEditarMetodos.setContentDescription("Editar métodos de pago. El botón desaparece al confirmar.");
 
         Bitmap foto = Imagen.cargar(rutaQr, 1200);
         if (foto != null) {
@@ -147,33 +134,6 @@ public class MostradorActivity extends BaseActivity {
                     ? "Código QR de Bre-B de ejemplo" : "Código QR de Bre-B");
             imgQr.setOnClickListener(null);
         }
-
-        listaMetodos.removeAllViews();
-        for (String m : metodos.split(",")) {
-            String nombre = m.trim();
-            if (nombre.isEmpty()) continue;
-            LinearLayout fila = new LinearLayout(this);
-            fila.setOrientation(LinearLayout.HORIZONTAL);
-            fila.setGravity(Gravity.CENTER_VERTICAL);
-            fila.setMinimumHeight(Ui.dp(this, 48));
-            ImageView check = new ImageView(this);
-            check.setImageResource(R.drawable.ic_check);
-            check.setColorFilter(getColor(R.color.primario));
-            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                    Ui.dp(this, 26), Ui.dp(this, 26));
-            lp.setMarginEnd(Ui.dp(this, 10));
-            check.setLayoutParams(lp);
-            check.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
-            fila.addView(check);
-            TextView texto = Ui.texto(this, nombre, 17, getColor(R.color.texto), true);
-            texto.setLayoutParams(new LinearLayout.LayoutParams(
-                    0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
-            fila.addView(texto);
-            fila.setContentDescription("Método disponible: " + nombre);
-            listaMetodos.addView(fila);
-        }
-        listaMetodos.setContentDescription(metodosVacios
-                ? "Métodos de ejemplo" : "Métodos de pago disponibles");
     }
 
     private void editarDato(String clave, String titulo, String ejemplo) {

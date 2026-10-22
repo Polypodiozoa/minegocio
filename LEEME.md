@@ -1,4 +1,4 @@
-# Mi Negocio 1.19 — inventario, ventas, fiados, personas, mostrador y reportes para negocios colombianos
+# Mi Negocio 1.20 — inventario, ventas, fiados, personas, mostrador y reportes para negocios colombianos
 
 Aplicación Android nativa para llevar el día a día de un negocio pequeño en Colombia:
 inventario con fotos, ventas, compras, clientes, proveedores, gastos, **cartera de fiados**,
@@ -6,16 +6,24 @@ impuestos opcionales, abonos, informes, **reportes en Excel** y **lector de cód
 o QR** y **varias personas en el mismo dispositivo**. Funciona sin internet. Solo pide permiso de cámara al abrir el lector; no usa ubicación, contactos ni almacenamiento general.
 
 - **APK instalado en el dispositivo de prueba:** `minegocio.apk` (564 KB)
-- **SHA-256 del APK:** `f853dbdef868f38dab30e331191bbdb8b529bedd8f3ef82a92dcef55a1196c1d`
-- **AAB de Play:** `minegocio.aab` (566 KB), SHA-256
-  `3e9da37ea092badfb79dc86ac2129dd951820124258c3723fa81d79767f33b0d`
+- **SHA-256 del APK:** `18efd78066b096576c8e62bf465d17557d72f6e55a343a0ad174776b3299c067`
+- **AAB de Play:** `minegocio.aab` (564 KB), SHA-256
+  `4692505c346d7f3e41832c37aab8a7366c00285ade173d2b0f63a2910d3fc3b2`
 - **Paquete:** `com.polypodiozoa.minegocio`
-- **Versión:** 1.19 (versionCode 20)
+- **Versión:** 1.20 (versionCode 21)
 - **Tablet de prueba:** Amazon Fire HD 8 `KFONWI`, Fire OS 9 / Android 9 (API 28),
   800 × 1280 px, densidad 213 dpi.
 - **Requisito mínimo:** Android 7.0 (API 24) · **targetSdk:** 35 (Android 15).
 - **Estado:** instalada, probada y actualizada el 21 de octubre de 2026. Al final se borraron los datos
   de prueba; la app quedó limpia, con **Ajustes → Cargar datos de ejemplo** para recorrerla.
+
+## Novedades de la versión 1.20 — sin métodos de pago
+
+- Se eliminó **Métodos disponibles** de El mostrador y de Ajustes.
+- Fuera **Nequi** y **Daviplata** de la app: sus cuentas ya funcionan con Bre-B.
+- El flujo queda centrado en el **QR de Bre-B** y la **llave Bre-B**; el **número de cuenta**
+  queda como respaldo si algo falla.
+- La guía de pago se reduce a escanear, dictar la llave y usar la cuenta si falla.
 
 ## Novedades de la versión 1.19 — banco de ejemplo claro
 
@@ -76,11 +84,10 @@ o QR** y **varias personas en el mismo dispositivo**. Funciona sin internet. Sol
 - **Primero el QR de pagos**, con foto personalizable; si no hay foto se genera un QR de
   ejemplo marcado como tal.
 - Debajo: **llave Bre-B**, **número de cuenta**, **banco/identificador** y **titular**.
-- **Métodos disponibles** configurables: Bre-B, Nequi, Daviplata, transferencia bancaria y
-  otros métodos escritos por el negocio.
+- ~~Métodos disponibles configurables~~: se retiraron en 1.20; Bre-B cubre Nequi y Daviplata.
 - **Ajustes → Datos para recibir pagos**, antes de “Borrar todos los datos”: campos, foto del
-  QR, métodos y ayuda. Si falta información, El mostrador muestra datos de ejemplo evidentes
-  (`11111111-2222-3333-aaaa-a1b2c3d4e5f6`, `1111 2222 3333 4444`, `Banco de ejemplo`).
+  QR y ayuda. Si falta información, El mostrador muestra datos de ejemplo evidentes
+  (`@EJEMPLO2567`, `#4004EJEMPLO2145`, `Banco de ejemplo`).
 - La foto del QR y los datos se guardan solo en el dispositivo; no se envían.
 
 ## Novedades de la versión 1.11 — personas y accesos
@@ -303,21 +310,21 @@ La ficha del cliente muestra:
 ## El mostrador
 
 - **Entrada:** botón **Datos** en la cabecera del inicio, al lado de **Administrador**.
-- **Orden de la página:** QR primero; al deslizar, llave Bre-B, cuenta, banco, titular,
-  métodos disponibles y “Cómo pagar”.
+- **Orden de la página:** QR primero; al deslizar, llave Bre-B, cuenta, banco, titular y
+  “Cómo pagar”. No hay métodos disponibles.
 - **QR:** se elige una imagen desde Ajustes; se guarda en el almacenamiento privado. Si no
   hay foto, se genera un QR de ejemplo con la llave de ejemplo o con la llave real si ya está
   configurada. Si hay foto, se puede tocar para verla en grande.
-- **Datos de ejemplo:** cuando falta llave, cuenta, banco o métodos, se muestra arriba
+- **Datos de ejemplo:** cuando falta llave, cuenta o banco, se muestra arriba
   **“Tienes datos de ejemplo”** y cada dato tiene un botón **Editar** a la derecha. El QR se
-  titula “QR de ejemplo”.
+  titula “QR de Bre-B de ejemplo”.
 - **Edición con confirmación:** al tocar Editar se abre un campo con el aviso de que el botón
   desaparecerá. Si se cierra o se toca afuera, no cambia nada. Al escribir y confirmar, aparece
   un segundo aviso; solo al confirmarlo se guarda y desaparece el botón. Para cambiarlo otra
   vez se entra a Ajustes.
 - **Configuración:** Ajustes → **Datos para recibir pagos**. Incluye vista previa del QR,
-  **“Tomar foto del QR”**, “Elegir imagen del QR”, “Quitar QR”, llave Bre-B, cuenta, banco,
-  titular, casillas de métodos y un campo para otros métodos separados por coma.
+  **“Tomar foto del QR”**, “Elegir imagen del QR”, “Quitar QR”, llave Bre-B, cuenta, banco y
+  titular. No hay casillas de métodos.
 - **Foto del QR:** la app decodifica la foto, reemplaza la imagen por un QR negro sobre blanco
   de 1200 × 1200 px y lo guarda en la carpeta privada. Es una copia funcional limpia; no
   conserva el logo o los colores del banco.
@@ -465,6 +472,16 @@ LibreOffice. El informe de prueba tenía 5 hojas y 7.510 bytes; la cartera, 2.76
   después.
 - **No se probó** una copia v1 de la versión 1.0 ni una copia v3 abierta en una app 1.10
   (esta última no es compatible por diseño).
+
+## Verificación 1.20 (22-10-2026)
+
+- **El mostrador** ya no muestra “Métodos disponibles” ni Nequi/Daviplata.
+- **Ajustes** ya no muestra casillas de métodos ni “Otros métodos”.
+- La página queda con QR de Bre-B, llave, cuenta/banco/titular y una guía que usa la cuenta
+  como respaldo.
+- APK 1.20 (21) firmado; AAB validado; solo permiso de cámara; sin internet.
+- **Limpieza final:** datos de prueba borrados; la app quedó con Administrador y sin datos de
+  negocio.
 
 ## Verificación 1.19 (22-10-2026)
 
@@ -647,18 +664,18 @@ Requisitos: Android SDK en `~/android-sdk` con **build-tools/35.0.0** y
 
 ```bash
 cd ~/proyectos/minegocio-tablet
-VERSION_CODE=20 VERSION_NAME=1.19 ./compilar.sh
+VERSION_CODE=21 VERSION_NAME=1.20 ./compilar.sh
 adb install -r minegocio.apk
 ```
 
 El script compila recursos, Java, DEX (incluye ZXing), alinea, firma con la llave de
 desarrollo y verifica. Para cambiar la versión:
-`VERSION_CODE=21 VERSION_NAME=1.20 ./compilar.sh`.
+`VERSION_CODE=22 VERSION_NAME=1.21 ./compilar.sh`.
 
 Para Play:
 
 ```bash
-VERSION_CODE=20 VERSION_NAME=1.19 ./empaquetar-aab.sh
+VERSION_CODE=21 VERSION_NAME=1.20 ./empaquetar-aab.sh
 ```
 
 Genera `minegocio.aab` y lo valida con `bundletool`.

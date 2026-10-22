@@ -1679,7 +1679,7 @@ public class BD extends SQLiteOpenHelper {
         Modelo.Producto bolsa = producto("Bolsa ecológica", "Accesorios", "BOL-001", 6000, 2500, 30, 10);
 
         Modelo.Cliente c1 = cliente("María Fernanda Gómez", "310 555 2211", "maria@correo.com",
-                "Calle 45 #12-30, Bogotá", "Prefiere pago con Nequi.");
+                "Calle 45 #12-30, Bogotá", "Prefiere pago por Bre-B.");
         c1.cupo = 200000;
         guardarCliente(c1);
         Modelo.Cliente c2 = cliente("Carlos Andrés Pérez", "320 444 8899", "",

@@ -216,40 +216,12 @@
                         android:text="Editar"
                         android:visibility="gone" />
                 </LinearLayout>
-            </LinearLayout>
 
-            <LinearLayout
-                style="@style/Tarjeta"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <LinearLayout
+                <TextView
+                    style="@style/Ayuda"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        style="@style/TituloSeccion"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Métodos disponibles" />
-
-                    <TextView
-                        android:id="@+id/btnEditarMetodos"
-                        style="@style/BotonEditarDato"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Editar"
-                        android:visibility="gone" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/listaMetodos"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical" />
+                    android:text="Si el QR o la llave Bre-B fallan, comparte este número de cuenta." />
             </LinearLayout>
 
             <LinearLayout
@@ -266,7 +238,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="1. Escanea el QR con la app del banco o billetera.\n2. Verifica la llave Bre-B y el número de cuenta.\n3. Confirma el valor y guarda el comprobante."
+                    android:text="1. Escanea el QR de Bre-B con la app del banco o billetera.\n2. Si no puedes escanear, dicta la llave Bre-B.\n3. Si algo falla, comparte el número de cuenta.\n4. Confirma el valor y guarda el comprobante."
                     android:textColor="@color/texto"
                     android:textSize="17sp"
                     android:lineSpacingExtra="5dp" />

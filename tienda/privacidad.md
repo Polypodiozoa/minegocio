@@ -20,7 +20,7 @@ Solo la que tú escribes, en la base de datos local de la app:
 - Datos del negocio: nombre, NIT, teléfono y dirección (opcionales).
 - Personas que comparten el dispositivo: nombre y rol. La app guarda qué persona registró
   cada venta, compra, abono o gasto.
-- Datos para recibir pagos: llave Bre-B, número de cuenta, banco, titular, métodos y la foto
+- Datos para recibir pagos: llave Bre-B, número de cuenta, banco, titular y la foto
   del QR que el negocio elija. Se usan solo para mostrarlos en la página El mostrador.
 - Productos, precios, costos y existencias.
 - Ventas, compras, gastos y abonos.

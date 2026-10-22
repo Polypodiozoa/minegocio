@@ -53,7 +53,7 @@ horizontal y vertical, con letra del sistema hasta 1,3×.
 | Gastos | `GastosActivity` → `GastoActivity` | Gastos del negocio con comprobante. |
 | Informes | `InformesActivity` | Períodos, utilidad, cartera, exportación a Excel/CSV. |
 | Perfil | `PerfilActivity` | Cuenta actual, resumen de ventas/gastos, edición y menú propio. |
-| Datos / Mostrador | `MostradorActivity` | QR de pagos, llave Bre-B, cuenta, banco, titular y métodos disponibles. |
+| Datos / Mostrador | `MostradorActivity` | QR de Bre-B, llave Bre-B, cuenta, banco y titular. |
 | Ajustes | `AjustesActivity` | Datos del negocio, impuesto, tamaño de texto, modo del lector, datos de pago, copia y borrado. |
 
 Apoyo: `SelectorActivity` (elegir producto, cliente o proveedor), `EscanerActivity`
@@ -86,11 +86,11 @@ una página deslizable, con el QR primero y los datos después:
 
 1. **QR de pagos** grande, con foto elegida por el negocio o un QR de ejemplo generado.
 2. **Llave Bre-B**, número de cuenta, banco/identificador y titular.
-3. **Métodos disponibles** y una guía de tres pasos.
+3. Una guía de pago centrada en Bre-B y el número de cuenta como respaldo.
 
 Los datos se configuran en **Ajustes → Datos para recibir pagos**, antes de “Borrar todos los
-datos”: foto del QR, llave, cuenta, banco, titular, casillas de Bre-B/Nequi/Daviplata/
-transferencia y un campo para otros métodos. Si faltan, se muestran valores de ejemplo
+datos”: foto del QR, llave, cuenta, banco y titular. No hay métodos. Si faltan, se muestran
+valores de ejemplo
 evidentes (`11111111-2222-3333-aaaa-a1b2c3d4e5f6`, `1111 2222 3333 4444`,
 `Banco de ejemplo`) y cada uno lleva su etiqueta **“Dato de ejemplo”**. La foto se guarda en la carpeta privada; no se envía.
 
@@ -183,7 +183,7 @@ llevan descripción para el lector de pantalla.
 1. **Cliente** (opcional; obligatorio si es fiada).
 2. **Productos** (descuenta inventario) o **Concepto** libre (no toca inventario).
 3. Cantidad con +/−, descuento e impuesto opcional.
-4. **Forma de pago**: Efectivo, Transferencia, Nequi/Daviplata, Tarjeta o **Crédito**.
+4. **Forma de pago**: Efectivo, Transferencia, Tarjeta o **Crédito**.
 5. Si es crédito: **fecha límite** (30 días por defecto, no anterior a hoy).
 6. Confirmación con total, vence y ganancia estimada → se registra en una transacción.
 
@@ -316,3 +316,4 @@ La app se va a publicar en Play después de los ciclos de prueba. Lo que falta p
 | 1.17 | 2026-10-22 | Etiqueta «Tienes datos de ejemplo», botones Editar que desaparecen y confirmación en dos pasos. |
 | 1.18 | 2026-10-22 | QR rotulado como Bre-B en El mostrador, Ajustes y vista ampliada. |
 | 1.19 | 2026-10-22 | Se quita «aaaaaa» del banco de ejemplo. |
+| 1.20 | 2026-10-22 | Se retiran Métodos, Nequi y Daviplata; solo QR Bre-B, llave y cuenta de respaldo. |

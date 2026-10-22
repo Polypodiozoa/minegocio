@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
@@ -39,8 +38,7 @@ public class AjustesActivity extends BaseActivity {
     private RadioGroup grupoEscaner;
     private TextView txtUltimaCopia;
     private Button btnCrearCopia, btnRestaurar;
-    private EditText etBreB, etCuenta, etBanco, etTitular, etOtrosMetodos;
-    private CheckBox cbBreB, cbNequi, cbDaviplata, cbTransferencia;
+    private EditText etBreB, etCuenta, etBanco, etTitular;
     private ImageView imgQrPago;
     private Button btnQuitarQr, btnTomarQr, btnElegirQr;
     private String rutaQr = "", qrOriginal = "", qrTemporal = "";
@@ -67,11 +65,6 @@ public class AjustesActivity extends BaseActivity {
         etCuenta = findViewById(R.id.etCuenta);
         etBanco = findViewById(R.id.etBanco);
         etTitular = findViewById(R.id.etTitular);
-        etOtrosMetodos = findViewById(R.id.etOtrosMetodos);
-        cbBreB = findViewById(R.id.cbBreB);
-        cbNequi = findViewById(R.id.cbNequi);
-        cbDaviplata = findViewById(R.id.cbDaviplata);
-        cbTransferencia = findViewById(R.id.cbTransferencia);
         imgQrPago = findViewById(R.id.imgQrPago);
         btnQuitarQr = findViewById(R.id.btnQuitarQr);
         btnTomarQr = findViewById(R.id.btnTomarQr);
@@ -101,7 +94,6 @@ public class AjustesActivity extends BaseActivity {
         etCuenta.setText(bd.ajuste("pago_cuenta", ""));
         etBanco.setText(bd.ajuste("pago_banco", ""));
         etTitular.setText(bd.ajuste("pago_titular", ""));
-        cargarMetodos(bd.ajuste("pago_metodos", ""));
         rutaQr = bd.ajuste("pago_qr_foto", "");
         qrOriginal = rutaQr;
         quitarQr = false;
@@ -156,7 +148,6 @@ public class AjustesActivity extends BaseActivity {
         bd.guardarAjuste("pago_cuenta", texto(etCuenta));
         bd.guardarAjuste("pago_banco", texto(etBanco));
         bd.guardarAjuste("pago_titular", texto(etTitular));
-        bd.guardarAjuste("pago_metodos", metodosSeleccionados());
 
         if (quitarQr) {
             if (!qrOriginal.isEmpty()) Archivos.borrar(qrOriginal);
@@ -186,44 +177,6 @@ public class AjustesActivity extends BaseActivity {
         if (Math.abs(nueva - anterior) > 0.001f) {
             recreate();
         }
-    }
-
-    private void cargarMetodos(String guardados) {
-        cbBreB.setChecked(false);
-        cbNequi.setChecked(false);
-        cbDaviplata.setChecked(false);
-        cbTransferencia.setChecked(false);
-        StringBuilder otros = new StringBuilder();
-        for (String m : guardados.split(",")) {
-            String nombre = m.trim();
-            if (nombre.equalsIgnoreCase("Bre-B")) cbBreB.setChecked(true);
-            else if (nombre.equalsIgnoreCase("Nequi")) cbNequi.setChecked(true);
-            else if (nombre.equalsIgnoreCase("Daviplata")) cbDaviplata.setChecked(true);
-            else if (nombre.equalsIgnoreCase("Transferencia bancaria")) cbTransferencia.setChecked(true);
-            else if (!nombre.isEmpty()) {
-                if (otros.length() > 0) otros.append(", ");
-                otros.append(nombre);
-            }
-        }
-        etOtrosMetodos.setText(otros.toString());
-    }
-
-    private String metodosSeleccionados() {
-        StringBuilder s = new StringBuilder();
-        if (cbBreB.isChecked()) agregarMetodo(s, "Bre-B");
-        if (cbNequi.isChecked()) agregarMetodo(s, "Nequi");
-        if (cbDaviplata.isChecked()) agregarMetodo(s, "Daviplata");
-        if (cbTransferencia.isChecked()) agregarMetodo(s, "Transferencia bancaria");
-        String otros = texto(etOtrosMetodos);
-        for (String m : otros.split(",")) {
-            if (!m.trim().isEmpty()) agregarMetodo(s, m.trim());
-        }
-        return s.toString();
-    }
-
-    private void agregarMetodo(StringBuilder s, String metodo) {
-        if (s.length() > 0) s.append(", ");
-        s.append(metodo);
     }
 
     private void procesarQr(String origen) {
