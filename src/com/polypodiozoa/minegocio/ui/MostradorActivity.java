@@ -1,5 +1,6 @@
 package com.polypodiozoa.minegocio.ui;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -7,6 +8,7 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -27,8 +29,8 @@ import java.util.Map;
 /** Datos para pagar en el mostrador: QR, llave Bre-B, cuenta y métodos. */
 public class MostradorActivity extends BaseActivity {
 
-    private static final String LLAVE_EJEMPLO = "11111111-2222-3333-aaaa-a1b2c3d4e5f6";
-    private static final String CUENTA_EJEMPLO = "1111 2222 3333 4444";
+    private static final String LLAVE_EJEMPLO = "@EJEMPLO2567";
+    private static final String CUENTA_EJEMPLO = "#4004EJEMPLO2145";
     private static final String BANCO_EJEMPLO = "Banco de ejemplo · aaaaaa";
     private static final String TITULAR_EJEMPLO = "Titular de ejemplo";
     private static final String METODOS_EJEMPLO = "Bre-B, Nequi, Daviplata, Transferencia bancaria";
@@ -58,6 +60,16 @@ public class MostradorActivity extends BaseActivity {
         txtBanco = findViewById(R.id.txtBanco);
         txtTitular = findViewById(R.id.txtTitular);
         listaMetodos = findViewById(R.id.listaMetodos);
+        txtEjemploLlave.setOnClickListener(v -> editarDato(
+                "pago_bre_b", "Llave Bre-B", "@EJEMPLO2567"));
+        txtEjemploCuenta.setOnClickListener(v -> editarDato(
+                "pago_cuenta", "Número de cuenta", "#4004EJEMPLO2145"));
+        txtEjemploBanco.setOnClickListener(v -> editarDato(
+                "pago_banco", "Banco o identificador", "Bancolombia · 0001"));
+        txtEjemploTitular.setOnClickListener(v -> editarDato(
+                "pago_titular", "Titular", "Papelería Somor"));
+        txtEjemploMetodos.setOnClickListener(v -> editarDato(
+                "pago_metodos", "Métodos disponibles", "Bre-B, Nequi, Daviplata"));
         cargar();
     }
 
@@ -97,6 +109,11 @@ public class MostradorActivity extends BaseActivity {
         txtEjemploBanco.setVisibility(bancoVacio ? View.VISIBLE : View.GONE);
         txtEjemploTitular.setVisibility(titularVacio && ejemplo ? View.VISIBLE : View.GONE);
         txtEjemploMetodos.setVisibility(metodosVacios ? View.VISIBLE : View.GONE);
+        txtEjemploLlave.setContentDescription("Dato de ejemplo. Toca para escribir tu llave Bre-B.");
+        txtEjemploCuenta.setContentDescription("Dato de ejemplo. Toca para escribir tu número de cuenta.");
+        txtEjemploBanco.setContentDescription("Dato de ejemplo. Toca para escribir tu banco.");
+        txtEjemploTitular.setContentDescription("Dato de ejemplo. Toca para escribir el titular.");
+        txtEjemploMetodos.setContentDescription("Dato de ejemplo. Toca para escribir los métodos de pago.");
 
         Bitmap foto = Imagen.cargar(rutaQr, 1200);
         if (foto != null) {
@@ -153,6 +170,49 @@ public class MostradorActivity extends BaseActivity {
         }
         listaMetodos.setContentDescription(metodosVacios
                 ? "Métodos de ejemplo" : "Métodos de pago disponibles");
+    }
+
+    private void editarDato(String clave, String titulo, String ejemplo) {
+        EditText campo = new EditText(this);
+        campo.setHint(ejemplo);
+        campo.setTextSize(18);
+        campo.setSingleLine(true);
+        campo.setBackgroundResource(R.drawable.fondo_campo);
+        int p = Ui.dp(this, 14);
+        campo.setPadding(p, p, p, p);
+
+        LinearLayout caja = new LinearLayout(this);
+        caja.setOrientation(LinearLayout.VERTICAL);
+        caja.setPadding(p, p, p, 0);
+        TextView ayuda = Ui.texto(this,
+                "Se guarda también en Ajustes → Datos para recibir pagos.",
+                15, getColor(R.color.texto_secundario), false);
+        ayuda.setPadding(0, 0, 0, p / 2);
+        caja.addView(ayuda);
+        caja.addView(campo);
+
+        AlertDialog d = new AlertDialog.Builder(this)
+                .setTitle("Editar " + titulo)
+                .setView(caja)
+                .setPositiveButton("Guardar", null)
+                .setNegativeButton("Cancelar", null)
+                .create();
+        d.setOnShowListener(x -> {
+            agrandarDialogo(d);
+            d.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
+                String valor = campo.getText() == null ? "" : campo.getText().toString().trim();
+                if (valor.isEmpty()) {
+                    campo.setError("Escribe el dato o cancela.");
+                    campo.requestFocus();
+                    return;
+                }
+                bd.guardarAjuste(clave, valor);
+                d.dismiss();
+                cargar();
+                aviso("Dato guardado.");
+            });
+        });
+        d.show();
     }
 
     private Bitmap qr(String contenido) {

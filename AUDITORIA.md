@@ -1,8 +1,20 @@
-# Auditoría de Mi Negocio — base 1.3, actualizaciones 1.10 a 1.15 (22/10/2026)
+# Auditoría de Mi Negocio — base 1.3, actualizaciones 1.10 a 1.16 (22/10/2026)
 
 
 
 
+
+
+## Actualización 1.16 — edición directa (22/10/2026)
+
+- **Etiquetas:** “Dato de ejemplo” queda a la derecha del valor; los ejemplos son
+  `@EJEMPLO2567` y `#4004EJEMPLO2145`.
+- **Edición desde El mostrador:** al tocar la etiqueta se abre un campo; al guardar se escribe
+  en la misma clave de Ajustes (`pago_bre_b`, `pago_cuenta`, etc.) y se recarga la página.
+  Verificado: `MILLAVE123` apareció en Ajustes sin pasos adicionales.
+- **Sin permisos nuevos:** es escritura local en la base.
+- **Riesgo:** cualquiera con el dispositivo puede cambiar los datos de pago desde El mostrador;
+  es coherente con que esa página es para el mostrador y no tiene PIN.
 
 ## Verificación de copias entre versiones (22/10/2026)
 

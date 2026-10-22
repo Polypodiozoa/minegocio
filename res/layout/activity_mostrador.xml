@@ -86,19 +86,27 @@
                     android:layout_marginBottom="2dp"
                     android:text="Llave Bre-B" />
 
-                <TextView
-                    android:id="@+id/txtEjemploLlave"
-                    style="@style/EtiquetaEjemplo"
-                    android:visibility="gone" />
-
-                <TextView
-                    android:id="@+id/txtLlave"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/texto"
-                    android:textIsSelectable="true"
-                    android:textSize="22sp"
-                    android:textStyle="bold" />
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/txtLlave"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="@color/texto"
+                        android:textIsSelectable="true"
+                        android:textSize="22sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/txtEjemploLlave"
+                        style="@style/EtiquetaEjemplo"
+                        android:visibility="gone" />
+                </LinearLayout>
 
                 <TextView
                     style="@style/Ayuda"
@@ -119,47 +127,69 @@
                     android:layout_marginBottom="2dp"
                     android:text="Número de cuenta" />
 
-                <TextView
-                    android:id="@+id/txtEjemploCuenta"
-                    style="@style/EtiquetaEjemplo"
-                    android:visibility="gone" />
-
-                <TextView
-                    android:id="@+id/txtCuenta"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/texto"
-                    android:textIsSelectable="true"
-                    android:textSize="22sp"
-                    android:textStyle="bold" />
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/txtEjemploBanco"
-                    style="@style/EtiquetaEjemplo"
+                    <TextView
+                        android:id="@+id/txtCuenta"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="@color/texto"
+                        android:textIsSelectable="true"
+                        android:textSize="22sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/txtEjemploCuenta"
+                        style="@style/EtiquetaEjemplo"
+                        android:visibility="gone" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:visibility="gone" />
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/txtBanco"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:textColor="@color/texto"
-                    android:textSize="17sp" />
+                    <TextView
+                        android:id="@+id/txtBanco"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="@color/texto"
+                        android:textSize="17sp" />
 
-                <TextView
-                    android:id="@+id/txtEjemploTitular"
-                    style="@style/EtiquetaEjemplo"
-                    android:layout_marginTop="8dp"
-                    android:visibility="gone" />
+                    <TextView
+                        android:id="@+id/txtEjemploBanco"
+                        style="@style/EtiquetaEjemplo"
+                        android:visibility="gone" />
+                </LinearLayout>
 
-                <TextView
-                    android:id="@+id/txtTitular"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:textColor="@color/texto_secundario"
-                    android:textSize="15sp" />
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/txtTitular"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="@color/texto_secundario"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:id="@+id/txtEjemploTitular"
+                        style="@style/EtiquetaEjemplo"
+                        android:visibility="gone" />
+                </LinearLayout>
             </LinearLayout>
 
             <LinearLayout
@@ -167,17 +197,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <TextView
-                    style="@style/TituloSeccion"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Métodos disponibles" />
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/txtEjemploMetodos"
-                    style="@style/EtiquetaEjemplo"
-                    android:layout_marginBottom="6dp"
-                    android:visibility="gone" />
+                    <TextView
+                        style="@style/TituloSeccion"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Métodos disponibles" />
+
+                    <TextView
+                        android:id="@+id/txtEjemploMetodos"
+                        style="@style/EtiquetaEjemplo"
+                        android:visibility="gone" />
+                </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/listaMetodos"

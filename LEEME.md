@@ -1,4 +1,4 @@
-# Mi Negocio 1.15 — inventario, ventas, fiados, personas, mostrador y reportes para negocios colombianos
+# Mi Negocio 1.16 — inventario, ventas, fiados, personas, mostrador y reportes para negocios colombianos
 
 Aplicación Android nativa para llevar el día a día de un negocio pequeño en Colombia:
 inventario con fotos, ventas, compras, clientes, proveedores, gastos, **cartera de fiados**,
@@ -6,16 +6,24 @@ impuestos opcionales, abonos, informes, **reportes en Excel** y **lector de cód
 o QR** y **varias personas en el mismo dispositivo**. Funciona sin internet. Solo pide permiso de cámara al abrir el lector; no usa ubicación, contactos ni almacenamiento general.
 
 - **APK instalado en el dispositivo de prueba:** `minegocio.apk` (564 KB)
-- **SHA-256 del APK:** `1bc82ab1f3fbd8b10c20e7fe6c01975f7e8209fa7d7b949562a5ac567968f62d`
-- **AAB de Play:** `minegocio.aab` (564 KB), SHA-256
-  `35616df85ec4aa87c4884c653a69ef3dceee5fbb11998596437ad330e25aa1f5`
+- **SHA-256 del APK:** `7176235ee2b3bcba46b0d9166fe5fcb517d524e5e53a77a52612446c14654d40`
+- **AAB de Play:** `minegocio.aab` (565 KB), SHA-256
+  `985fd5ffdf86de240f2258e5a72d6a8120aea9c275d1eb4e8656e65b7ba784e1`
 - **Paquete:** `com.polypodiozoa.minegocio`
-- **Versión:** 1.15 (versionCode 16)
+- **Versión:** 1.16 (versionCode 17)
 - **Tablet de prueba:** Amazon Fire HD 8 `KFONWI`, Fire OS 9 / Android 9 (API 28),
   800 × 1280 px, densidad 213 dpi.
 - **Requisito mínimo:** Android 7.0 (API 24) · **targetSdk:** 35 (Android 15).
 - **Estado:** instalada, probada y actualizada el 21 de octubre de 2026. Al final se borraron los datos
   de prueba; la app quedó limpia, con **Ajustes → Cargar datos de ejemplo** para recorrerla.
+
+## Novedades de la versión 1.16 — editar desde El mostrador
+
+- Las etiquetas **“Dato de ejemplo”** van a la **derecha** del dato, no encima.
+- Ejemplos nuevos: llave **`@EJEMPLO2567`**, cuenta **`#4004EJEMPLO2145`**.
+- Al tocar **“Dato de ejemplo”** se abre un diálogo para escribir el dato en ese momento.
+  Se guarda en la misma configuración que Ajustes, así que aparece allí sin pasos extra.
+- Aplica a llave, cuenta, banco, titular y métodos.
 
 ## Novedades de la versión 1.15 — etiquetas de ejemplo
 
@@ -277,8 +285,10 @@ La ficha del cliente muestra:
   hay foto, se genera un QR de ejemplo con la llave de ejemplo o con la llave real si ya está
   configurada. Si hay foto, se puede tocar para verla en grande.
 - **Datos de ejemplo:** cuando falta llave, cuenta, banco o métodos, se muestran valores
-  visibles de ejemplo y cada uno lleva su etiqueta **“Dato de ejemplo”**. El QR se titula
-  “QR de ejemplo”. No hay un aviso grande para toda la página.
+  visibles de ejemplo y cada uno lleva su etiqueta **“Dato de ejemplo” a la derecha**. El QR
+  se titula “QR de ejemplo”. No hay un aviso grande para toda la página.
+- **Edición directa:** al tocar “Dato de ejemplo” se abre un campo para escribir el dato;
+  se guarda al instante y se refleja en Ajustes.
 - **Configuración:** Ajustes → **Datos para recibir pagos**. Incluye vista previa del QR,
   **“Tomar foto del QR”**, “Elegir imagen del QR”, “Quitar QR”, llave Bre-B, cuenta, banco,
   titular, casillas de métodos y un campo para otros métodos separados por coma.
@@ -430,6 +440,17 @@ LibreOffice. El informe de prueba tenía 5 hojas y 7.510 bytes; la cartera, 2.76
 - **No se probó** una copia v1 de la versión 1.0 ni una copia v3 abierta en una app 1.10
   (esta última no es compatible por diseño).
 
+## Verificación 1.16 (22-10-2026)
+
+- **Etiquetas a la derecha:** llave `@EJEMPLO2567`, cuenta `#4004EJEMPLO2145`, banco,
+  titular y métodos con su etiqueta “Dato de ejemplo” al lado derecho.
+- **Edición directa:** se tocó “Dato de ejemplo” de la llave, se escribió `MILLAVE123`, se
+  guardó y el valor apareció de inmediato en El mostrador; al abrir Ajustes, el campo
+  **Llave Bre-B** ya mostraba `MILLAVE123`.
+- APK 1.16 (17) firmado; AAB validado; solo permiso de cámara; sin internet.
+- **Limpieza final:** datos de prueba borrados; la app quedó con Administrador y sin datos de
+  negocio.
+
 ## Verificación 1.15 (22-10-2026)
 
 - **El mostrador** con todos los datos vacíos muestra “Dato de ejemplo” junto a llave,
@@ -556,7 +577,7 @@ En el dispositivo por USB:
 | ![Inicio con nombre del negocio](capturas/31-inicio-negocio.png) | ![Venta con la persona que atendió](capturas/32-venta-atendio.png) |
 | ![El mostrador con QR y datos](capturas/33-mostrador.png) | ![Datos para recibir pagos](capturas/34-ajustes-pagos.png) |
 | ![Inicio con el botón Datos](capturas/35-inicio-datos.png) | ![QR limpio generado desde una foto](capturas/36-qr-limpio.png) |
-| ![QR limpio en El mostrador](capturas/37-mostrador-qr-limpio.png) | |
+| ![QR limpio en El mostrador](capturas/37-mostrador-qr-limpio.png) | ![Editar un dato desde El mostrador](capturas/38-editar-dato.png) |
 
 ## Compilar e instalar
 
@@ -566,18 +587,18 @@ Requisitos: Android SDK en `~/android-sdk` con **build-tools/35.0.0** y
 
 ```bash
 cd ~/proyectos/minegocio-tablet
-VERSION_CODE=16 VERSION_NAME=1.15 ./compilar.sh
+VERSION_CODE=17 VERSION_NAME=1.16 ./compilar.sh
 adb install -r minegocio.apk
 ```
 
 El script compila recursos, Java, DEX (incluye ZXing), alinea, firma con la llave de
 desarrollo y verifica. Para cambiar la versión:
-`VERSION_CODE=17 VERSION_NAME=1.16 ./compilar.sh`.
+`VERSION_CODE=18 VERSION_NAME=1.17 ./compilar.sh`.
 
 Para Play:
 
 ```bash
-VERSION_CODE=16 VERSION_NAME=1.15 ./empaquetar-aab.sh
+VERSION_CODE=17 VERSION_NAME=1.16 ./empaquetar-aab.sh
 ```
 
 Genera `minegocio.aab` y lo valida con `bundletool`.

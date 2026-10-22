@@ -312,3 +312,4 @@ La app se va a publicar en Play después de los ciclos de prueba. Lo que falta p
 | 1.13 | 2026-10-21 | Mensaje de la app: «Hecha para negocios Colombianos». |
 | 1.14 | 2026-10-22 | Foto del QR de pagos: lectura, regeneración limpia en blanco y negro y guardado local. |
 | 1.15 | 2026-10-22 | Etiquetas «Dato de ejemplo» por dato en El mostrador; sin aviso global. |
+| 1.16 | 2026-10-22 | Etiquetas a la derecha y edición directa del dato desde El mostrador, sincronizada con Ajustes. |
