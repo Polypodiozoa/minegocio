@@ -365,7 +365,7 @@ android:id="@+id/scrollForm"
                     style="@style/Ayuda"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Sube una foto del QR para que la app la limpie y analice; es más confiable que tomarla con la cámara. La foto debe estar cerca, sin reflejos y con los cuatro bordes visibles." />
+                    android:text="Sube una foto o un PDF del QR para que la app lo limpie y analice; es más confiable que tomarlo con la cámara. La imagen debe estar cerca, sin reflejos y con los cuatro bordes visibles." />
 
                 <ImageView
                     android:id="@+id/imgQrPago"
@@ -385,7 +385,7 @@ android:id="@+id/scrollForm"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="Subir foto del QR" />
+                    android:text="Subir foto o PDF del QR" />
 
                 <Button
                     android:id="@+id/btnTomarQr"

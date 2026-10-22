@@ -146,7 +146,7 @@ public class MostradorActivity extends BaseActivity {
             else imgQr.setImageResource(R.drawable.ic_qr);
             imgQr.setScaleType(ImageView.ScaleType.FIT_CENTER);
             txtQrTitulo.setText(llaveVacia ? "QR de ejemplo" : "QR");
-            txtQrAyuda.setText("Sube una foto del QR; es más confiable que tomarla con la cámara.");
+            txtQrAyuda.setText("Sube una foto o PDF del QR; es más confiable que tomarlo con la cámara.");
             txtQrAyuda.setVisibility(View.VISIBLE);
             imgQr.setClickable(false);
             imgQr.setFocusable(false);
@@ -218,11 +218,11 @@ public class MostradorActivity extends BaseActivity {
     private void ofrecerConfigurarQr() {
         new AlertDialog.Builder(this)
                 .setTitle("Configurar QR")
-                .setMessage("Sube una foto del QR: es la opción más confiable porque la app "
-                        + "la limpia y analiza. También puedes tomar una foto con la cámara, "
-                        + "aunque puede fallar más. Después se cambia en Ajustes → Datos para "
-                        + "recibir pagos.")
-                .setPositiveButton("Subir foto", (d, w) -> elegirQr())
+                .setMessage("Sube una foto o un PDF del QR: es la opción más confiable porque "
+                        + "la app lo limpia y analiza. También puedes tomar una foto con la "
+                        + "cámara, aunque puede fallar más. Después se cambia en Ajustes → "
+                        + "Datos para recibir pagos.")
+                .setPositiveButton("Subir foto o PDF", (d, w) -> elegirQr())
                 .setNeutralButton("Tomar foto", (d, w) -> tomarQrConPermiso())
                 .setNegativeButton("Cancelar", null)
                 .show();
@@ -252,7 +252,8 @@ public class MostradorActivity extends BaseActivity {
     private void elegirQr() {
         Intent i = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         i.addCategory(Intent.CATEGORY_OPENABLE);
-        i.setType("image/*");
+        i.setType("*/*");
+        i.putExtra(Intent.EXTRA_MIME_TYPES, new String[]{"image/*", "application/pdf"});
         try {
             startActivityForResult(i, PEDIR_QR_IMAGEN);
         } catch (Exception e) {
@@ -276,13 +277,18 @@ public class MostradorActivity extends BaseActivity {
             if (resultCode != RESULT_OK || data == null || data.getData() == null) return;
             String ruta = resultadoArchivo(resultCode, data);
             if (ruta == null) return;
-            if (!Archivos.esImagen(ruta, mimeArchivoPendiente)) {
+            if (!Archivos.esImagen(ruta, mimeArchivoPendiente) && !esPdf(ruta)) {
                 Archivos.borrar(ruta);
-                aviso("Elige una imagen del código QR.");
+                aviso("Elige una imagen o un PDF del código QR.");
                 return;
             }
             procesarQrOnboarding(ruta);
         }
+    }
+
+    private boolean esPdf(String ruta) {
+        return (mimeArchivoPendiente != null && "application/pdf".equals(mimeArchivoPendiente))
+                || (ruta != null && ruta.toLowerCase().endsWith(".pdf"));
     }
 
     private void procesarQrOnboarding(String origen) {

@@ -6,7 +6,7 @@ fiados, informes, reportes en Excel y **varias personas en el mismo dispositivo*
 sin internet. Solo pide permiso de **cámara** cuando se abre el lector de códigos; no usa
 ubicación, contactos ni almacenamiento general.
 
-- **Versión:** 1.25 (versionCode 26) · **targetSdk 35**
+- **Versión:** 1.26 (versionCode 27) · **targetSdk 35**
 - **Paquete:** `com.polypodiozoa.minegocio`
 - **Android:** 7.0 (API 24) o superior. Probada en una tablet Amazon Fire HD 8 (API 28).
 - **Privacidad:** no recoge ni envía datos; no declara el permiso de internet.
@@ -18,8 +18,8 @@ ubicación, contactos ni almacenamiento general.
 | [`minegocio.apk`](minegocio.apk) · 568 KB | **Instalar a mano o compartir** con alguien (WhatsApp, Drive, USB). | Se abre en el dispositivo y se acepta el origen desconocido. |
 | [`minegocio.aab`](minegocio.aab) · 570 KB | **Subir a Google Play Console.** Es un *Android App Bundle*: un paquete de entrega, no un instalador. | Play lo convierte en el APK que corresponde a cada dispositivo. **No se puede instalar directamente.** |
 
-- APK SHA-256: `94d39b9acf7b18a4895491573a42b2ff91bf29a7ad2a893c2acb9ca5553e87a6`
-- AAB SHA-256: `f9de309adc504e4532faf60c7cc56faa36f4474cc4fa217219bb524e53d82275`
+- APK SHA-256: `19534c6c6d2ff8ce6b0b10598ea48ecfddc8e6a1a4b3edd2830ff30d4177b83d`
+- AAB SHA-256: `3d84dbf3468cbeafb9dba500dac8cb0d327f2e355aef5d805bdc38f26ce1cd91`
 
 El APK del repositorio va firmado con la llave de **desarrollo** (sirve para probar y para
 compartir). La versión de Play la firma la llave de subida del dueño; si se instala encima de
@@ -52,7 +52,8 @@ la de desarrollo, Android pide desinstalar antes (y eso borra los datos): hacer 
 - Un botón central **Completar datos** reúne la edición de QR, llave, cuenta, banco y titular.
   Solo desaparece cuando no quedan datos de ejemplo en los módulos visibles. Banco y titular
   solo se muestran si se completaron en Ajustes.
-- **Subir foto** es la opción principal del QR; la cámara queda como alternativa menos fiable.
+- **Subir foto o PDF** es la opción principal del QR; la cámara queda como alternativa menos
+  fiable. Si es un PDF, la app renderiza la página y extrae el QR.
 - En **Ajustes → Datos para recibir pagos → Personalizar Mostrador** se elige qué módulos se
   ven (QR, llave, cuenta, cómo pagar) y su orden; también se pueden ocultar.
 - Al bajar: **llave Bre-B**, **número de cuenta** y, si se configuraron, **banco** y
@@ -100,8 +101,8 @@ Requiere el SDK de Android (**platforms;android-35** y **build-tools;35.0.0**) y
 Gradle. ZXing está en `herramientas/zxing-core-3.5.3.jar` y se incluye solo en el DEX.
 
 ```bash
-VERSION_CODE=26 VERSION_NAME=1.25 ./compilar.sh        # → minegocio.apk (firmado)
-VERSION_CODE=26 VERSION_NAME=1.25 ./empaquetar-aab.sh  # → minegocio.aab (para Play)
+VERSION_CODE=27 VERSION_NAME=1.26 ./compilar.sh        # → minegocio.apk (firmado)
+VERSION_CODE=27 VERSION_NAME=1.26 ./empaquetar-aab.sh  # → minegocio.aab (para Play)
 ```
 
 El AAB se arma con `aapt2` en formato proto y `herramientas/bundletool.jar`; se valida con

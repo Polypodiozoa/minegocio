@@ -1,4 +1,4 @@
-# Mi Negocio 1.25 — inventario, ventas, fiados, personas, mostrador y reportes para negocios colombianos
+# Mi Negocio 1.26 — inventario, ventas, fiados, personas, mostrador y reportes para negocios colombianos
 
 Aplicación Android nativa para llevar el día a día de un negocio pequeño en Colombia:
 inventario con fotos, ventas, compras, clientes, proveedores, gastos, **cartera de fiados**,
@@ -6,16 +6,24 @@ impuestos opcionales, abonos, informes, **reportes en Excel** y **lector de cód
 o QR** y **varias personas en el mismo dispositivo**. Funciona sin internet. Solo pide permiso de cámara al abrir el lector; no usa ubicación, contactos ni almacenamiento general.
 
 - **APK instalado en el dispositivo de prueba:** `minegocio.apk` (564 KB)
-- **SHA-256 del APK:** `94d39b9acf7b18a4895491573a42b2ff91bf29a7ad2a893c2acb9ca5553e87a6`
+- **SHA-256 del APK:** `19534c6c6d2ff8ce6b0b10598ea48ecfddc8e6a1a4b3edd2830ff30d4177b83d`
 - **AAB de Play:** `minegocio.aab` (570 KB), SHA-256
-  `f9de309adc504e4532faf60c7cc56faa36f4474cc4fa217219bb524e53d82275`
+  `3d84dbf3468cbeafb9dba500dac8cb0d327f2e355aef5d805bdc38f26ce1cd91`
 - **Paquete:** `com.polypodiozoa.minegocio`
-- **Versión:** 1.25 (versionCode 26)
+- **Versión:** 1.26 (versionCode 27)
 - **Tablet de prueba:** Amazon Fire HD 8 `KFONWI`, Fire OS 9 / Android 9 (API 28),
   800 × 1280 px, densidad 213 dpi.
 - **Requisito mínimo:** Android 7.0 (API 24) · **targetSdk:** 35 (Android 15).
 - **Estado:** instalada, probada y actualizada el 21 de octubre de 2026. Al final se borraron los datos
   de prueba; la app quedó limpia, con **Ajustes → Cargar datos de ejemplo** para recorrerla.
+
+## Novedades de la versión 1.26 — QR desde PDF
+
+- **Subir foto o PDF**: el selector acepta imágenes y documentos PDF.
+- Si es PDF, la app renderiza hasta cuatro páginas y extrae el primer QR legible; luego lo
+  limpia y lo guarda como siempre.
+- La cámara sigue como alternativa. Se probó con un PDF real de QR Nu: el QR se extrajo y
+  quedó visible en Mostrador.
 
 ## Novedades de la versión 1.25 — sin banco/titular ficticios y subir foto primero
 
@@ -526,6 +534,17 @@ LibreOffice. El informe de prueba tenía 5 hojas y 7.510 bytes; la cartera, 2.76
 - **No se probó** una copia v1 de la versión 1.0 ni una copia v3 abierta en una app 1.10
   (esta última no es compatible por diseño).
 
+## Verificación 1.26 (22-10-2026)
+
+- **PDF real:** se subió `QR-Nu.pdf` desde Descargas; la app lo procesó, extrajo el QR y lo
+  mostró en Mostrador. No se cerró ni pidió permisos extra.
+- **Archivos en la tablet:** `QR-Nu.pdf` y `QR-Nu-QR.png` quedaron en `/sdcard/Download/`.
+- **Prioridad:** el diálogo ofrece **Subir foto o PDF** como opción principal y **Tomar foto**
+  como alternativa.
+- APK 1.26 (27) firmado; AAB validado; solo permiso de cámara; sin internet.
+- **Datos:** el QR probado quedó configurado en la app; los datos de ejemplo de llave/cuenta
+  siguen visibles.
+
 ## Verificación 1.25 (22-10-2026)
 
 - **Sin ejemplos de banco/titular:** con los campos vacíos, la tarjeta de cuenta muestra solo
@@ -776,18 +795,18 @@ Requisitos: Android SDK en `~/android-sdk` con **build-tools/35.0.0** y
 
 ```bash
 cd ~/proyectos/minegocio-tablet
-VERSION_CODE=26 VERSION_NAME=1.25 ./compilar.sh
+VERSION_CODE=27 VERSION_NAME=1.26 ./compilar.sh
 adb install -r minegocio.apk
 ```
 
 El script compila recursos, Java, DEX (incluye ZXing), alinea, firma con la llave de
 desarrollo y verifica. Para cambiar la versión:
-`VERSION_CODE=27 VERSION_NAME=1.26 ./compilar.sh`.
+`VERSION_CODE=28 VERSION_NAME=1.27 ./compilar.sh`.
 
 Para Play:
 
 ```bash
-VERSION_CODE=26 VERSION_NAME=1.25 ./empaquetar-aab.sh
+VERSION_CODE=27 VERSION_NAME=1.26 ./empaquetar-aab.sh
 ```
 
 Genera `minegocio.aab` y lo valida con `bundletool`.

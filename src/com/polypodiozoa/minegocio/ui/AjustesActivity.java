@@ -186,6 +186,11 @@ public class AjustesActivity extends BaseActivity {
         }
     }
 
+    private boolean esPdf(String ruta) {
+        return (mimeArchivoPendiente != null && "application/pdf".equals(mimeArchivoPendiente))
+                || (ruta != null && ruta.toLowerCase().endsWith(".pdf"));
+    }
+
     private void procesarQr(String origen) {
         if (origen == null || origen.isEmpty()) return;
         ProgressDialog progreso = new ProgressDialog(this);
@@ -253,7 +258,8 @@ public class AjustesActivity extends BaseActivity {
     private void elegirQr() {
         Intent i = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         i.addCategory(Intent.CATEGORY_OPENABLE);
-        i.setType("image/*");
+        i.setType("*/*");
+        i.putExtra(Intent.EXTRA_MIME_TYPES, new String[]{"image/*", "application/pdf"});
         try {
             startActivityForResult(i, PEDIR_QR);
         } catch (Exception e) {
@@ -320,9 +326,9 @@ public class AjustesActivity extends BaseActivity {
             if (resultCode != RESULT_OK || data == null || data.getData() == null) return;
             String ruta = resultadoArchivo(resultCode, data);
             if (ruta == null) return;
-            if (!Archivos.esImagen(ruta, mimeArchivoPendiente)) {
+            if (!Archivos.esImagen(ruta, mimeArchivoPendiente) && !esPdf(ruta)) {
                 Archivos.borrar(ruta);
-                aviso("Elige una imagen del código QR.");
+                aviso("Elige una imagen o un PDF del código QR.");
                 return;
             }
             procesarQr(ruta);

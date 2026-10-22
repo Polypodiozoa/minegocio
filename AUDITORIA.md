@@ -1,4 +1,4 @@
-# Auditoría de Mi Negocio — base 1.3, actualizaciones 1.10 a 1.25 (22/10/2026)
+# Auditoría de Mi Negocio — base 1.3, actualizaciones 1.10 a 1.26 (22/10/2026)
 
 
 
@@ -13,6 +13,16 @@
 
 
 
+
+
+## Actualización 1.26 — QR desde PDF (22/10/2026)
+
+- **Entrada:** el selector de QR acepta `image/*` y `application/pdf`.
+- **Procesamiento local:** `PdfRenderer` renderiza hasta 4 páginas; ZXing lee el QR y se
+  regenera limpio. No se envía el PDF ni su contenido.
+- **Archivos de prueba:** `QR-Nu.pdf` y `QR-Nu-QR.png` en Descargas de la tablet.
+- **Límite:** solo se busca el primer QR legible; un PDF con varios QR distintos no se
+  resuelve por selección.
 
 ## Actualización 1.25 — banco/titular y prioridad del QR (22/10/2026)
 
