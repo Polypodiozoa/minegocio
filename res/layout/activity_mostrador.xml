@@ -43,215 +43,171 @@
                 android:layout_marginBottom="4dp"
                 android:background="@drawable/fondo_alerta"
                 android:padding="12dp"
-                android:text="Tienes datos de ejemplo"
+                android:text="Tienes datos de ejemplo. Completa tu información."
                 android:textColor="@color/advertencia"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:visibility="gone" />
 
+            <Button
+                android:id="@+id/btnCompletarDatos"
+                style="@style/BotonPrimario"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Completar datos"
+                android:visibility="gone" />
+
             <LinearLayout
-                style="@style/Tarjeta"
+                android:id="@+id/contenedorModulos"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="14dp"
-                android:gravity="center_horizontal">
-
-                <TextView
-                    android:id="@+id/txtQrTitulo"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="QR"
-                    android:textColor="@color/texto"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
-
-                <ImageView
-                    android:id="@+id/imgQr"
-                    android:layout_width="280dp"
-                    android:layout_height="280dp"
-                    android:layout_marginTop="10dp"
-                    android:background="@color/blanco"
-                    android:contentDescription="Código QR"
-                    android:padding="8dp"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/ic_qr" />
-
-                <TextView
-                    android:id="@+id/txtQrAyuda"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:gravity="center"
-                    android:text="Toca el QR para verlo en grande"
-                    android:textColor="@color/texto_secundario"
-                    android:textSize="15sp" />
-
-                <Button
-                    android:id="@+id/btnConfigurarQr"
-                    style="@style/BotonSecundario"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="Configurar QR"
-                    android:visibility="gone" />
-            </LinearLayout>
-
-            <LinearLayout
-                style="@style/Tarjeta"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    style="@style/TituloSeccion"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="2dp"
-                    android:text="Llave Bre-B" />
+                android:orientation="vertical">
 
                 <LinearLayout
+                    android:id="@+id/cardQr"
+                    style="@style/Tarjeta"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:gravity="center_horizontal">
+
+                    <TextView
+                        android:id="@+id/txtQrTitulo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="QR"
+                        android:textColor="@color/texto"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:id="@+id/imgQr"
+                        android:layout_width="280dp"
+                        android:layout_height="280dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@color/blanco"
+                        android:contentDescription="Código QR"
+                        android:padding="8dp"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/ic_qr" />
+
+                    <TextView
+                        android:id="@+id/txtQrAyuda"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:gravity="center"
+                        android:text="Toca el QR para verlo en grande"
+                        android:textColor="@color/texto_secundario"
+                        android:textSize="15sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/cardLlave"
+                    style="@style/Tarjeta"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        style="@style/TituloSeccion"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="2dp"
+                        android:text="Llave Bre-B" />
 
                     <TextView
                         android:id="@+id/txtLlave"
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
                         android:textColor="@color/texto"
                         android:textIsSelectable="true"
                         android:textSize="22sp"
                         android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/btnEditarLlave"
-                        style="@style/BotonEditarDato"
-                        android:layout_width="wrap_content"
+                        style="@style/Ayuda"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Editar"
-                        android:visibility="gone" />
+                        android:text="Es el identificador que le dictas a quien te paga." />
                 </LinearLayout>
 
-                <TextView
-                    style="@style/Ayuda"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Es el identificador que le dictas a quien te paga." />
-            </LinearLayout>
-
-            <LinearLayout
-                style="@style/Tarjeta"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    style="@style/TituloSeccion"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="2dp"
-                    android:text="Número de cuenta" />
-
                 <LinearLayout
+                    android:id="@+id/cardCuenta"
+                    style="@style/Tarjeta"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        style="@style/TituloSeccion"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="2dp"
+                        android:text="Número de cuenta" />
 
                     <TextView
                         android:id="@+id/txtCuenta"
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
                         android:textColor="@color/texto"
                         android:textIsSelectable="true"
                         android:textSize="22sp"
                         android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/btnEditarCuenta"
-                        style="@style/BotonEditarDato"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Editar"
-                        android:visibility="gone" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <TextView
                         android:id="@+id/txtBanco"
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_marginTop="10dp"
                         android:textColor="@color/texto"
                         android:textSize="17sp" />
 
                     <TextView
-                        android:id="@+id/btnEditarBanco"
-                        style="@style/BotonEditarDato"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Editar"
-                        android:visibility="gone" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <TextView
                         android:id="@+id/txtTitular"
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_marginTop="4dp"
                         android:textColor="@color/texto_secundario"
                         android:textSize="15sp" />
 
                     <TextView
-                        android:id="@+id/btnEditarTitular"
-                        style="@style/BotonEditarDato"
-                        android:layout_width="wrap_content"
+                        style="@style/Ayuda"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Editar"
-                        android:visibility="gone" />
+                        android:text="Si el QR o la llave Bre-B fallan, comparte este número de cuenta." />
                 </LinearLayout>
 
-                <TextView
-                    style="@style/Ayuda"
+                <LinearLayout
+                    android:id="@+id/cardAyuda"
+                    style="@style/Tarjeta"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Si el QR o la llave Bre-B fallan, comparte este número de cuenta." />
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        style="@style/TituloSeccion"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Cómo pagar" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="1. Escanea el QR con la app del banco o billetera.\n2. Si no puedes escanear, dicta la llave Bre-B.\n3. Si algo falla, comparte el número de cuenta.\n4. Confirma el valor y guarda el comprobante."
+                        android:textColor="@color/texto"
+                        android:textSize="17sp"
+                        android:lineSpacingExtra="5dp" />
+                </LinearLayout>
             </LinearLayout>
 
-            <LinearLayout
-                style="@style/Tarjeta"
+            <TextView
+                android:id="@+id/txtSinModulos"
+                style="@style/Ayuda"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    style="@style/TituloSeccion"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Cómo pagar" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="1. Escanea el QR con la app del banco o billetera.\n2. Si no puedes escanear, dicta la llave Bre-B.\n3. Si algo falla, comparte el número de cuenta.\n4. Confirma el valor y guarda el comprobante."
-                    android:textColor="@color/texto"
-                    android:textSize="17sp"
-                    android:lineSpacingExtra="5dp" />
-            </LinearLayout>
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:text="No hay módulos visibles. Personaliza El mostrador desde Ajustes."
+                android:visibility="gone" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

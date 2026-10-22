@@ -5,9 +5,9 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -20,6 +20,7 @@ import com.google.zxing.common.BitMatrix;
 import com.polypodiozoa.minegocio.R;
 import com.polypodiozoa.minegocio.util.Archivos;
 import com.polypodiozoa.minegocio.util.Imagen;
+import com.polypodiozoa.minegocio.util.MostradorModulos;
 import com.polypodiozoa.minegocio.util.QrPago;
 import com.polypodiozoa.minegocio.util.Ui;
 
@@ -31,7 +32,7 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
-/** Datos para pagar en el mostrador: QR, llave Bre-B, cuenta y métodos. */
+/** Datos para pagar en el mostrador, con módulos y orden configurables. */
 public class MostradorActivity extends BaseActivity {
 
     private static final String LLAVE_EJEMPLO = "@EJEMPLO2567";
@@ -43,38 +44,32 @@ public class MostradorActivity extends BaseActivity {
 
     private ImageView imgQr;
     private TextView txtQrTitulo, txtQrAyuda, txtLlave, txtCuenta, txtBanco, txtTitular;
-    private TextView txtAviso, btnEditarLlave, btnEditarCuenta, btnEditarBanco,
-            btnEditarTitular;
-    private android.widget.Button btnConfigurarQr;
+    private TextView txtAviso, txtSinModulos;
+    private Button btnCompletarDatos;
+    private LinearLayout contenedorModulos, cardQr, cardLlave, cardCuenta, cardAyuda;
     private String rutaQr = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mostrador);
-        configurarBarra("El mostrador");
+        configurarBarra("Mostrador");
         imgQr = findViewById(R.id.imgQr);
         txtQrTitulo = findViewById(R.id.txtQrTitulo);
         txtQrAyuda = findViewById(R.id.txtQrAyuda);
         txtAviso = findViewById(R.id.txtAvisoEjemplo);
-        btnEditarLlave = findViewById(R.id.btnEditarLlave);
-        btnEditarCuenta = findViewById(R.id.btnEditarCuenta);
-        btnEditarBanco = findViewById(R.id.btnEditarBanco);
-        btnEditarTitular = findViewById(R.id.btnEditarTitular);
-        btnConfigurarQr = findViewById(R.id.btnConfigurarQr);
+        txtSinModulos = findViewById(R.id.txtSinModulos);
+        btnCompletarDatos = findViewById(R.id.btnCompletarDatos);
+        contenedorModulos = findViewById(R.id.contenedorModulos);
+        cardQr = findViewById(R.id.cardQr);
+        cardLlave = findViewById(R.id.cardLlave);
+        cardCuenta = findViewById(R.id.cardCuenta);
+        cardAyuda = findViewById(R.id.cardAyuda);
         txtLlave = findViewById(R.id.txtLlave);
         txtCuenta = findViewById(R.id.txtCuenta);
         txtBanco = findViewById(R.id.txtBanco);
         txtTitular = findViewById(R.id.txtTitular);
-        btnEditarLlave.setOnClickListener(v -> editarDato(
-                "pago_bre_b", "Llave Bre-B", "@EJEMPLO2567"));
-        btnEditarCuenta.setOnClickListener(v -> editarDato(
-                "pago_cuenta", "Número de cuenta", "#4004EJEMPLO2145"));
-        btnEditarBanco.setOnClickListener(v -> editarDato(
-                "pago_banco", "Banco o identificador", "Bancolombia · 0001"));
-        btnEditarTitular.setOnClickListener(v -> editarDato(
-                "pago_titular", "Titular", "Papelería Somor"));
-        btnConfigurarQr.setOnClickListener(v -> ofrecerConfigurarQr());
+        btnCompletarDatos.setOnClickListener(v -> completarDatos());
         cargar();
     }
 
@@ -84,7 +79,18 @@ public class MostradorActivity extends BaseActivity {
         cargar();
     }
 
+    private String modulos() {
+        return MostradorModulos.limpiar(bd.ajuste(
+                "pago_mostrador_modulos", MostradorModulos.ORDEN_DEFECTO));
+    }
+
     private void cargar() {
+        String modulos = modulos();
+        boolean qrVisible = modulos.contains(MostradorModulos.QR);
+        boolean llaveVisible = modulos.contains(MostradorModulos.LLAVE);
+        boolean cuentaVisible = modulos.contains(MostradorModulos.CUENTA);
+        boolean ayudaVisible = modulos.contains(MostradorModulos.AYUDA);
+
         String llave = bd.ajuste("pago_bre_b", "").trim();
         String cuenta = bd.ajuste("pago_cuenta", "").trim();
         String banco = bd.ajuste("pago_banco", "").trim();
@@ -106,18 +112,16 @@ public class MostradorActivity extends BaseActivity {
         txtBanco.setText("Banco: " + banco);
         txtTitular.setText(titular.isEmpty() ? "" : "Titular: " + titular);
         txtTitular.setVisibility(titular.isEmpty() ? View.GONE : View.VISIBLE);
-        btnEditarLlave.setVisibility(llaveVacia ? View.VISIBLE : View.GONE);
-        btnEditarCuenta.setVisibility(cuentaVacia ? View.VISIBLE : View.GONE);
-        btnEditarBanco.setVisibility(bancoVacio ? View.VISIBLE : View.GONE);
-        btnEditarTitular.setVisibility(titularVacio && ejemplo ? View.VISIBLE : View.GONE);
-        txtAviso.setVisibility(ejemplo ? View.VISIBLE : View.GONE);
-        btnEditarLlave.setContentDescription("Editar llave Bre-B. El botón desaparece al confirmar.");
-        btnEditarCuenta.setContentDescription("Editar número de cuenta. El botón desaparece al confirmar.");
-        btnEditarBanco.setContentDescription("Editar banco. El botón desaparece al confirmar.");
-        btnEditarTitular.setContentDescription("Editar titular. El botón desaparece al confirmar.");
 
         Bitmap foto = Imagen.cargar(rutaQr, 1200);
-        btnConfigurarQr.setVisibility(foto == null ? View.VISIBLE : View.GONE);
+        boolean faltaQr = qrVisible && foto == null;
+        boolean faltaLlave = llaveVisible && llaveVacia;
+        boolean faltaCuenta = cuentaVisible && (cuentaVacia || bancoVacio);
+        boolean faltan = faltaQr || faltaLlave || faltaCuenta;
+        txtAviso.setVisibility(faltan ? View.VISIBLE : View.GONE);
+        btnCompletarDatos.setVisibility(faltan ? View.VISIBLE : View.GONE);
+        btnCompletarDatos.setEnabled(true);
+
         if (foto != null) {
             imgQr.setImageBitmap(foto);
             imgQr.setScaleType(ImageView.ScaleType.FIT_CENTER);
@@ -149,6 +153,65 @@ public class MostradorActivity extends BaseActivity {
                     ? "Código QR de ejemplo" : "Código QR");
             imgQr.setOnClickListener(null);
         }
+
+        cardQr.setVisibility(qrVisible ? View.VISIBLE : View.GONE);
+        cardLlave.setVisibility(llaveVisible ? View.VISIBLE : View.GONE);
+        cardCuenta.setVisibility(cuentaVisible ? View.VISIBLE : View.GONE);
+        cardAyuda.setVisibility(ayudaVisible ? View.VISIBLE : View.GONE);
+        ordenar(modulos);
+    }
+
+    private void ordenar(String modulos) {
+        contenedorModulos.removeAllViews();
+        for (String id : MostradorModulos.lista(modulos)) {
+            View card = null;
+            if (MostradorModulos.QR.equals(id)) card = cardQr;
+            else if (MostradorModulos.LLAVE.equals(id)) card = cardLlave;
+            else if (MostradorModulos.CUENTA.equals(id)) card = cardCuenta;
+            else if (MostradorModulos.AYUDA.equals(id)) card = cardAyuda;
+            if (card != null) contenedorModulos.addView(card);
+        }
+        txtSinModulos.setVisibility(modulos.isEmpty() ? View.VISIBLE : View.GONE);
+    }
+
+    private void completarDatos() {
+        String modulos = modulos();
+        List<String> nombres = new ArrayList<>();
+        List<Runnable> acciones = new ArrayList<>();
+        if (modulos.contains(MostradorModulos.QR) && Imagen.cargar(rutaQr, 200) == null) {
+            nombres.add("Configurar QR");
+            acciones.add(this::ofrecerConfigurarQr);
+        }
+        if (modulos.contains(MostradorModulos.LLAVE)
+                && bd.ajuste("pago_bre_b", "").trim().isEmpty()) {
+            nombres.add("Llave Bre-B");
+            acciones.add(() -> editarDato("pago_bre_b", "Llave Bre-B", "@EJEMPLO2567"));
+        }
+        if (modulos.contains(MostradorModulos.CUENTA)) {
+            if (bd.ajuste("pago_cuenta", "").trim().isEmpty()) {
+                nombres.add("Número de cuenta");
+                acciones.add(() -> editarDato("pago_cuenta", "Número de cuenta",
+                        "#4004EJEMPLO2145"));
+            }
+            if (bd.ajuste("pago_banco", "").trim().isEmpty()) {
+                nombres.add("Banco o identificador");
+                acciones.add(() -> editarDato("pago_banco", "Banco o identificador",
+                        "Bancolombia · 0001"));
+            }
+            if (bd.ajuste("pago_titular", "").trim().isEmpty()) {
+                nombres.add("Titular (opcional)");
+                acciones.add(() -> editarDato("pago_titular", "Titular", "Papelería Somor"));
+            }
+        }
+        if (nombres.isEmpty()) {
+            cargar();
+            return;
+        }
+        new AlertDialog.Builder(this)
+                .setTitle("Completar datos")
+                .setItems(nombres.toArray(new String[0]), (d, w) -> acciones.get(w).run())
+                .setNegativeButton("Cerrar", null)
+                .show();
     }
 
     private void ofrecerConfigurarQr() {
@@ -201,7 +264,7 @@ public class MostradorActivity extends BaseActivity {
         progreso.setMessage("Limpiando el QR…");
         progreso.setCancelable(false);
         progreso.show();
-        btnConfigurarQr.setEnabled(false);
+        btnCompletarDatos.setEnabled(false);
         new Thread(() -> {
             Bitmap limpio = QrPago.limpiar(origen);
             String rutaFinal = null;
@@ -223,8 +286,8 @@ public class MostradorActivity extends BaseActivity {
             runOnUiThread(() -> {
                 progreso.dismiss();
                 if (isFinishing()) return;
-                btnConfigurarQr.setEnabled(true);
                 if (guardada == null) {
+                    btnCompletarDatos.setEnabled(true);
                     aviso("No se pudo leer el QR. Acércalo, evita reflejos y muestra los cuatro bordes.");
                     return;
                 }
@@ -247,7 +310,7 @@ public class MostradorActivity extends BaseActivity {
         caja.setOrientation(LinearLayout.VERTICAL);
         caja.setPadding(p, p, p, 0);
         TextView aviso = Ui.texto(this,
-                "Este botón Editar desaparecerá cuando confirmes el dato. "
+                "El botón Completar datos desaparecerá cuando ya no queden datos de ejemplo. "
                         + "Si necesitas cambiarlo después, ve a Ajustes → Datos para recibir pagos.",
                 15, getColor(R.color.texto_secundario), false);
         aviso.setPadding(0, 0, 0, p);
@@ -273,13 +336,14 @@ public class MostradorActivity extends BaseActivity {
                 AlertDialog confirmar = new AlertDialog.Builder(this)
                         .setTitle("Confirmar dato")
                         .setMessage("¿Confirmas que " + titulo + " es “" + valor + "”?\n\n"
-                                + "Después de confirmar, este botón Editar desaparecerá de El mostrador. "
-                                + "Podrás cambiarlo en Ajustes → Datos para recibir pagos.")
+                                + "Después de confirmar, el botón Completar datos desaparecerá "
+                                + "cuando ya no queden datos de ejemplo. Podrás cambiar el dato "
+                                + "en Ajustes → Datos para recibir pagos.")
                         .setPositiveButton("Confirmar", (cd, w) -> {
                             bd.guardarAjuste(clave, valor);
                             d.dismiss();
                             cargar();
-                            aviso("Dato guardado. El botón Editar desapareció.");
+                            aviso("Dato guardado.");
                         })
                         .setNegativeButton("Volver", null)
                         .create();

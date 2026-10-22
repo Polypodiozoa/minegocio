@@ -1,4 +1,4 @@
-# Auditoría de Mi Negocio — base 1.3, actualizaciones 1.10 a 1.22 (22/10/2026)
+# Auditoría de Mi Negocio — base 1.3, actualizaciones 1.10 a 1.23 (22/10/2026)
 
 
 
@@ -10,6 +10,16 @@
 
 
 
+
+
+## Actualización 1.23 — botón central y personalización (22/10/2026)
+
+- **Título:** la barra de Mostrador dice “Mostrador”.
+- **Un solo botón:** reúne la edición de QR, llave, cuenta, banco y titular; desaparece
+  cuando no quedan datos de ejemplo en los módulos visibles.
+- **Personalización:** Ajustes permite ocultar y reordenar QR, llave, cuenta y guía. Los
+  módulos ocultos no se exigen para retirar el botón.
+- **Datos:** se guarda el orden visible en `pago_mostrador_modulos`; sin permisos nuevos.
 
 ## Actualización 1.22 — QR una vez desde El mostrador (22/10/2026)
 

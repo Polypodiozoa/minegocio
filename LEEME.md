@@ -1,4 +1,4 @@
-# Mi Negocio 1.22 — inventario, ventas, fiados, personas, mostrador y reportes para negocios colombianos
+# Mi Negocio 1.23 — inventario, ventas, fiados, personas, mostrador y reportes para negocios colombianos
 
 Aplicación Android nativa para llevar el día a día de un negocio pequeño en Colombia:
 inventario con fotos, ventas, compras, clientes, proveedores, gastos, **cartera de fiados**,
@@ -6,16 +6,28 @@ impuestos opcionales, abonos, informes, **reportes en Excel** y **lector de cód
 o QR** y **varias personas en el mismo dispositivo**. Funciona sin internet. Solo pide permiso de cámara al abrir el lector; no usa ubicación, contactos ni almacenamiento general.
 
 - **APK instalado en el dispositivo de prueba:** `minegocio.apk` (564 KB)
-- **SHA-256 del APK:** `9929872d9506fed3f046380f05a1ba1e03172d93adcfab9eedab2acb1287ca42`
-- **AAB de Play:** `minegocio.aab` (566 KB), SHA-256
-  `82fe75d41494a9f674f9c5862ccf1fccef756d08c4912a65d6426bad47bf1000`
+- **SHA-256 del APK:** `cb4093b52c72ed2d7a4887f259a14cbc5a2ac93382894860ec21b94c55d2618f`
+- **AAB de Play:** `minegocio.aab` (569 KB), SHA-256
+  `5cf1c224dd8c4b8ac38dc3ea2dd3b175d79233c267b14cbb0f7db8406dc05f0e`
 - **Paquete:** `com.polypodiozoa.minegocio`
-- **Versión:** 1.22 (versionCode 23)
+- **Versión:** 1.23 (versionCode 24)
 - **Tablet de prueba:** Amazon Fire HD 8 `KFONWI`, Fire OS 9 / Android 9 (API 28),
   800 × 1280 px, densidad 213 dpi.
 - **Requisito mínimo:** Android 7.0 (API 24) · **targetSdk:** 35 (Android 15).
 - **Estado:** instalada, probada y actualizada el 21 de octubre de 2026. Al final se borraron los datos
   de prueba; la app quedó limpia, con **Ajustes → Cargar datos de ejemplo** para recorrerla.
+
+## Novedades de la versión 1.23 — botón central y Mostrador personalizable
+
+- El título de la pantalla dice **“Mostrador”**, no “El mostrador”.
+- Los botones individuales de Editar desaparecen. En su lugar hay un botón central
+  **“Completar datos”** con la nota **“Tienes datos de ejemplo. Completa tu información.”**
+  Ese botón reúne QR, llave, cuenta, banco y titular, y solo desaparece cuando ya no quedan
+  datos de ejemplo en los módulos visibles.
+- En Ajustes → Datos para recibir pagos → **Personalizar Mostrador** se puede elegir qué
+  módulos se ven y su orden: QR, llave Bre-B, cuenta/banco/titular y cómo pagar.
+- Si se oculta un módulo, no aparece en Mostrador y no se exige su dato para que desaparezca
+  el botón central.
 
 ## Novedades de la versión 1.22 — configurar QR una vez
 
@@ -330,12 +342,14 @@ La ficha del cliente muestra:
 - **QR:** se elige una imagen desde Ajustes; se guarda en el almacenamiento privado. Si no
   hay foto, se genera un QR de ejemplo con la llave de ejemplo o con la llave real si ya está
   configurada. Si hay foto, se puede tocar para verla en grande.
-- **Datos de ejemplo:** cuando falta llave, cuenta o banco, se muestra arriba
-  **“Tienes datos de ejemplo”** y cada dato tiene un botón **Editar** a la derecha. El QR se
-  titula “QR de ejemplo”.
-- **Configurar QR:** si no hay QR propio, aparece **Configurar QR** debajo del código. Se
-  puede tomar foto o elegir imagen; la app limpia y guarda. Es una sola vez desde aquí;
-  después se cambia en Ajustes.
+- **Datos de ejemplo:** cuando falta un dato de un módulo visible, se muestra arriba
+  **“Tienes datos de ejemplo. Completa tu información.”** y un botón central **Completar
+  datos**. Al tocarlo se elige qué completar: QR, llave, cuenta, banco o titular. El botón
+  desaparece cuando ya no quedan datos de ejemplo en los módulos visibles.
+- **Personalización:** en Ajustes → Datos para recibir pagos → **Personalizar Mostrador** se
+  elige qué módulos se muestran y su orden. Se pueden ocultar QR, llave, cuenta o guía.
+- **Después de completar:** los datos se cambian desde Ajustes; no hay botones individuales
+  en Mostrador.
 - **Edición con confirmación:** al tocar Editar se abre un campo con el aviso de que el botón
   desaparecerá. Si se cierra o se toca afuera, no cambia nada. Al escribir y confirmar, aparece
   un segundo aviso; solo al confirmarlo se guarda y desaparece el botón. Para cambiarlo otra
@@ -490,6 +504,18 @@ LibreOffice. El informe de prueba tenía 5 hojas y 7.510 bytes; la cartera, 2.76
   después.
 - **No se probó** una copia v1 de la versión 1.0 ni una copia v3 abierta en una app 1.10
   (esta última no es compatible por diseño).
+
+## Verificación 1.23 (22-10-2026)
+
+- **Título:** la barra superior dice **“Mostrador”**.
+- **Botón central:** con datos vacíos aparece la nota y **Completar datos**; al tocarlo se
+  abre el menú con QR, llave, cuenta, banco y titular. No hay botones “Editar” por dato.
+- **Personalización:** desde Ajustes se abrió **Personalizar Mostrador**, se ocultó QR y se
+  movió “Cómo pagar” arriba de “Cuenta”; al guardar y volver, QR desapareció y el orden se
+  respetó. El botón central siguió visible por los datos de ejemplo restantes.
+- APK 1.23 (24) firmado; AAB validado; solo permiso de cámara; sin internet.
+- **Limpieza final:** datos de prueba borrados; la app quedó con Administrador y sin datos de
+  negocio.
 
 ## Verificación 1.22 (22-10-2026)
 
@@ -697,6 +723,8 @@ En el dispositivo por USB:
 | ![Inicio con el botón Datos](capturas/35-inicio-datos.png) | ![QR limpio generado desde una foto](capturas/36-qr-limpio.png) |
 | ![QR limpio en El mostrador](capturas/37-mostrador-qr-limpio.png) | ![Aviso al editar un dato](capturas/38-editar-dato.png) |
 | ![Confirmar el dato](capturas/39-confirmar-dato.png) | ![Configurar QR una vez](capturas/40-configurar-qr.png) |
+| ![Completar datos desde el botón central](capturas/41-completar-datos.png) | ![Personalizar Mostrador](capturas/42-personalizar-mostrador.png) |
+| ![Mostrador personalizado](capturas/43-mostrador-personalizado.png) | |
 
 ## Compilar e instalar
 
@@ -706,18 +734,18 @@ Requisitos: Android SDK en `~/android-sdk` con **build-tools/35.0.0** y
 
 ```bash
 cd ~/proyectos/minegocio-tablet
-VERSION_CODE=23 VERSION_NAME=1.22 ./compilar.sh
+VERSION_CODE=24 VERSION_NAME=1.23 ./compilar.sh
 adb install -r minegocio.apk
 ```
 
 El script compila recursos, Java, DEX (incluye ZXing), alinea, firma con la llave de
 desarrollo y verifica. Para cambiar la versión:
-`VERSION_CODE=24 VERSION_NAME=1.23 ./compilar.sh`.
+`VERSION_CODE=25 VERSION_NAME=1.24 ./compilar.sh`.
 
 Para Play:
 
 ```bash
-VERSION_CODE=23 VERSION_NAME=1.22 ./empaquetar-aab.sh
+VERSION_CODE=24 VERSION_NAME=1.23 ./empaquetar-aab.sh
 ```
 
 Genera `minegocio.aab` y lo valida con `bundletool`.

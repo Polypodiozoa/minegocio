@@ -72,6 +72,9 @@ public class AjustesActivity extends BaseActivity {
         btnTomarQr.setOnClickListener(v -> tomarFoto(PEDIR_QR_FOTO));
         btnElegirQr.setOnClickListener(v -> elegirQr());
         btnQuitarQr.setOnClickListener(v -> quitarQr());
+        findViewById(R.id.btnPersonalizarMostrador).setOnClickListener(v -> {
+            startActivity(new android.content.Intent(this, MostradorConfigActivity.class));
+        });
 
         findViewById(R.id.btnGuardar).setOnClickListener(v -> guardar());
         btnCrearCopia.setOnClickListener(v -> pedirDestinoCopia());
