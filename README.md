@@ -10,12 +10,14 @@ ubicación, contactos ni almacenamiento general.
 - **Paquete:** `com.polypodiozoa.minegocio`
 - **Android:** 7.0 (API 24) o superior. Probada en una tablet Amazon Fire HD 8 (API 28).
 - **Privacidad:** no recoge ni envía datos; no declara el permiso de internet.
+- **Descarga pública del APK:** https://github.com/Polypodiozoa/minegocio-apk/releases/latest/download/minegocio.apk
+  (repositorio público solo con el APK; el código fuente sigue privado).
 
 ## Qué se comparte y qué se sube a Play
 
 | Archivo | Para qué | Cómo se usa |
 |---|---|---|
-| [`minegocio.apk`](minegocio.apk) · 564 KB | **Instalar a mano o compartir** con alguien (WhatsApp, Drive, USB). | Se abre en el dispositivo y se acepta el origen desconocido. |
+| [`minegocio.apk`](minegocio.apk) · 568 KB | **Instalar a mano o compartir** con alguien (WhatsApp, Drive, USB). | Se abre en el dispositivo y se acepta el origen desconocido. |
 | [`minegocio.aab`](minegocio.aab) · 569 KB | **Subir a Google Play Console.** Es un *Android App Bundle*: un paquete de entrega, no un instalador. | Play lo convierte en el APK que corresponde a cada dispositivo. **No se puede instalar directamente.** |
 
 - APK SHA-256: `cb4093b52c72ed2d7a4887f259a14cbc5a2ac93382894860ec21b94c55d2618f`
