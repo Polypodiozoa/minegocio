@@ -353,6 +353,12 @@ android:id="@+id/scrollForm"
                     android:layout_height="wrap_content"
                     android:text="Se muestran en El mostrador, el botón Datos del inicio. Si no los llenas, la app usa datos de ejemplo." />
 
+                <TextView
+                    style="@style/Ayuda"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Para el QR: tómalo de cerca, sin reflejos y con los cuatro bordes visibles. La app lo lee y lo vuelve a generar limpio, en blanco y negro." />
+
                 <ImageView
                     android:id="@+id/imgQrPago"
                     android:layout_width="150dp"
@@ -364,6 +370,14 @@ android:id="@+id/scrollForm"
                     android:padding="6dp"
                     android:scaleType="centerInside"
                     android:src="@drawable/ic_qr" />
+
+                <Button
+                    android:id="@+id/btnTomarQr"
+                    style="@style/BotonSecundario"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Tomar foto del QR" />
 
                 <Button
                     android:id="@+id/btnElegirQr"

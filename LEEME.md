@@ -1,4 +1,4 @@
-# Mi Negocio 1.13 — inventario, ventas, fiados, personas, mostrador y reportes para negocios colombianos
+# Mi Negocio 1.14 — inventario, ventas, fiados, personas, mostrador y reportes para negocios colombianos
 
 Aplicación Android nativa para llevar el día a día de un negocio pequeño en Colombia:
 inventario con fotos, ventas, compras, clientes, proveedores, gastos, **cartera de fiados**,
@@ -6,16 +6,25 @@ impuestos opcionales, abonos, informes, **reportes en Excel** y **lector de cód
 o QR** y **varias personas en el mismo dispositivo**. Funciona sin internet. Solo pide permiso de cámara al abrir el lector; no usa ubicación, contactos ni almacenamiento general.
 
 - **APK instalado en el dispositivo de prueba:** `minegocio.apk` (564 KB)
-- **SHA-256 del APK:** `a4931e5052d37f7c72fc25580ab5bd7df42c203d5c988ffd27c6e60dd6bdf06e`
-- **AAB de Play:** `minegocio.aab` (562 KB), SHA-256
-  `1e2f7006204cb9589b7c2de8dfdbc444fd7b249f5e4d36750be1fae59db1c1d3`
+- **SHA-256 del APK:** `3af1f27edfd3a64ee859e2b81961ae3cf261441d9840f991a7081029d18a0dd1`
+- **AAB de Play:** `minegocio.aab` (563 KB), SHA-256
+  `f82a11fe782d19478820faee06a4bb5e01fe9668e336dc6f3485d97945705ee0`
 - **Paquete:** `com.polypodiozoa.minegocio`
-- **Versión:** 1.13 (versionCode 14)
+- **Versión:** 1.14 (versionCode 15)
 - **Tablet de prueba:** Amazon Fire HD 8 `KFONWI`, Fire OS 9 / Android 9 (API 28),
   800 × 1280 px, densidad 213 dpi.
 - **Requisito mínimo:** Android 7.0 (API 24) · **targetSdk:** 35 (Android 15).
 - **Estado:** instalada, probada y actualizada el 21 de octubre de 2026. Al final se borraron los datos
   de prueba; la app quedó limpia, con **Ajustes → Cargar datos de ejemplo** para recorrerla.
+
+## Novedades de la versión 1.14 — foto del QR
+
+- **Tomar foto del QR** desde Ajustes, además de elegir una imagen.
+- La app **lee el QR**, lo vuelve a generar limpio en blanco y negro a **1200 × 1200 px** y lo
+  guarda como imagen para El mostrador. Así se eliminan sombras, fondo, inclinación y ruido.
+- Si la foto no se puede leer, avisa y pide acercarse, evitar reflejos y mostrar los cuatro
+  bordes. No reemplaza el QR anterior si falla.
+- No hay permiso nuevo: se usa la cámara del sistema.
 
 ## Novedades de la versión 1.13 — texto de la app
 
@@ -264,8 +273,11 @@ La ficha del cliente muestra:
 - **Datos de ejemplo:** cuando falta llave, cuenta, banco o métodos, se muestran valores
   visibles de ejemplo y un aviso que indica configurarlos en Ajustes.
 - **Configuración:** Ajustes → **Datos para recibir pagos**. Incluye vista previa del QR,
-  “Elegir imagen del QR”, “Quitar QR”, llave Bre-B, cuenta, banco, titular, casillas de
-  métodos y un campo para otros métodos separados por coma.
+  **“Tomar foto del QR”**, “Elegir imagen del QR”, “Quitar QR”, llave Bre-B, cuenta, banco,
+  titular, casillas de métodos y un campo para otros métodos separados por coma.
+- **Foto del QR:** la app decodifica la foto, reemplaza la imagen por un QR negro sobre blanco
+  de 1200 × 1200 px y lo guarda en la carpeta privada. Es una copia funcional limpia; no
+  conserva el logo o los colores del banco.
 - **Privacidad:** no se pide cámara para esta página; la foto elegida se copia a la carpeta
   privada de la app y no se comparte.
 
@@ -393,6 +405,18 @@ LibreOffice. El informe de prueba tenía 5 hojas y 7.510 bytes; la cartera, 2.76
 - **Nota honesta:** esta Fire OS no tiene TalkBack instalado; se validaron etiquetas con
   `uiautomator`, contraste calculado y prueba de texto grande, no con lector de pantalla real.
 
+## Verificación 1.14 (22-10-2026)
+
+- **Foto del QR:** se eligió una imagen QR local en Ajustes; la app la procesó y mostró un QR
+  limpio de 1200 × 1200 px en la vista previa. Al guardar y abrir **El mostrador**, la imagen
+  limpia apareció en grande.
+- **Botones:** “Tomar foto del QR” y “Elegir imagen del QR” visibles en Ajustes.
+- **Fallo controlado:** si el QR no se puede leer, se conserva el anterior y se pide una foto
+  más cercana; no se guarda una imagen rota.
+- APK 1.14 (15) firmado; AAB validado; solo permiso de cámara; sin internet.
+- **Limpieza final:** datos y fotos de prueba borrados; la app quedó con Administrador y sin
+  datos de negocio.
+
 ## Verificación 1.12 (21-10-2026)
 
 - **El mostrador** abierto desde el botón **Datos**; QR primero y datos de ejemplo visibles:
@@ -498,7 +522,8 @@ En el dispositivo por USB:
 | ![Perfil de la cuenta](capturas/29-perfil.png) | ![Orden del menú por cuenta](capturas/30-menu-cuenta.png) |
 | ![Inicio con nombre del negocio](capturas/31-inicio-negocio.png) | ![Venta con la persona que atendió](capturas/32-venta-atendio.png) |
 | ![El mostrador con QR y datos](capturas/33-mostrador.png) | ![Datos para recibir pagos](capturas/34-ajustes-pagos.png) |
-| ![Inicio con el botón Datos](capturas/35-inicio-datos.png) | |
+| ![Inicio con el botón Datos](capturas/35-inicio-datos.png) | ![QR limpio generado desde una foto](capturas/36-qr-limpio.png) |
+| ![QR limpio en El mostrador](capturas/37-mostrador-qr-limpio.png) | |
 
 ## Compilar e instalar
 
@@ -508,18 +533,18 @@ Requisitos: Android SDK en `~/android-sdk` con **build-tools/35.0.0** y
 
 ```bash
 cd ~/proyectos/minegocio-tablet
-VERSION_CODE=14 VERSION_NAME=1.13 ./compilar.sh
+VERSION_CODE=15 VERSION_NAME=1.14 ./compilar.sh
 adb install -r minegocio.apk
 ```
 
 El script compila recursos, Java, DEX (incluye ZXing), alinea, firma con la llave de
 desarrollo y verifica. Para cambiar la versión:
-`VERSION_CODE=15 VERSION_NAME=1.14 ./compilar.sh`.
+`VERSION_CODE=16 VERSION_NAME=1.15 ./compilar.sh`.
 
 Para Play:
 
 ```bash
-VERSION_CODE=14 VERSION_NAME=1.13 ./empaquetar-aab.sh
+VERSION_CODE=15 VERSION_NAME=1.14 ./empaquetar-aab.sh
 ```
 
 Genera `minegocio.aab` y lo valida con `bundletool`.

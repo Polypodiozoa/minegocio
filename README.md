@@ -6,7 +6,7 @@ fiados, informes, reportes en Excel y **varias personas en el mismo dispositivo*
 sin internet. Solo pide permiso de **cámara** cuando se abre el lector de códigos; no usa
 ubicación, contactos ni almacenamiento general.
 
-- **Versión:** 1.13 (versionCode 14) · **targetSdk 35**
+- **Versión:** 1.14 (versionCode 15) · **targetSdk 35**
 - **Paquete:** `com.polypodiozoa.minegocio`
 - **Android:** 7.0 (API 24) o superior. Probada en una tablet Amazon Fire HD 8 (API 28).
 - **Privacidad:** no recoge ni envía datos; no declara el permiso de internet.
@@ -16,10 +16,10 @@ ubicación, contactos ni almacenamiento general.
 | Archivo | Para qué | Cómo se usa |
 |---|---|---|
 | [`minegocio.apk`](minegocio.apk) · 564 KB | **Instalar a mano o compartir** con alguien (WhatsApp, Drive, USB). | Se abre en el dispositivo y se acepta el origen desconocido. |
-| [`minegocio.aab`](minegocio.aab) · 562 KB | **Subir a Google Play Console.** Es un *Android App Bundle*: un paquete de entrega, no un instalador. | Play lo convierte en el APK que corresponde a cada dispositivo. **No se puede instalar directamente.** |
+| [`minegocio.aab`](minegocio.aab) · 563 KB | **Subir a Google Play Console.** Es un *Android App Bundle*: un paquete de entrega, no un instalador. | Play lo convierte en el APK que corresponde a cada dispositivo. **No se puede instalar directamente.** |
 
-- APK SHA-256: `a4931e5052d37f7c72fc25580ab5bd7df42c203d5c988ffd27c6e60dd6bdf06e`
-- AAB SHA-256: `1e2f7006204cb9589b7c2de8dfdbc444fd7b249f5e4d36750be1fae59db1c1d3`
+- APK SHA-256: `3af1f27edfd3a64ee859e2b81961ae3cf261441d9840f991a7081029d18a0dd1`
+- AAB SHA-256: `f82a11fe782d19478820faee06a4bb5e01fe9668e336dc6f3485d97945705ee0`
 
 El APK del repositorio va firmado con la llave de **desarrollo** (sirve para probar y para
 compartir). La versión de Play la firma la llave de subida del dueño; si se instala encima de
@@ -57,6 +57,9 @@ la de desarrollo, Android pide desinstalar antes (y eso borra los datos): hacer 
   datos”. Si falta información, se muestran valores de ejemplo:
   `11111111-2222-3333-aaaa-a1b2c3d4e5f6`, `1111 2222 3333 4444`, `Banco de ejemplo`.
 - La foto del QR se guarda en el almacenamiento privado y no se envía a ningún servidor.
+- **Tomar foto del QR**: la app lee el QR de la foto, lo vuelve a generar limpio en blanco y
+  negro a 1200 × 1200 px y lo deja listo para El mostrador. También se puede elegir una imagen.
+  Funciona mejor de cerca, sin reflejos y con los cuatro bordes visibles.
 
 ## Lector de códigos
 
@@ -88,8 +91,8 @@ Requiere el SDK de Android (**platforms;android-35** y **build-tools;35.0.0**) y
 Gradle. ZXing está en `herramientas/zxing-core-3.5.3.jar` y se incluye solo en el DEX.
 
 ```bash
-VERSION_CODE=14 VERSION_NAME=1.13 ./compilar.sh        # → minegocio.apk (firmado)
-VERSION_CODE=14 VERSION_NAME=1.13 ./empaquetar-aab.sh  # → minegocio.aab (para Play)
+VERSION_CODE=15 VERSION_NAME=1.14 ./compilar.sh        # → minegocio.apk (firmado)
+VERSION_CODE=15 VERSION_NAME=1.14 ./empaquetar-aab.sh  # → minegocio.aab (para Play)
 ```
 
 El AAB se arma con `aapt2` en formato proto y `herramientas/bundletool.jar`; se valida con

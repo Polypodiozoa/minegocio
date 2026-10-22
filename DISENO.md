@@ -310,3 +310,4 @@ La app se va a publicar en Play después de los ciclos de prueba. Lo que falta p
 | 1.11 | 2026-10-21 | Personas y accesos con selector verde, perfil, autoría de ventas/compras/pagos/gastos, menú propio por cuenta, nombre del negocio bajo la fecha y bordes principales. |
 | 1.12 | 2026-10-21 | El mostrador con QR, llave Bre-B, cuenta, banco, titular, métodos configurables y datos de ejemplo. |
 | 1.13 | 2026-10-21 | Mensaje de la app: «Hecha para negocios Colombianos». |
+| 1.14 | 2026-10-22 | Foto del QR de pagos: lectura, regeneración limpia en blanco y negro y guardado local. |

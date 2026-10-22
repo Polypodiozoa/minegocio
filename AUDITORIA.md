@@ -1,7 +1,19 @@
-# Auditoría de Mi Negocio — base 1.3, actualizaciones 1.10 a 1.12 (21/10/2026)
+# Auditoría de Mi Negocio — base 1.3, actualizaciones 1.10 a 1.14 (22/10/2026)
 
 
 
+## Actualización 1.14 — foto del QR (22/10/2026)
+
+- **Procesamiento local:** la foto se lee con ZXing, se extrae el contenido y se vuelve a
+  generar un QR de 1200 × 1200 px en blanco y negro. No se envía la foto ni el contenido.
+- **Qué se conserva:** el contenido del QR; no el logo, color ni diseño del banco. La copia
+  resultante es funcional, no una copia gráfica del banco.
+- **Fallo controlado:** si no se puede leer, no se reemplaza el QR anterior y se pide una foto
+  más cercana, sin reflejos y con los cuatro bordes.
+- **Almacenamiento:** el QR limpio queda en la carpeta privada y entra en las copias de
+  seguridad; trátese como dato sensible.
+- **Verificación:** se procesó una imagen QR local; la vista previa y El mostrador mostraron
+  el QR limpio; el guardado reemplazó la imagen. No se probó con una foto real de un banco.
 
 ## Actualización 1.12 — El mostrador (21/10/2026)
 

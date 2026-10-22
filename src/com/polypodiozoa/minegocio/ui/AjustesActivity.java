@@ -20,14 +20,18 @@ import com.polypodiozoa.minegocio.util.Archivos;
 import com.polypodiozoa.minegocio.util.Fechas;
 import com.polypodiozoa.minegocio.util.Formatos;
 import com.polypodiozoa.minegocio.util.Imagen;
+import com.polypodiozoa.minegocio.util.QrPago;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 public class AjustesActivity extends BaseActivity {
 
     private static final int PEDIR_DESTINO_COPIA = 301;
     private static final int PEDIR_COPIA_RESTAURAR = 302;
     private static final int PEDIR_QR = 303;
+    private static final int PEDIR_QR_FOTO = 304;
 
     private EditText etNegocio, etNit, etTelefono, etDireccion, etImpuesto;
     private Switch swImpuesto, swStockNegativo;
@@ -38,7 +42,7 @@ public class AjustesActivity extends BaseActivity {
     private EditText etBreB, etCuenta, etBanco, etTitular, etOtrosMetodos;
     private CheckBox cbBreB, cbNequi, cbDaviplata, cbTransferencia;
     private ImageView imgQrPago;
-    private Button btnQuitarQr;
+    private Button btnQuitarQr, btnTomarQr, btnElegirQr;
     private String rutaQr = "", qrOriginal = "", qrTemporal = "";
     private boolean quitarQr;
 
@@ -70,7 +74,10 @@ public class AjustesActivity extends BaseActivity {
         cbTransferencia = findViewById(R.id.cbTransferencia);
         imgQrPago = findViewById(R.id.imgQrPago);
         btnQuitarQr = findViewById(R.id.btnQuitarQr);
-        findViewById(R.id.btnElegirQr).setOnClickListener(v -> elegirQr());
+        btnTomarQr = findViewById(R.id.btnTomarQr);
+        btnElegirQr = findViewById(R.id.btnElegirQr);
+        btnTomarQr.setOnClickListener(v -> tomarFoto(PEDIR_QR_FOTO));
+        btnElegirQr.setOnClickListener(v -> elegirQr());
         btnQuitarQr.setOnClickListener(v -> quitarQr());
 
         findViewById(R.id.btnGuardar).setOnClickListener(v -> guardar());
@@ -219,6 +226,49 @@ public class AjustesActivity extends BaseActivity {
         s.append(metodo);
     }
 
+    private void procesarQr(String origen) {
+        if (origen == null || origen.isEmpty()) return;
+        ProgressDialog progreso = new ProgressDialog(this);
+        progreso.setMessage("Preparando el QR…");
+        progreso.setCancelable(false);
+        progreso.show();
+        btnTomarQr.setEnabled(false);
+        btnElegirQr.setEnabled(false);
+        new Thread(() -> {
+            Bitmap limpio = QrPago.limpiar(origen);
+            String ruta = null;
+            if (limpio != null) {
+                File salida = Archivos.nuevoArchivoTemporal(this, "qr", "png");
+                try (FileOutputStream out = new FileOutputStream(salida)) {
+                    limpio.compress(Bitmap.CompressFormat.PNG, 100, out);
+                    ruta = salida.getAbsolutePath();
+                } catch (IOException e) {
+                    Archivos.borrar(salida.getAbsolutePath());
+                }
+            }
+            Archivos.borrar(origen);
+            final String nueva = ruta;
+            runOnUiThread(() -> {
+                progreso.dismiss();
+                if (isFinishing()) {
+                    if (nueva != null) Archivos.borrar(nueva);
+                    return;
+                }
+                btnTomarQr.setEnabled(true);
+                btnElegirQr.setEnabled(true);
+                if (nueva == null) {
+                    aviso("No se pudo leer el QR. Acércalo, evita reflejos y muestra los cuatro bordes.");
+                    return;
+                }
+                qrTemporal = nueva;
+                rutaQr = nueva;
+                quitarQr = false;
+                mostrarQr();
+                aviso("QR limpio listo. Guarda los ajustes para conservarlo.");
+            });
+        }).start();
+    }
+
     private void elegirQr() {
         Intent i = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         i.addCategory(Intent.CATEGORY_OPENABLE);
@@ -294,10 +344,12 @@ public class AjustesActivity extends BaseActivity {
                 aviso("Elige una imagen del código QR.");
                 return;
             }
-            qrTemporal = ruta;
-            rutaQr = ruta;
-            quitarQr = false;
-            mostrarQr();
+            procesarQr(ruta);
+            return;
+        }
+        if (requestCode == PEDIR_QR_FOTO) {
+            String ruta = resultadoFoto(resultCode, data);
+            if (ruta != null) procesarQr(ruta);
             return;
         }
         if (resultCode != RESULT_OK || data == null || data.getData() == null) return;
