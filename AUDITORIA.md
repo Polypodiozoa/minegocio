@@ -1,9 +1,22 @@
-# Auditoría de Mi Negocio — base 1.3, actualizaciones 1.10 a 1.16 (22/10/2026)
+# Auditoría de Mi Negocio — base 1.3, actualizaciones 1.10 a 1.17 (22/10/2026)
 
 
 
 
 
+
+
+## Actualización 1.17 — confirmación y ocultamiento (22/10/2026)
+
+- **Aviso superior:** “Tienes datos de ejemplo” se muestra si falta algún dato; no hay
+  etiquetas por dato encima.
+- **Botones Editar:** cada dato de ejemplo tiene un botón a la derecha. El diálogo advierte
+  que desaparecerá al confirmar y que después se cambia en Ajustes.
+- **Dos pasos:** escribir y confirmar no basta; aparece un segundo aviso con el valor. Solo
+  al confirmarlo se guarda y se oculta el botón. Cerrar o tocar afuera no modifica nada.
+- **Una vez desde El mostrador:** después de confirmar, para volver a cambiarlo se usa
+  Ajustes; es intencional para reducir cambios accidentales en el mostrador.
+- **Verificación:** `LLAVE1` guardado y botón oculto; sin permisos nuevos.
 
 ## Actualización 1.16 — edición directa (22/10/2026)
 

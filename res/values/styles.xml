@@ -42,6 +42,19 @@
         <item name="android:layout_marginBottom">10dp</item>
     </style>
 
+    <style name="BotonEditarDato" parent="BotonTexto">
+        <item name="android:background">@drawable/boton_secundario</item>
+        <item name="android:textColor">@color/primario</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:minWidth">84dp</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">10dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+    </style>
+
     <style name="EtiquetaEjemplo">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>

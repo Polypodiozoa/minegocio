@@ -1,4 +1,4 @@
-# Mi Negocio 1.16 — inventario, ventas, fiados, personas, mostrador y reportes para negocios colombianos
+# Mi Negocio 1.17 — inventario, ventas, fiados, personas, mostrador y reportes para negocios colombianos
 
 Aplicación Android nativa para llevar el día a día de un negocio pequeño en Colombia:
 inventario con fotos, ventas, compras, clientes, proveedores, gastos, **cartera de fiados**,
@@ -6,16 +6,27 @@ impuestos opcionales, abonos, informes, **reportes en Excel** y **lector de cód
 o QR** y **varias personas en el mismo dispositivo**. Funciona sin internet. Solo pide permiso de cámara al abrir el lector; no usa ubicación, contactos ni almacenamiento general.
 
 - **APK instalado en el dispositivo de prueba:** `minegocio.apk` (564 KB)
-- **SHA-256 del APK:** `7176235ee2b3bcba46b0d9166fe5fcb517d524e5e53a77a52612446c14654d40`
-- **AAB de Play:** `minegocio.aab` (565 KB), SHA-256
-  `985fd5ffdf86de240f2258e5a72d6a8120aea9c275d1eb4e8656e65b7ba784e1`
+- **SHA-256 del APK:** `b4d7f9d2d0b66ca411c85b598a52719fa2f87df88005b7d0db683b6af73767ac`
+- **AAB de Play:** `minegocio.aab` (566 KB), SHA-256
+  `74d960d05cff6903c1be221549378450ffae97ac592e4e505382776c1b2ab37c`
 - **Paquete:** `com.polypodiozoa.minegocio`
-- **Versión:** 1.16 (versionCode 17)
+- **Versión:** 1.17 (versionCode 18)
 - **Tablet de prueba:** Amazon Fire HD 8 `KFONWI`, Fire OS 9 / Android 9 (API 28),
   800 × 1280 px, densidad 213 dpi.
 - **Requisito mínimo:** Android 7.0 (API 24) · **targetSdk:** 35 (Android 15).
 - **Estado:** instalada, probada y actualizada el 21 de octubre de 2026. Al final se borraron los datos
   de prueba; la app quedó limpia, con **Ajustes → Cargar datos de ejemplo** para recorrerla.
+
+## Novedades de la versión 1.17 — confirmar antes de ocultar
+
+- Arriba de El mostrador aparece **“Tienes datos de ejemplo”** si falta algún dato.
+- Cada dato tiene un botón **Editar** a la derecha; ya no dice “Dato de ejemplo”.
+- El diálogo avisa que **el botón Editar desaparecerá al confirmar** y que después se cambia
+  en Ajustes.
+- Si se cierra el diálogo o se toca afuera, no cambia nada.
+- Al escribir un dato y tocar **Confirmar**, aparece un segundo aviso; solo al confirmarlo se
+  guarda y desaparece el botón.
+- El cambio queda también en Ajustes. Para modificarlo otra vez se usa Ajustes.
 
 ## Novedades de la versión 1.16 — editar desde El mostrador
 
@@ -284,11 +295,13 @@ La ficha del cliente muestra:
 - **QR:** se elige una imagen desde Ajustes; se guarda en el almacenamiento privado. Si no
   hay foto, se genera un QR de ejemplo con la llave de ejemplo o con la llave real si ya está
   configurada. Si hay foto, se puede tocar para verla en grande.
-- **Datos de ejemplo:** cuando falta llave, cuenta, banco o métodos, se muestran valores
-  visibles de ejemplo y cada uno lleva su etiqueta **“Dato de ejemplo” a la derecha**. El QR
-  se titula “QR de ejemplo”. No hay un aviso grande para toda la página.
-- **Edición directa:** al tocar “Dato de ejemplo” se abre un campo para escribir el dato;
-  se guarda al instante y se refleja en Ajustes.
+- **Datos de ejemplo:** cuando falta llave, cuenta, banco o métodos, se muestra arriba
+  **“Tienes datos de ejemplo”** y cada dato tiene un botón **Editar** a la derecha. El QR se
+  titula “QR de ejemplo”.
+- **Edición con confirmación:** al tocar Editar se abre un campo con el aviso de que el botón
+  desaparecerá. Si se cierra o se toca afuera, no cambia nada. Al escribir y confirmar, aparece
+  un segundo aviso; solo al confirmarlo se guarda y desaparece el botón. Para cambiarlo otra
+  vez se entra a Ajustes.
 - **Configuración:** Ajustes → **Datos para recibir pagos**. Incluye vista previa del QR,
   **“Tomar foto del QR”**, “Elegir imagen del QR”, “Quitar QR”, llave Bre-B, cuenta, banco,
   titular, casillas de métodos y un campo para otros métodos separados por coma.
@@ -440,6 +453,20 @@ LibreOffice. El informe de prueba tenía 5 hojas y 7.510 bytes; la cartera, 2.76
 - **No se probó** una copia v1 de la versión 1.0 ni una copia v3 abierta en una app 1.10
   (esta última no es compatible por diseño).
 
+## Verificación 1.17 (22-10-2026)
+
+- **Etiqueta superior:** “Tienes datos de ejemplo” visible con todos los datos vacíos.
+- **Botones Editar:** llave, cuenta, banco, titular y métodos con un botón **Editar** a la
+  derecha; ya no aparece “Dato de ejemplo” encima ni al lado.
+- **Aviso:** el diálogo de edición dice que el botón desaparecerá al confirmar y que después
+  se cambia en Ajustes.
+- **Confirmación en dos pasos:** se escribió `LLAVE1`, se tocó Confirmar, apareció el segundo
+  aviso y al confirmarlo el valor cambió y el botón Editar de la llave desapareció.
+- **Cerrar/afuera:** el diálogo no guarda nada mientras no se confirme el segundo aviso.
+- APK 1.17 (18) firmado; AAB validado; solo permiso de cámara; sin internet.
+- **Limpieza final:** datos de prueba borrados; la app quedó con Administrador y sin datos de
+  negocio.
+
 ## Verificación 1.16 (22-10-2026)
 
 - **Etiquetas a la derecha:** llave `@EJEMPLO2567`, cuenta `#4004EJEMPLO2145`, banco,
@@ -577,7 +604,8 @@ En el dispositivo por USB:
 | ![Inicio con nombre del negocio](capturas/31-inicio-negocio.png) | ![Venta con la persona que atendió](capturas/32-venta-atendio.png) |
 | ![El mostrador con QR y datos](capturas/33-mostrador.png) | ![Datos para recibir pagos](capturas/34-ajustes-pagos.png) |
 | ![Inicio con el botón Datos](capturas/35-inicio-datos.png) | ![QR limpio generado desde una foto](capturas/36-qr-limpio.png) |
-| ![QR limpio en El mostrador](capturas/37-mostrador-qr-limpio.png) | ![Editar un dato desde El mostrador](capturas/38-editar-dato.png) |
+| ![QR limpio en El mostrador](capturas/37-mostrador-qr-limpio.png) | ![Aviso al editar un dato](capturas/38-editar-dato.png) |
+| ![Confirmar el dato](capturas/39-confirmar-dato.png) | |
 
 ## Compilar e instalar
 
@@ -587,18 +615,18 @@ Requisitos: Android SDK en `~/android-sdk` con **build-tools/35.0.0** y
 
 ```bash
 cd ~/proyectos/minegocio-tablet
-VERSION_CODE=17 VERSION_NAME=1.16 ./compilar.sh
+VERSION_CODE=18 VERSION_NAME=1.17 ./compilar.sh
 adb install -r minegocio.apk
 ```
 
 El script compila recursos, Java, DEX (incluye ZXing), alinea, firma con la llave de
 desarrollo y verifica. Para cambiar la versión:
-`VERSION_CODE=18 VERSION_NAME=1.17 ./compilar.sh`.
+`VERSION_CODE=19 VERSION_NAME=1.18 ./compilar.sh`.
 
 Para Play:
 
 ```bash
-VERSION_CODE=17 VERSION_NAME=1.16 ./empaquetar-aab.sh
+VERSION_CODE=18 VERSION_NAME=1.17 ./empaquetar-aab.sh
 ```
 
 Genera `minegocio.aab` y lo valida con `bundletool`.

@@ -6,7 +6,7 @@ fiados, informes, reportes en Excel y **varias personas en el mismo dispositivo*
 sin internet. Solo pide permiso de **cámara** cuando se abre el lector de códigos; no usa
 ubicación, contactos ni almacenamiento general.
 
-- **Versión:** 1.16 (versionCode 17) · **targetSdk 35**
+- **Versión:** 1.17 (versionCode 18) · **targetSdk 35**
 - **Paquete:** `com.polypodiozoa.minegocio`
 - **Android:** 7.0 (API 24) o superior. Probada en una tablet Amazon Fire HD 8 (API 28).
 - **Privacidad:** no recoge ni envía datos; no declara el permiso de internet.
@@ -16,10 +16,10 @@ ubicación, contactos ni almacenamiento general.
 | Archivo | Para qué | Cómo se usa |
 |---|---|---|
 | [`minegocio.apk`](minegocio.apk) · 564 KB | **Instalar a mano o compartir** con alguien (WhatsApp, Drive, USB). | Se abre en el dispositivo y se acepta el origen desconocido. |
-| [`minegocio.aab`](minegocio.aab) · 565 KB | **Subir a Google Play Console.** Es un *Android App Bundle*: un paquete de entrega, no un instalador. | Play lo convierte en el APK que corresponde a cada dispositivo. **No se puede instalar directamente.** |
+| [`minegocio.aab`](minegocio.aab) · 566 KB | **Subir a Google Play Console.** Es un *Android App Bundle*: un paquete de entrega, no un instalador. | Play lo convierte en el APK que corresponde a cada dispositivo. **No se puede instalar directamente.** |
 
-- APK SHA-256: `7176235ee2b3bcba46b0d9166fe5fcb517d524e5e53a77a52612446c14654d40`
-- AAB SHA-256: `985fd5ffdf86de240f2258e5a72d6a8120aea9c275d1eb4e8656e65b7ba784e1`
+- APK SHA-256: `b4d7f9d2d0b66ca411c85b598a52719fa2f87df88005b7d0db683b6af73767ac`
+- AAB SHA-256: `74d960d05cff6903c1be221549378450ffae97ac592e4e505382776c1b2ab37c`
 
 El APK del repositorio va firmado con la llave de **desarrollo** (sirve para probar y para
 compartir). La versión de Play la firma la llave de subida del dueño; si se instala encima de
@@ -57,9 +57,9 @@ la de desarrollo, Android pide desinstalar antes (y eso borra los datos): hacer 
   datos”. Si falta información, se muestran valores de ejemplo:
   `11111111-2222-3333-aaaa-a1b2c3d4e5f6`, `1111 2222 3333 4444`, `Banco de ejemplo`.
 - La foto del QR se guarda en el almacenamiento privado y no se envía a ningún servidor.
-- Si falta un dato, cada uno lleva su etiqueta **“Dato de ejemplo” a la derecha**; no hay un
-  aviso grande para toda la página. Al tocar esa etiqueta se puede escribir el dato en el
-  momento y queda guardado también en Ajustes.
+- Si falta algún dato, arriba aparece **“Tienes datos de ejemplo”** y cada dato tiene un
+  botón **Editar** a la derecha. Al confirmar el dato, ese botón desaparece y el valor queda
+  guardado también en Ajustes; para cambiarlo después se usa Ajustes.
 - **Tomar foto del QR**: la app lee el QR de la foto, lo vuelve a generar limpio en blanco y
   negro a 1200 × 1200 px y lo deja listo para El mostrador. También se puede elegir una imagen.
   Funciona mejor de cerca, sin reflejos y con los cuatro bordes visibles.
@@ -94,8 +94,8 @@ Requiere el SDK de Android (**platforms;android-35** y **build-tools;35.0.0**) y
 Gradle. ZXing está en `herramientas/zxing-core-3.5.3.jar` y se incluye solo en el DEX.
 
 ```bash
-VERSION_CODE=17 VERSION_NAME=1.16 ./compilar.sh        # → minegocio.apk (firmado)
-VERSION_CODE=17 VERSION_NAME=1.16 ./empaquetar-aab.sh  # → minegocio.aab (para Play)
+VERSION_CODE=18 VERSION_NAME=1.17 ./compilar.sh        # → minegocio.apk (firmado)
+VERSION_CODE=18 VERSION_NAME=1.17 ./empaquetar-aab.sh  # → minegocio.aab (para Play)
 ```
 
 El AAB se arma con `aapt2` en formato proto y `herramientas/bundletool.jar`; se valida con

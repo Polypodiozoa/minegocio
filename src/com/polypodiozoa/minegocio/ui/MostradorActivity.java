@@ -37,8 +37,8 @@ public class MostradorActivity extends BaseActivity {
 
     private ImageView imgQr;
     private TextView txtQrTitulo, txtQrAyuda, txtLlave, txtCuenta, txtBanco, txtTitular;
-    private TextView txtEjemploLlave, txtEjemploCuenta, txtEjemploBanco, txtEjemploTitular,
-            txtEjemploMetodos;
+    private TextView txtAviso, btnEditarLlave, btnEditarCuenta, btnEditarBanco,
+            btnEditarTitular, btnEditarMetodos;
     private LinearLayout listaMetodos;
     private String rutaQr = "";
 
@@ -50,25 +50,26 @@ public class MostradorActivity extends BaseActivity {
         imgQr = findViewById(R.id.imgQr);
         txtQrTitulo = findViewById(R.id.txtQrTitulo);
         txtQrAyuda = findViewById(R.id.txtQrAyuda);
-        txtEjemploLlave = findViewById(R.id.txtEjemploLlave);
-        txtEjemploCuenta = findViewById(R.id.txtEjemploCuenta);
-        txtEjemploBanco = findViewById(R.id.txtEjemploBanco);
-        txtEjemploTitular = findViewById(R.id.txtEjemploTitular);
-        txtEjemploMetodos = findViewById(R.id.txtEjemploMetodos);
+        txtAviso = findViewById(R.id.txtAvisoEjemplo);
+        btnEditarLlave = findViewById(R.id.btnEditarLlave);
+        btnEditarCuenta = findViewById(R.id.btnEditarCuenta);
+        btnEditarBanco = findViewById(R.id.btnEditarBanco);
+        btnEditarTitular = findViewById(R.id.btnEditarTitular);
+        btnEditarMetodos = findViewById(R.id.btnEditarMetodos);
         txtLlave = findViewById(R.id.txtLlave);
         txtCuenta = findViewById(R.id.txtCuenta);
         txtBanco = findViewById(R.id.txtBanco);
         txtTitular = findViewById(R.id.txtTitular);
         listaMetodos = findViewById(R.id.listaMetodos);
-        txtEjemploLlave.setOnClickListener(v -> editarDato(
+        btnEditarLlave.setOnClickListener(v -> editarDato(
                 "pago_bre_b", "Llave Bre-B", "@EJEMPLO2567"));
-        txtEjemploCuenta.setOnClickListener(v -> editarDato(
+        btnEditarCuenta.setOnClickListener(v -> editarDato(
                 "pago_cuenta", "Número de cuenta", "#4004EJEMPLO2145"));
-        txtEjemploBanco.setOnClickListener(v -> editarDato(
+        btnEditarBanco.setOnClickListener(v -> editarDato(
                 "pago_banco", "Banco o identificador", "Bancolombia · 0001"));
-        txtEjemploTitular.setOnClickListener(v -> editarDato(
+        btnEditarTitular.setOnClickListener(v -> editarDato(
                 "pago_titular", "Titular", "Papelería Somor"));
-        txtEjemploMetodos.setOnClickListener(v -> editarDato(
+        btnEditarMetodos.setOnClickListener(v -> editarDato(
                 "pago_metodos", "Métodos disponibles", "Bre-B, Nequi, Daviplata"));
         cargar();
     }
@@ -104,16 +105,17 @@ public class MostradorActivity extends BaseActivity {
         txtBanco.setText("Banco: " + banco);
         txtTitular.setText(titular.isEmpty() ? "" : "Titular: " + titular);
         txtTitular.setVisibility(titular.isEmpty() ? View.GONE : View.VISIBLE);
-        txtEjemploLlave.setVisibility(llaveVacia ? View.VISIBLE : View.GONE);
-        txtEjemploCuenta.setVisibility(cuentaVacia ? View.VISIBLE : View.GONE);
-        txtEjemploBanco.setVisibility(bancoVacio ? View.VISIBLE : View.GONE);
-        txtEjemploTitular.setVisibility(titularVacio && ejemplo ? View.VISIBLE : View.GONE);
-        txtEjemploMetodos.setVisibility(metodosVacios ? View.VISIBLE : View.GONE);
-        txtEjemploLlave.setContentDescription("Dato de ejemplo. Toca para escribir tu llave Bre-B.");
-        txtEjemploCuenta.setContentDescription("Dato de ejemplo. Toca para escribir tu número de cuenta.");
-        txtEjemploBanco.setContentDescription("Dato de ejemplo. Toca para escribir tu banco.");
-        txtEjemploTitular.setContentDescription("Dato de ejemplo. Toca para escribir el titular.");
-        txtEjemploMetodos.setContentDescription("Dato de ejemplo. Toca para escribir los métodos de pago.");
+        btnEditarLlave.setVisibility(llaveVacia ? View.VISIBLE : View.GONE);
+        btnEditarCuenta.setVisibility(cuentaVacia ? View.VISIBLE : View.GONE);
+        btnEditarBanco.setVisibility(bancoVacio ? View.VISIBLE : View.GONE);
+        btnEditarTitular.setVisibility(titularVacio && ejemplo ? View.VISIBLE : View.GONE);
+        btnEditarMetodos.setVisibility(metodosVacios ? View.VISIBLE : View.GONE);
+        txtAviso.setVisibility(ejemplo ? View.VISIBLE : View.GONE);
+        btnEditarLlave.setContentDescription("Editar llave Bre-B. El botón desaparece al confirmar.");
+        btnEditarCuenta.setContentDescription("Editar número de cuenta. El botón desaparece al confirmar.");
+        btnEditarBanco.setContentDescription("Editar banco. El botón desaparece al confirmar.");
+        btnEditarTitular.setContentDescription("Editar titular. El botón desaparece al confirmar.");
+        btnEditarMetodos.setContentDescription("Editar métodos de pago. El botón desaparece al confirmar.");
 
         Bitmap foto = Imagen.cargar(rutaQr, 1200);
         if (foto != null) {
@@ -184,32 +186,45 @@ public class MostradorActivity extends BaseActivity {
         LinearLayout caja = new LinearLayout(this);
         caja.setOrientation(LinearLayout.VERTICAL);
         caja.setPadding(p, p, p, 0);
-        TextView ayuda = Ui.texto(this,
-                "Se guarda también en Ajustes → Datos para recibir pagos.",
+        TextView aviso = Ui.texto(this,
+                "Este botón Editar desaparecerá cuando confirmes el dato. "
+                        + "Si necesitas cambiarlo después, ve a Ajustes → Datos para recibir pagos.",
                 15, getColor(R.color.texto_secundario), false);
-        ayuda.setPadding(0, 0, 0, p / 2);
-        caja.addView(ayuda);
+        aviso.setPadding(0, 0, 0, p);
+        aviso.setLineSpacing(0f, 1.1f);
+        caja.addView(aviso);
         caja.addView(campo);
 
         AlertDialog d = new AlertDialog.Builder(this)
                 .setTitle("Editar " + titulo)
                 .setView(caja)
-                .setPositiveButton("Guardar", null)
-                .setNegativeButton("Cancelar", null)
+                .setPositiveButton("Confirmar", null)
+                .setNegativeButton("Cerrar", null)
                 .create();
         d.setOnShowListener(x -> {
             agrandarDialogo(d);
             d.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
                 String valor = campo.getText() == null ? "" : campo.getText().toString().trim();
                 if (valor.isEmpty()) {
-                    campo.setError("Escribe el dato o cancela.");
+                    campo.setError("Escribe el dato o cierra sin cambios.");
                     campo.requestFocus();
                     return;
                 }
-                bd.guardarAjuste(clave, valor);
-                d.dismiss();
-                cargar();
-                aviso("Dato guardado.");
+                AlertDialog confirmar = new AlertDialog.Builder(this)
+                        .setTitle("Confirmar dato")
+                        .setMessage("¿Confirmas que " + titulo + " es “" + valor + "”?\n\n"
+                                + "Después de confirmar, este botón Editar desaparecerá de El mostrador. "
+                                + "Podrás cambiarlo en Ajustes → Datos para recibir pagos.")
+                        .setPositiveButton("Confirmar", (cd, w) -> {
+                            bd.guardarAjuste(clave, valor);
+                            d.dismiss();
+                            cargar();
+                            aviso("Dato guardado. El botón Editar desapareció.");
+                        })
+                        .setNegativeButton("Volver", null)
+                        .create();
+                confirmar.setOnShowListener(cd -> agrandarDialogo(confirmar));
+                confirmar.show();
             });
         });
         d.show();

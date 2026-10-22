@@ -35,6 +35,20 @@
                 android:textSize="16sp"
                 android:lineSpacingExtra="3dp" />
 
+            <TextView
+                android:id="@+id/txtAvisoEjemplo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:layout_marginBottom="4dp"
+                android:background="@drawable/fondo_alerta"
+                android:padding="12dp"
+                android:text="Tienes datos de ejemplo"
+                android:textColor="@color/advertencia"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
             <LinearLayout
                 style="@style/Tarjeta"
                 android:layout_width="match_parent"
@@ -103,8 +117,11 @@
                         android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/txtEjemploLlave"
-                        style="@style/EtiquetaEjemplo"
+                        android:id="@+id/btnEditarLlave"
+                        style="@style/BotonEditarDato"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Editar"
                         android:visibility="gone" />
                 </LinearLayout>
 
@@ -144,8 +161,11 @@
                         android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/txtEjemploCuenta"
-                        style="@style/EtiquetaEjemplo"
+                        android:id="@+id/btnEditarCuenta"
+                        style="@style/BotonEditarDato"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Editar"
                         android:visibility="gone" />
                 </LinearLayout>
 
@@ -165,8 +185,11 @@
                         android:textSize="17sp" />
 
                     <TextView
-                        android:id="@+id/txtEjemploBanco"
-                        style="@style/EtiquetaEjemplo"
+                        android:id="@+id/btnEditarBanco"
+                        style="@style/BotonEditarDato"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Editar"
                         android:visibility="gone" />
                 </LinearLayout>
 
@@ -186,8 +209,11 @@
                         android:textSize="15sp" />
 
                     <TextView
-                        android:id="@+id/txtEjemploTitular"
-                        style="@style/EtiquetaEjemplo"
+                        android:id="@+id/btnEditarTitular"
+                        style="@style/BotonEditarDato"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Editar"
                         android:visibility="gone" />
                 </LinearLayout>
             </LinearLayout>
@@ -211,8 +237,11 @@
                         android:text="Métodos disponibles" />
 
                     <TextView
-                        android:id="@+id/txtEjemploMetodos"
-                        style="@style/EtiquetaEjemplo"
+                        android:id="@+id/btnEditarMetodos"
+                        style="@style/BotonEditarDato"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Editar"
                         android:visibility="gone" />
                 </LinearLayout>
 

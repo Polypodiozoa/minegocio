@@ -72,11 +72,11 @@ Android 7.0 o superior. Funciona en celular y en tableta.
 - Sitio web: **(tú)** (puede ser el mismo de la política de privacidad)
 - Política de privacidad: **(tú)** — publicar `privacidad.md` en una URL
 
-## Qué hay de nuevo (versión 1.16)
+## Qué hay de nuevo (versión 1.17)
 
-> Versión 1.16: El mostrador con QR, llave Bre-B, cuenta, banco y métodos de pago; foto del
-> QR que la app limpia y convierte a blanco y negro; etiquetas de ejemplo a la derecha y
-> edición directa del dato;
+> Versión 1.17: El mostrador con QR, llave Bre-B, cuenta, banco y métodos de pago; foto del
+> QR que la app limpia y convierte a blanco y negro; botones Editar que desaparecen al
+> confirmar, con aviso y confirmación en dos pasos;
 > varias personas con perfil y menú propio; lector de códigos de barras y QR (local);
 > inventario, ventas, fiados con abonos y vencimientos, compras, clientes, proveedores,
 > gastos, informes con Excel y comprobante en PDF. Sin internet.
