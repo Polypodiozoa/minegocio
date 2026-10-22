@@ -6,7 +6,7 @@ fiados, informes, reportes en Excel y **varias personas en el mismo dispositivo*
 sin internet. Solo pide permiso de **cámara** cuando se abre el lector de códigos; no usa
 ubicación, contactos ni almacenamiento general.
 
-- **Versión:** 1.17 (versionCode 18) · **targetSdk 35**
+- **Versión:** 1.18 (versionCode 19) · **targetSdk 35**
 - **Paquete:** `com.polypodiozoa.minegocio`
 - **Android:** 7.0 (API 24) o superior. Probada en una tablet Amazon Fire HD 8 (API 28).
 - **Privacidad:** no recoge ni envía datos; no declara el permiso de internet.
@@ -18,8 +18,8 @@ ubicación, contactos ni almacenamiento general.
 | [`minegocio.apk`](minegocio.apk) · 564 KB | **Instalar a mano o compartir** con alguien (WhatsApp, Drive, USB). | Se abre en el dispositivo y se acepta el origen desconocido. |
 | [`minegocio.aab`](minegocio.aab) · 566 KB | **Subir a Google Play Console.** Es un *Android App Bundle*: un paquete de entrega, no un instalador. | Play lo convierte en el APK que corresponde a cada dispositivo. **No se puede instalar directamente.** |
 
-- APK SHA-256: `b4d7f9d2d0b66ca411c85b598a52719fa2f87df88005b7d0db683b6af73767ac`
-- AAB SHA-256: `74d960d05cff6903c1be221549378450ffae97ac592e4e505382776c1b2ab37c`
+- APK SHA-256: `3307eb7138c26ce940a2088dbefa54f2542a4204593828320415d9a16b269bff`
+- AAB SHA-256: `4f989110c9ba3815004c3d5018a408c0bf98dcf88e5ecf28494593faefc23630`
 
 El APK del repositorio va firmado con la llave de **desarrollo** (sirve para probar y para
 compartir). La versión de Play la firma la llave de subida del dueño; si se instala encima de
@@ -94,8 +94,8 @@ Requiere el SDK de Android (**platforms;android-35** y **build-tools;35.0.0**) y
 Gradle. ZXing está en `herramientas/zxing-core-3.5.3.jar` y se incluye solo en el DEX.
 
 ```bash
-VERSION_CODE=18 VERSION_NAME=1.17 ./compilar.sh        # → minegocio.apk (firmado)
-VERSION_CODE=18 VERSION_NAME=1.17 ./empaquetar-aab.sh  # → minegocio.aab (para Play)
+VERSION_CODE=19 VERSION_NAME=1.18 ./compilar.sh        # → minegocio.apk (firmado)
+VERSION_CODE=19 VERSION_NAME=1.18 ./empaquetar-aab.sh  # → minegocio.aab (para Play)
 ```
 
 El AAB se arma con `aapt2` en formato proto y `herramientas/bundletool.jar`; se valida con

@@ -24,13 +24,19 @@ public class FotoActivity extends BaseActivity {
         ruta = getIntent().getStringExtra("ruta");
         findViewById(R.id.btnAtras).setOnClickListener(v -> finish());
         ImageView img = findViewById(R.id.imgFoto);
+        String titulo = getIntent().getStringExtra("titulo");
+        String descripcion = getIntent().getStringExtra("descripcion");
+        if (titulo != null && !titulo.isEmpty()) {
+            ((android.widget.TextView) findViewById(R.id.tituloBarra)).setText(titulo);
+        }
         if (ruta == null || ruta.isEmpty()) {
             aviso("No se encontró la imagen.");
             finish();
             return;
         }
         Imagen.mostrar(img, ruta, R.drawable.ic_imagen, 1600);
-        img.setContentDescription("Comprobante: " + new File(ruta).getName());
+        img.setContentDescription(descripcion != null && !descripcion.isEmpty()
+                ? descripcion : "Comprobante: " + new File(ruta).getName());
         findViewById(R.id.btnCompartir).setOnClickListener(v -> compartir(false));
         findViewById(R.id.btnOtraApp).setOnClickListener(v -> compartir(true));
     }

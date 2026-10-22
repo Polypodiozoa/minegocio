@@ -61,7 +61,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="Escanea el QR de Bre-B"
+                    android:text="QR de Bre-B"
                     android:textColor="@color/texto"
                     android:textSize="20sp"
                     android:textStyle="bold" />
@@ -72,7 +72,7 @@
                     android:layout_height="280dp"
                     android:layout_marginTop="10dp"
                     android:background="@color/blanco"
-                    android:contentDescription="Código QR para pagar"
+                    android:contentDescription="Código QR de Bre-B"
                     android:padding="8dp"
                     android:scaleType="centerInside"
                     android:src="@drawable/ic_qr" />

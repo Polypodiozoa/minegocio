@@ -1,10 +1,20 @@
-# Auditoría de Mi Negocio — base 1.3, actualizaciones 1.10 a 1.17 (22/10/2026)
+# Auditoría de Mi Negocio — base 1.3, actualizaciones 1.10 a 1.18 (22/10/2026)
 
 
 
 
 
 
+
+
+## Actualización 1.18 — QR identificado como Bre-B (22/10/2026)
+
+- **El mostrador:** “QR de Bre-B” o “QR de Bre-B de ejemplo”; la descripción accesible dice
+  “Código QR de Bre-B”.
+- **Ajustes:** etiqueta “QR de Bre-B” y ayuda específica antes de la vista previa.
+- **Vista ampliada:** la barra superior y la descripción accesible usan “QR de Bre-B”, no
+  “Comprobante”.
+- **Sin cambio funcional:** sigue siendo el mismo QR local; solo se corrige la identificación.
 
 ## Actualización 1.17 — confirmación y ocultamiento (22/10/2026)
 

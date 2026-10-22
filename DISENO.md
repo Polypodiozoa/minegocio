@@ -314,3 +314,4 @@ La app se va a publicar en Play después de los ciclos de prueba. Lo que falta p
 | 1.15 | 2026-10-22 | Etiquetas «Dato de ejemplo» por dato en El mostrador; sin aviso global. |
 | 1.16 | 2026-10-22 | Etiquetas a la derecha y edición directa del dato desde El mostrador, sincronizada con Ajustes. |
 | 1.17 | 2026-10-22 | Etiqueta «Tienes datos de ejemplo», botones Editar que desaparecen y confirmación en dos pasos. |
+| 1.18 | 2026-10-22 | QR rotulado como Bre-B en El mostrador, Ajustes y vista ampliada. |
