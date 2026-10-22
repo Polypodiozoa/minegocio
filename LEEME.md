@@ -1,4 +1,4 @@
-# Mi Negocio 1.14 — inventario, ventas, fiados, personas, mostrador y reportes para negocios colombianos
+# Mi Negocio 1.15 — inventario, ventas, fiados, personas, mostrador y reportes para negocios colombianos
 
 Aplicación Android nativa para llevar el día a día de un negocio pequeño en Colombia:
 inventario con fotos, ventas, compras, clientes, proveedores, gastos, **cartera de fiados**,
@@ -6,16 +6,22 @@ impuestos opcionales, abonos, informes, **reportes en Excel** y **lector de cód
 o QR** y **varias personas en el mismo dispositivo**. Funciona sin internet. Solo pide permiso de cámara al abrir el lector; no usa ubicación, contactos ni almacenamiento general.
 
 - **APK instalado en el dispositivo de prueba:** `minegocio.apk` (564 KB)
-- **SHA-256 del APK:** `3af1f27edfd3a64ee859e2b81961ae3cf261441d9840f991a7081029d18a0dd1`
-- **AAB de Play:** `minegocio.aab` (563 KB), SHA-256
-  `f82a11fe782d19478820faee06a4bb5e01fe9668e336dc6f3485d97945705ee0`
+- **SHA-256 del APK:** `1bc82ab1f3fbd8b10c20e7fe6c01975f7e8209fa7d7b949562a5ac567968f62d`
+- **AAB de Play:** `minegocio.aab` (564 KB), SHA-256
+  `35616df85ec4aa87c4884c653a69ef3dceee5fbb11998596437ad330e25aa1f5`
 - **Paquete:** `com.polypodiozoa.minegocio`
-- **Versión:** 1.14 (versionCode 15)
+- **Versión:** 1.15 (versionCode 16)
 - **Tablet de prueba:** Amazon Fire HD 8 `KFONWI`, Fire OS 9 / Android 9 (API 28),
   800 × 1280 px, densidad 213 dpi.
 - **Requisito mínimo:** Android 7.0 (API 24) · **targetSdk:** 35 (Android 15).
 - **Estado:** instalada, probada y actualizada el 21 de octubre de 2026. Al final se borraron los datos
   de prueba; la app quedó limpia, con **Ajustes → Cargar datos de ejemplo** para recorrerla.
+
+## Novedades de la versión 1.15 — etiquetas de ejemplo
+
+- En **El mostrador**, cada dato que está en ejemplo lleva su propia etiqueta
+  **“Dato de ejemplo”**: llave, cuenta, banco, titular y métodos. El QR dice “QR de ejemplo”.
+- Se quitó el aviso grande que abarcaba toda la página.
 
 ## Novedades de la versión 1.14 — foto del QR
 
@@ -271,7 +277,8 @@ La ficha del cliente muestra:
   hay foto, se genera un QR de ejemplo con la llave de ejemplo o con la llave real si ya está
   configurada. Si hay foto, se puede tocar para verla en grande.
 - **Datos de ejemplo:** cuando falta llave, cuenta, banco o métodos, se muestran valores
-  visibles de ejemplo y un aviso que indica configurarlos en Ajustes.
+  visibles de ejemplo y cada uno lleva su etiqueta **“Dato de ejemplo”**. El QR se titula
+  “QR de ejemplo”. No hay un aviso grande para toda la página.
 - **Configuración:** Ajustes → **Datos para recibir pagos**. Incluye vista previa del QR,
   **“Tomar foto del QR”**, “Elegir imagen del QR”, “Quitar QR”, llave Bre-B, cuenta, banco,
   titular, casillas de métodos y un campo para otros métodos separados por coma.
@@ -405,6 +412,14 @@ LibreOffice. El informe de prueba tenía 5 hojas y 7.510 bytes; la cartera, 2.76
 - **Nota honesta:** esta Fire OS no tiene TalkBack instalado; se validaron etiquetas con
   `uiautomator`, contraste calculado y prueba de texto grande, no con lector de pantalla real.
 
+## Verificación 1.15 (22-10-2026)
+
+- **El mostrador** con todos los datos vacíos muestra “Dato de ejemplo” junto a llave,
+  cuenta, banco, titular y métodos, y “QR de ejemplo” en el QR. No aparece el aviso grande.
+- APK 1.15 (16) firmado; AAB validado; solo permiso de cámara; sin internet.
+- **Limpieza final:** datos y fotos de prueba borrados; la app quedó con Administrador y sin
+  datos de negocio.
+
 ## Verificación 1.14 (22-10-2026)
 
 - **Foto del QR:** se eligió una imagen QR local en Ajustes; la app la procesó y mostró un QR
@@ -533,18 +548,18 @@ Requisitos: Android SDK en `~/android-sdk` con **build-tools/35.0.0** y
 
 ```bash
 cd ~/proyectos/minegocio-tablet
-VERSION_CODE=15 VERSION_NAME=1.14 ./compilar.sh
+VERSION_CODE=16 VERSION_NAME=1.15 ./compilar.sh
 adb install -r minegocio.apk
 ```
 
 El script compila recursos, Java, DEX (incluye ZXing), alinea, firma con la llave de
 desarrollo y verifica. Para cambiar la versión:
-`VERSION_CODE=16 VERSION_NAME=1.15 ./compilar.sh`.
+`VERSION_CODE=17 VERSION_NAME=1.16 ./compilar.sh`.
 
 Para Play:
 
 ```bash
-VERSION_CODE=15 VERSION_NAME=1.14 ./empaquetar-aab.sh
+VERSION_CODE=16 VERSION_NAME=1.15 ./empaquetar-aab.sh
 ```
 
 Genera `minegocio.aab` y lo valida con `bundletool`.

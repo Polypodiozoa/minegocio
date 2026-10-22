@@ -1,6 +1,15 @@
-# Auditoría de Mi Negocio — base 1.3, actualizaciones 1.10 a 1.14 (22/10/2026)
+# Auditoría de Mi Negocio — base 1.3, actualizaciones 1.10 a 1.15 (22/10/2026)
 
 
+
+
+## Actualización 1.15 — etiquetas por dato (22/10/2026)
+
+- **Claridad:** se quitó el aviso global de “datos de ejemplo” y cada valor ficticio lleva su
+  propia etiqueta **“Dato de ejemplo”**; el QR se titula “QR de ejemplo”. Así no se confunde
+  un dato real configurado con uno ficticio.
+- **Accesibilidad:** las etiquetas son texto visible, no solo color.
+- **Sin cambios de permisos ni de datos:** es una mejora de presentación.
 
 ## Actualización 1.14 — foto del QR (22/10/2026)
 

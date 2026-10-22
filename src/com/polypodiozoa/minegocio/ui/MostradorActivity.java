@@ -34,7 +34,9 @@ public class MostradorActivity extends BaseActivity {
     private static final String METODOS_EJEMPLO = "Bre-B, Nequi, Daviplata, Transferencia bancaria";
 
     private ImageView imgQr;
-    private TextView txtQrTitulo, txtQrAyuda, txtAviso, txtLlave, txtCuenta, txtBanco, txtTitular;
+    private TextView txtQrTitulo, txtQrAyuda, txtLlave, txtCuenta, txtBanco, txtTitular;
+    private TextView txtEjemploLlave, txtEjemploCuenta, txtEjemploBanco, txtEjemploTitular,
+            txtEjemploMetodos;
     private LinearLayout listaMetodos;
     private String rutaQr = "";
 
@@ -46,7 +48,11 @@ public class MostradorActivity extends BaseActivity {
         imgQr = findViewById(R.id.imgQr);
         txtQrTitulo = findViewById(R.id.txtQrTitulo);
         txtQrAyuda = findViewById(R.id.txtQrAyuda);
-        txtAviso = findViewById(R.id.txtAvisoEjemplo);
+        txtEjemploLlave = findViewById(R.id.txtEjemploLlave);
+        txtEjemploCuenta = findViewById(R.id.txtEjemploCuenta);
+        txtEjemploBanco = findViewById(R.id.txtEjemploBanco);
+        txtEjemploTitular = findViewById(R.id.txtEjemploTitular);
+        txtEjemploMetodos = findViewById(R.id.txtEjemploMetodos);
         txtLlave = findViewById(R.id.txtLlave);
         txtCuenta = findViewById(R.id.txtCuenta);
         txtBanco = findViewById(R.id.txtBanco);
@@ -70,20 +76,27 @@ public class MostradorActivity extends BaseActivity {
         rutaQr = bd.ajuste("pago_qr_foto", "").trim();
 
         boolean llaveVacia = llave.isEmpty();
-        boolean ejemplo = llaveVacia || cuenta.isEmpty() || banco.isEmpty()
-                || metodos.isEmpty();
+        boolean cuentaVacia = cuenta.isEmpty();
+        boolean bancoVacio = banco.isEmpty();
+        boolean metodosVacios = metodos.isEmpty();
+        boolean titularVacio = titular.isEmpty();
+        boolean ejemplo = llaveVacia || cuentaVacia || bancoVacio || metodosVacios;
         if (llaveVacia) llave = LLAVE_EJEMPLO;
-        if (cuenta.isEmpty()) cuenta = CUENTA_EJEMPLO;
-        if (banco.isEmpty()) banco = BANCO_EJEMPLO;
-        if (titular.isEmpty()) titular = ejemplo ? TITULAR_EJEMPLO : "";
-        if (metodos.isEmpty()) metodos = METODOS_EJEMPLO;
+        if (cuentaVacia) cuenta = CUENTA_EJEMPLO;
+        if (bancoVacio) banco = BANCO_EJEMPLO;
+        if (titularVacio) titular = ejemplo ? TITULAR_EJEMPLO : "";
+        if (metodosVacios) metodos = METODOS_EJEMPLO;
 
         txtLlave.setText(llave);
         txtCuenta.setText(cuenta);
         txtBanco.setText("Banco: " + banco);
         txtTitular.setText(titular.isEmpty() ? "" : "Titular: " + titular);
         txtTitular.setVisibility(titular.isEmpty() ? View.GONE : View.VISIBLE);
-        txtAviso.setVisibility(ejemplo ? View.VISIBLE : View.GONE);
+        txtEjemploLlave.setVisibility(llaveVacia ? View.VISIBLE : View.GONE);
+        txtEjemploCuenta.setVisibility(cuentaVacia ? View.VISIBLE : View.GONE);
+        txtEjemploBanco.setVisibility(bancoVacio ? View.VISIBLE : View.GONE);
+        txtEjemploTitular.setVisibility(titularVacio && ejemplo ? View.VISIBLE : View.GONE);
+        txtEjemploMetodos.setVisibility(metodosVacios ? View.VISIBLE : View.GONE);
 
         Bitmap foto = Imagen.cargar(rutaQr, 1200);
         if (foto != null) {
@@ -138,7 +151,7 @@ public class MostradorActivity extends BaseActivity {
             fila.setContentDescription("Método disponible: " + nombre);
             listaMetodos.addView(fila);
         }
-        listaMetodos.setContentDescription(ejemplo
+        listaMetodos.setContentDescription(metodosVacios
                 ? "Métodos de ejemplo" : "Métodos de pago disponibles");
     }
 

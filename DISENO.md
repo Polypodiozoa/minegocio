@@ -92,7 +92,7 @@ Los datos se configuran en **Ajustes → Datos para recibir pagos**, antes de �
 datos”: foto del QR, llave, cuenta, banco, titular, casillas de Bre-B/Nequi/Daviplata/
 transferencia y un campo para otros métodos. Si faltan, se muestran valores de ejemplo
 evidentes (`11111111-2222-3333-aaaa-a1b2c3d4e5f6`, `1111 2222 3333 4444`,
-`Banco de ejemplo`). La foto se guarda en la carpeta privada; no se envía.
+`Banco de ejemplo`) y cada uno lleva su etiqueta **“Dato de ejemplo”**. La foto se guarda en la carpeta privada; no se envía.
 
 ## 3.3 Lector de códigos
 
@@ -311,3 +311,4 @@ La app se va a publicar en Play después de los ciclos de prueba. Lo que falta p
 | 1.12 | 2026-10-21 | El mostrador con QR, llave Bre-B, cuenta, banco, titular, métodos configurables y datos de ejemplo. |
 | 1.13 | 2026-10-21 | Mensaje de la app: «Hecha para negocios Colombianos». |
 | 1.14 | 2026-10-22 | Foto del QR de pagos: lectura, regeneración limpia en blanco y negro y guardado local. |
+| 1.15 | 2026-10-22 | Etiquetas «Dato de ejemplo» por dato en El mostrador; sin aviso global. |
