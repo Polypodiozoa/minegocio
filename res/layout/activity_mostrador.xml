@@ -30,7 +30,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="Escanea el QR o usa los datos de la cuenta. Pregunta si necesitas ayuda."
+                android:text="Escanea el QR o usa los datos de la cuenta."
                 android:textColor="@color/texto_secundario"
                 android:textSize="16sp"
                 android:lineSpacingExtra="3dp" />

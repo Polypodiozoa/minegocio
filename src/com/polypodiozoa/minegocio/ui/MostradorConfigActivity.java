@@ -4,8 +4,9 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.LinearLayout;
+import android.widget.Switch;
+import android.widget.TextView;
 
 import com.polypodiozoa.minegocio.R;
 import com.polypodiozoa.minegocio.util.MostradorModulos;
@@ -51,48 +52,93 @@ public class MostradorConfigActivity extends BaseActivity {
             final int indice = i;
             final String id = orden.get(i);
 
-            LinearLayout fila = new LinearLayout(this);
-            fila.setOrientation(LinearLayout.HORIZONTAL);
-            fila.setGravity(Gravity.CENTER_VERTICAL);
-            fila.setMinimumHeight(Ui.dp(this, 56));
-            fila.setPadding(0, Ui.dp(this, 4), 0, Ui.dp(this, 4));
+            LinearLayout tarjeta = new LinearLayout(this);
+            tarjeta.setOrientation(LinearLayout.VERTICAL);
+            tarjeta.setBackgroundResource(R.drawable.fondo_tarjeta);
+            tarjeta.setPadding(Ui.dp(this, 16), Ui.dp(this, 14),
+                    Ui.dp(this, 16), Ui.dp(this, 14));
+            LinearLayout.LayoutParams lpTarjeta = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT);
+            lpTarjeta.bottomMargin = Ui.dp(this, 14);
+            tarjeta.setLayoutParams(lpTarjeta);
 
-            CheckBox cb = new CheckBox(this);
-            cb.setText(MostradorModulos.etiqueta(id));
-            cb.setTextColor(getColor(R.color.texto));
-            cb.setTextSize(17);
-            cb.setChecked(visibles.contains(id));
-            cb.setLayoutParams(new LinearLayout.LayoutParams(
+            LinearLayout cabecera = new LinearLayout(this);
+            cabecera.setOrientation(LinearLayout.HORIZONTAL);
+            cabecera.setGravity(Gravity.CENTER_VERTICAL);
+
+            TextView titulo = Ui.texto(this, MostradorModulos.etiqueta(id),
+                    20, getColor(R.color.texto), true);
+            titulo.setLayoutParams(new LinearLayout.LayoutParams(
                     0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
-            cb.setOnCheckedChangeListener((b, checked) -> {
+            cabecera.addView(titulo);
+
+            Switch mostrar = new Switch(this);
+            mostrar.setText("Mostrar");
+            mostrar.setTextSize(14);
+            mostrar.setTextColor(getColor(R.color.texto_secundario));
+            mostrar.setChecked(visibles.contains(id));
+            mostrar.setMinHeight(Ui.dp(this, 48));
+            mostrar.setContentDescription("Mostrar " + MostradorModulos.etiqueta(id)
+                    + " en Mostrador");
+            mostrar.setOnCheckedChangeListener((b, checked) -> {
                 if (checked) visibles.add(id);
                 else visibles.remove(id);
             });
-            fila.addView(cb);
+            cabecera.addView(mostrar);
+            tarjeta.addView(cabecera);
 
-            Button subir = boton("Subir");
+            TextView descripcion = Ui.texto(this, descripcion(id),
+                    15, getColor(R.color.texto_secundario), false);
+            descripcion.setPadding(0, Ui.dp(this, 6), 0, Ui.dp(this, 10));
+            descripcion.setLineSpacing(0f, 1.1f);
+            tarjeta.addView(descripcion);
+
+            LinearLayout acciones = new LinearLayout(this);
+            acciones.setOrientation(LinearLayout.HORIZONTAL);
+            Button subir = boton("Subir", "Subir " + MostradorModulos.etiqueta(id));
             subir.setEnabled(i > 0);
             subir.setOnClickListener(v -> mover(indice, -1));
-            fila.addView(subir);
+            LinearLayout.LayoutParams lpSubir = new LinearLayout.LayoutParams(
+                    0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
+            lpSubir.rightMargin = Ui.dp(this, 6);
+            acciones.addView(subir, lpSubir);
 
-            Button bajar = boton("Bajar");
+            Button bajar = boton("Bajar", "Bajar " + MostradorModulos.etiqueta(id));
             bajar.setEnabled(i < orden.size() - 1);
             bajar.setOnClickListener(v -> mover(indice, 1));
-            fila.addView(bajar);
+            LinearLayout.LayoutParams lpBajar = new LinearLayout.LayoutParams(
+                    0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
+            lpBajar.leftMargin = Ui.dp(this, 6);
+            acciones.addView(bajar, lpBajar);
+            tarjeta.addView(acciones);
 
-            contenedor.addView(fila);
+            contenedor.addView(tarjeta);
         }
     }
 
-    private Button boton(String texto) {
+    private String descripcion(String id) {
+        if (MostradorModulos.QR.equals(id)) {
+            return "Muestra el código QR de pago.";
+        }
+        if (MostradorModulos.LLAVE.equals(id)) {
+            return "Muestra la llave Bre-B para dictarla.";
+        }
+        if (MostradorModulos.CUENTA.equals(id)) {
+            return "Muestra el número de cuenta y, si los configuras, banco y titular.";
+        }
+        return "Muestra los pasos para pagar.";
+    }
+
+    private Button boton(String texto, String descripcion) {
         Button b = new Button(this);
         b.setText(texto);
-        b.setTextSize(14);
-        b.setMinWidth(Ui.dp(this, 68));
-        b.setMinimumHeight(Ui.dp(this, 48));
+        b.setTextSize(16);
+        b.setMinimumHeight(Ui.dp(this, 50));
         b.setBackgroundResource(R.drawable.boton_secundario);
         b.setTextColor(getColor(R.color.primario));
         b.setAllCaps(false);
+        b.setContentDescription(descripcion);
         return b;
     }
 

@@ -31,7 +31,7 @@
                 style="@style/Ayuda"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Elige qué módulos se muestran y en qué orden. Lo que ocultes no aparecerá en el mostrador." />
+                android:text="Activa los módulos que quieres mostrar y usa Subir o Bajar para ordenarlos. Lo que ocultes no aparecerá en Mostrador." />
 
             <LinearLayout
                 android:id="@+id/contenedorOpciones"

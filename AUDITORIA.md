@@ -1,4 +1,4 @@
-# Auditoría de Mi Negocio — base 1.3, actualizaciones 1.10 a 1.27 (22/10/2026)
+# Auditoría de Mi Negocio — base 1.3, actualizaciones 1.10 a 1.28 (22/10/2026)
 
 
 
@@ -15,6 +15,15 @@
 
 
 
+
+
+## Actualización 1.28 — personalización clara (22/10/2026)
+
+- **Interfaz:** Personalizar Mostrador usa tarjetas, interruptores y botones grandes; mismo
+  lenguaje visual que Ajustes.
+- **Texto:** se retiró “Pregunta si necesitas ayuda” de Mostrador.
+- **QR:** se mantiene la carga de foto/PDF y la extracción local; el PDF de prueba sigue
+  configurado tras la actualización.
 
 ## Actualización 1.27 — ejemplos unificados (22/10/2026)
 
