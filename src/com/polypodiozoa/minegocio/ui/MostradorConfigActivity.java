@@ -16,7 +16,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-/** Elige los módulos visibles de El mostrador y su orden. */
+/** Elige los módulos visibles del mostrador y su orden. */
 public class MostradorConfigActivity extends BaseActivity {
 
     private final List<String> orden = new ArrayList<>();

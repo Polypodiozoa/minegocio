@@ -206,7 +206,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="14dp"
-                android:text="No hay módulos visibles. Personaliza El mostrador desde Ajustes."
+                android:text="No hay módulos visibles. Personaliza el mostrador desde Ajustes."
                 android:visibility="gone" />
         </LinearLayout>
     </ScrollView>

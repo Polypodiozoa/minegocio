@@ -1,10 +1,13 @@
 package com.polypodiozoa.minegocio.ui;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -31,6 +34,7 @@ public class AjustesActivity extends BaseActivity {
     private static final int PEDIR_COPIA_RESTAURAR = 302;
     private static final int PEDIR_QR = 303;
     private static final int PEDIR_QR_FOTO = 304;
+    private static final int PERMISO_CAMARA_QR = 305;
 
     private EditText etNegocio, etNit, etTelefono, etDireccion, etImpuesto;
     private Switch swImpuesto, swStockNegativo;
@@ -69,7 +73,7 @@ public class AjustesActivity extends BaseActivity {
         btnQuitarQr = findViewById(R.id.btnQuitarQr);
         btnTomarQr = findViewById(R.id.btnTomarQr);
         btnElegirQr = findViewById(R.id.btnElegirQr);
-        btnTomarQr.setOnClickListener(v -> tomarFoto(PEDIR_QR_FOTO));
+        btnTomarQr.setOnClickListener(v -> tomarQrConPermiso());
         btnElegirQr.setOnClickListener(v -> elegirQr());
         btnQuitarQr.setOnClickListener(v -> quitarQr());
         findViewById(R.id.btnPersonalizarMostrador).setOnClickListener(v -> {
@@ -223,6 +227,27 @@ public class AjustesActivity extends BaseActivity {
                 aviso("QR limpio listo. Guarda los ajustes para conservarlo.");
             });
         }).start();
+    }
+
+    private void tomarQrConPermiso() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+                && checkSelfPermission(Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.CAMERA}, PERMISO_CAMARA_QR);
+            return;
+        }
+        tomarFoto(PEDIR_QR_FOTO);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permisos, int[] resultados) {
+        super.onRequestPermissionsResult(requestCode, permisos, resultados);
+        if (requestCode != PERMISO_CAMARA_QR) return;
+        if (resultados.length > 0 && resultados[0] == PackageManager.PERMISSION_GRANTED) {
+            tomarFoto(PEDIR_QR_FOTO);
+        } else {
+            aviso("Para tomar la foto necesitas permitir la cámara. También puedes elegir una imagen.");
+        }
     }
 
     private void elegirQr() {

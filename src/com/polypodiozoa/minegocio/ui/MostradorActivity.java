@@ -1,10 +1,13 @@
 package com.polypodiozoa.minegocio.ui;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -41,6 +44,7 @@ public class MostradorActivity extends BaseActivity {
     private static final String TITULAR_EJEMPLO = "Titular de ejemplo";
     private static final int PEDIR_QR_CAMARA = 401;
     private static final int PEDIR_QR_IMAGEN = 402;
+    private static final int PERMISO_CAMARA_QR = 403;
 
     private ImageView imgQr;
     private TextView txtQrTitulo, txtQrAyuda, txtLlave, txtCuenta, txtBanco, txtTitular;
@@ -218,12 +222,33 @@ public class MostradorActivity extends BaseActivity {
         new AlertDialog.Builder(this)
                 .setTitle("Configurar QR")
                 .setMessage("La app limpia la foto y la guarda. Se configura una sola vez desde "
-                        + "El mostrador; para cambiarlo después, entra a Ajustes → Datos para "
+                        + "el mostrador; para cambiarlo después, entra a Ajustes → Datos para "
                         + "recibir pagos.")
-                .setPositiveButton("Tomar foto", (d, w) -> tomarFoto(PEDIR_QR_CAMARA))
+                .setPositiveButton("Tomar foto", (d, w) -> tomarQrConPermiso())
                 .setNeutralButton("Elegir imagen", (d, w) -> elegirQr())
                 .setNegativeButton("Cancelar", null)
                 .show();
+    }
+
+    private void tomarQrConPermiso() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+                && checkSelfPermission(Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.CAMERA}, PERMISO_CAMARA_QR);
+            return;
+        }
+        tomarFoto(PEDIR_QR_CAMARA);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permisos, int[] resultados) {
+        super.onRequestPermissionsResult(requestCode, permisos, resultados);
+        if (requestCode != PERMISO_CAMARA_QR) return;
+        if (resultados.length > 0 && resultados[0] == PackageManager.PERMISSION_GRANTED) {
+            tomarFoto(PEDIR_QR_CAMARA);
+        } else {
+            aviso("Para tomar la foto necesitas permitir la cámara. También puedes elegir una imagen.");
+        }
     }
 
     private void elegirQr() {
@@ -242,7 +267,11 @@ public class MostradorActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PEDIR_QR_CAMARA) {
             String ruta = resultadoFoto(resultCode, data);
-            if (ruta != null) procesarQrOnboarding(ruta);
+            if (ruta != null) {
+                procesarQrOnboarding(ruta);
+            } else if (resultCode == RESULT_OK) {
+                aviso("No se pudo guardar la foto. Intenta de nuevo o elige una imagen.");
+            }
             return;
         }
         if (requestCode == PEDIR_QR_IMAGEN) {

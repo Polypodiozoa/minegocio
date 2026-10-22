@@ -6,7 +6,7 @@ fiados, informes, reportes en Excel y **varias personas en el mismo dispositivo*
 sin internet. Solo pide permiso de **cámara** cuando se abre el lector de códigos; no usa
 ubicación, contactos ni almacenamiento general.
 
-- **Versión:** 1.23 (versionCode 24) · **targetSdk 35**
+- **Versión:** 1.24 (versionCode 25) · **targetSdk 35**
 - **Paquete:** `com.polypodiozoa.minegocio`
 - **Android:** 7.0 (API 24) o superior. Probada en una tablet Amazon Fire HD 8 (API 28).
 - **Privacidad:** no recoge ni envía datos; no declara el permiso de internet.
@@ -16,10 +16,10 @@ ubicación, contactos ni almacenamiento general.
 | Archivo | Para qué | Cómo se usa |
 |---|---|---|
 | [`minegocio.apk`](minegocio.apk) · 568 KB | **Instalar a mano o compartir** con alguien (WhatsApp, Drive, USB). | Se abre en el dispositivo y se acepta el origen desconocido. |
-| [`minegocio.aab`](minegocio.aab) · 569 KB | **Subir a Google Play Console.** Es un *Android App Bundle*: un paquete de entrega, no un instalador. | Play lo convierte en el APK que corresponde a cada dispositivo. **No se puede instalar directamente.** |
+| [`minegocio.aab`](minegocio.aab) · 570 KB | **Subir a Google Play Console.** Es un *Android App Bundle*: un paquete de entrega, no un instalador. | Play lo convierte en el APK que corresponde a cada dispositivo. **No se puede instalar directamente.** |
 
-- APK SHA-256: `cb4093b52c72ed2d7a4887f259a14cbc5a2ac93382894860ec21b94c55d2618f`
-- AAB SHA-256: `5cf1c224dd8c4b8ac38dc3ea2dd3b175d79233c267b14cbb0f7db8406dc05f0e`
+- APK SHA-256: `e3cdc7103f8cc97f9532cc8b4a323335e814df78492432681a9ec6d2dce284f5`
+- AAB SHA-256: `efc85a77c819eb61ebd1e9b91ead5578eaf4881333ba2ab971187231c3c09327`
 
 El APK del repositorio va firmado con la llave de **desarrollo** (sirve para probar y para
 compartir). La versión de Play la firma la llave de subida del dueño; si se instala encima de
@@ -97,8 +97,8 @@ Requiere el SDK de Android (**platforms;android-35** y **build-tools;35.0.0**) y
 Gradle. ZXing está en `herramientas/zxing-core-3.5.3.jar` y se incluye solo en el DEX.
 
 ```bash
-VERSION_CODE=24 VERSION_NAME=1.23 ./compilar.sh        # → minegocio.apk (firmado)
-VERSION_CODE=24 VERSION_NAME=1.23 ./empaquetar-aab.sh  # → minegocio.aab (para Play)
+VERSION_CODE=25 VERSION_NAME=1.24 ./compilar.sh        # → minegocio.apk (firmado)
+VERSION_CODE=25 VERSION_NAME=1.24 ./empaquetar-aab.sh  # → minegocio.aab (para Play)
 ```
 
 El AAB se arma con `aapt2` en formato proto y `herramientas/bundletool.jar`; se valida con

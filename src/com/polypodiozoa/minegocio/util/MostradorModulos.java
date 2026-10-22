@@ -3,7 +3,7 @@ package com.polypodiozoa.minegocio.util;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Módulos de El mostrador: orden y visibilidad configurables. */
+/** Módulos del mostrador: orden y visibilidad configurables. */
 public final class MostradorModulos {
 
     public static final String QR = "qr";

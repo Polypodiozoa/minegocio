@@ -1,4 +1,4 @@
-# Auditoría de Mi Negocio — base 1.3, actualizaciones 1.10 a 1.23 (22/10/2026)
+# Auditoría de Mi Negocio — base 1.3, actualizaciones 1.10 a 1.24 (22/10/2026)
 
 
 
@@ -11,6 +11,14 @@
 
 
 
+
+
+## Actualización 1.24 — cámara del QR (22/10/2026)
+
+- **Fallo corregido:** `ACTION_IMAGE_CAPTURE` lanzaba `SecurityException` si la app declaraba
+  cámara pero el permiso estaba revocado; ahora se pide antes de abrir la cámara.
+- **Texto:** “desde el mostrador” en minúscula.
+- **Manejo:** si se niega el permiso o no se guarda la foto, se avisa y se ofrece elegir imagen.
 
 ## Actualización 1.23 — botón central y personalización (22/10/2026)
 

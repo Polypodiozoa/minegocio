@@ -351,7 +351,7 @@ android:id="@+id/scrollForm"
                     style="@style/Ayuda"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Se muestran en El mostrador, el botón Datos del inicio. Si no los llenas, la app usa datos de ejemplo." />
+                    android:text="Se muestran en el mostrador, el botón Datos del inicio. Si no los llenas, la app usa datos de ejemplo." />
 
                 <TextView
                     style="@style/Etiqueta"

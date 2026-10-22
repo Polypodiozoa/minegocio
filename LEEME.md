@@ -1,4 +1,4 @@
-# Mi Negocio 1.23 — inventario, ventas, fiados, personas, mostrador y reportes para negocios colombianos
+# Mi Negocio 1.24 — inventario, ventas, fiados, personas, mostrador y reportes para negocios colombianos
 
 Aplicación Android nativa para llevar el día a día de un negocio pequeño en Colombia:
 inventario con fotos, ventas, compras, clientes, proveedores, gastos, **cartera de fiados**,
@@ -6,16 +6,26 @@ impuestos opcionales, abonos, informes, **reportes en Excel** y **lector de cód
 o QR** y **varias personas en el mismo dispositivo**. Funciona sin internet. Solo pide permiso de cámara al abrir el lector; no usa ubicación, contactos ni almacenamiento general.
 
 - **APK instalado en el dispositivo de prueba:** `minegocio.apk` (564 KB)
-- **SHA-256 del APK:** `cb4093b52c72ed2d7a4887f259a14cbc5a2ac93382894860ec21b94c55d2618f`
-- **AAB de Play:** `minegocio.aab` (569 KB), SHA-256
-  `5cf1c224dd8c4b8ac38dc3ea2dd3b175d79233c267b14cbb0f7db8406dc05f0e`
+- **SHA-256 del APK:** `e3cdc7103f8cc97f9532cc8b4a323335e814df78492432681a9ec6d2dce284f5`
+- **AAB de Play:** `minegocio.aab` (570 KB), SHA-256
+  `efc85a77c819eb61ebd1e9b91ead5578eaf4881333ba2ab971187231c3c09327`
 - **Paquete:** `com.polypodiozoa.minegocio`
-- **Versión:** 1.23 (versionCode 24)
+- **Versión:** 1.24 (versionCode 25)
 - **Tablet de prueba:** Amazon Fire HD 8 `KFONWI`, Fire OS 9 / Android 9 (API 28),
   800 × 1280 px, densidad 213 dpi.
 - **Requisito mínimo:** Android 7.0 (API 24) · **targetSdk:** 35 (Android 15).
 - **Estado:** instalada, probada y actualizada el 21 de octubre de 2026. Al final se borraron los datos
   de prueba; la app quedó limpia, con **Ajustes → Cargar datos de ejemplo** para recorrerla.
+
+## Novedades de la versión 1.24 — cámara del QR y texto
+
+- Corregido **“desde el mostrador”** (minúscula) en el mensaje de Configurar QR.
+- **Tomar foto** ahora pide permiso de cámara antes de abrir la cámara del sistema. Antes, si
+  el permiso estaba revocado, la app se cerraba con `SecurityException`.
+- Si se niega el permiso, avisa y sugiere elegir una imagen. Si la cámara no devuelve la foto,
+  también avisa.
+- Verificado: con el permiso revocado apareció el diálogo de Android; al permitir, se abrió la
+  cámara sin cerrar la app.
 
 ## Novedades de la versión 1.23 — botón central y Mostrador personalizable
 
@@ -505,6 +515,16 @@ LibreOffice. El informe de prueba tenía 5 hojas y 7.510 bytes; la cartera, 2.76
 - **No se probó** una copia v1 de la versión 1.0 ni una copia v3 abierta en una app 1.10
   (esta última no es compatible por diseño).
 
+## Verificación 1.24 (22-10-2026)
+
+- **Texto:** el diálogo de Configurar QR dice “desde el mostrador”, no “desde El mostrador”.
+- **Cámara:** se revocó el permiso de cámara; al tocar **Tomar foto** apareció el diálogo de
+  Android. Al pulsar **Permitir**, se abrió la cámara del sistema y la app siguió funcionando.
+- **Negación:** si se niega, la app muestra el aviso para usar **Elegir imagen**.
+- APK 1.24 (25) firmado; AAB validado; solo permiso de cámara; sin internet.
+- **Limpieza final:** datos de prueba borrados; la app quedó con Administrador y sin datos de
+  negocio.
+
 ## Verificación 1.23 (22-10-2026)
 
 - **Título:** la barra superior dice **“Mostrador”**.
@@ -734,18 +754,18 @@ Requisitos: Android SDK en `~/android-sdk` con **build-tools/35.0.0** y
 
 ```bash
 cd ~/proyectos/minegocio-tablet
-VERSION_CODE=24 VERSION_NAME=1.23 ./compilar.sh
+VERSION_CODE=25 VERSION_NAME=1.24 ./compilar.sh
 adb install -r minegocio.apk
 ```
 
 El script compila recursos, Java, DEX (incluye ZXing), alinea, firma con la llave de
 desarrollo y verifica. Para cambiar la versión:
-`VERSION_CODE=25 VERSION_NAME=1.24 ./compilar.sh`.
+`VERSION_CODE=26 VERSION_NAME=1.25 ./compilar.sh`.
 
 Para Play:
 
 ```bash
-VERSION_CODE=24 VERSION_NAME=1.23 ./empaquetar-aab.sh
+VERSION_CODE=25 VERSION_NAME=1.24 ./empaquetar-aab.sh
 ```
 
 Genera `minegocio.aab` y lo valida con `bundletool`.

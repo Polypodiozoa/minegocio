@@ -320,3 +320,4 @@ La app se va a publicar en Play después de los ciclos de prueba. Lo que falta p
 | 1.21 | 2026-10-22 | El QR se titula solo «QR»; se retira «de Bre-B» del código. |
 | 1.22 | 2026-10-22 | Configurar QR desde El mostrador una sola vez, con limpieza; después en Ajustes. |
 | 1.23 | 2026-10-22 | Título «Mostrador», botón central Completar datos y módulos ocultables/reordenables. |
+| 1.24 | 2026-10-22 | Permiso de cámara para el QR y corrección de «desde el mostrador». |
