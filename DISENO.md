@@ -38,7 +38,7 @@ horizontal y vertical, con letra del sistema hasta 1,3×.
 
 ## 3. Mapa de pantallas
 
-24 actividades. El inicio es un tablero con **11 accesos grandes** (dos columnas, icono de
+29 actividades. El inicio es un tablero con **12 accesos grandes** (dos columnas, icono de
 34 dp y etiqueta de 18 sp):
 
 | Acceso | Pantalla | Para qué |
@@ -53,13 +53,33 @@ horizontal y vertical, con letra del sistema hasta 1,3×.
 | Proveedores | `ProveedoresActivity` → `ProveedorActivity` / `ProveedorDetalleActivity` | Contacto e historial de compras. |
 | Gastos | `GastosActivity` → `GastoActivity` | Gastos del negocio con comprobante. |
 | Informes | `InformesActivity` | Períodos, utilidad, cartera, exportación a Excel/CSV. |
+| Perfil | `PerfilActivity` | Cuenta actual, resumen de ventas/gastos, edición y menú propio. |
 | Ajustes | `AjustesActivity` | Datos del negocio, impuesto, tamaño de texto, modo del lector, copia y borrado. |
 
 Apoyo: `SelectorActivity` (elegir producto, cliente o proveedor), `EscanerActivity`
-(leer un código de barras o QR) y `FotoActivity` (ver una foto o comprobante a pantalla
-completa).
+(leer un código de barras o QR), `AccesosActivity` (selector verde de personas),
+`UsuariosActivity`/`UsuarioActivity` (alta y edición), `MenuPerfilActivity` (orden del menú
+por cuenta) y `FotoActivity` (ver una foto o comprobante a pantalla completa).
 
-## 3.1 Lector de códigos
+## 3.1 Personas y accesos
+
+El negocio puede compartir una tablet entre varias personas. La cuenta actual es la que
+firma; no es un login remoto. En la parte superior de Inicio hay un botón con icono de
+persona y el nombre actual que abre el **Administrador de Accesos**.
+
+- **Verde bosque** (`#245B43`) para las páginas de administración (accesos, perfil, personas
+  y menú), frente al azul de la terminal. Es un verde oscuro, no fluorescente.
+- **Tarjetas** de personas con inicial, nombre, rol y “En uso”; tocar una cambia la cuenta.
+- **Rol informativo**: Administrador o Empleado. No hay PIN; el selector es de confianza para
+  un dispositivo compartido, no una barrera de seguridad.
+- **Historial**: una cuenta con ventas no se borra, se desactiva; los registros conservan su
+  nombre.
+- **Menú por cuenta:** el orden de «¿Qué quieres hacer?» se guarda en `usuarios.menu`. Nueva
+  venta y Nueva compra mantienen el borde de 2 dp.
+- **Inicio:** el nombre del negocio aparece debajo de la fecha; el texto fijo de módulos se
+  retiró. El botón de usuario queda arriba a la derecha.
+
+## 3.2 Lector de códigos
 
 El lector nace de dos tareas concretas: **cargar el inventario** sin teclear cada referencia y
 **agregar un producto a la venta** sin buscarlo en una lista. Por eso aparece en la ficha del
@@ -272,3 +292,4 @@ La app se va a publicar en Play después de los ciclos de prueba. Lo que falta p
 | 1.8 | 2026-10-18 | «Mi Negocio» con mayúsculas en app y PDF; «dispositivo» en vez de «tablet»; checklist de Google Play. |
 | 1.9 | 2026-10-18 | targetSdk 35, empaquetado AAB y textos de tienda y privacidad. |
 | 1.10 | 2026-10-21 | Lector de códigos de barras (predeterminado) y QR, integrado en producto, inventario y venta; permiso de cámara acotado al lector. |
+| 1.11 | 2026-10-21 | Personas y accesos con selector verde, perfil, autoría de ventas/compras/pagos/gastos, menú propio por cuenta, nombre del negocio bajo la fecha y bordes principales. |

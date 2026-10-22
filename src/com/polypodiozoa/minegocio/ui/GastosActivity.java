@@ -69,12 +69,14 @@ public class GastosActivity extends BaseActivity {
             f.id = g.id;
             f.titulo = g.descripcion;
             String sub = (g.categoria.isEmpty() ? "Sin categoría" : g.categoria)
-                    + " · " + Fechas.fecha(g.fecha) + " · " + g.formaPago;
+                    + " · " + Fechas.fecha(g.fecha) + " · " + g.formaPago
+                    + (g.usuarioNombre.isEmpty() ? "" : " · " + g.usuarioNombre);
             f.subtitulo = sub;
             f.valor = Formatos.pesos(g.monto);
             f.iconoDefecto = R.drawable.ic_dinero;
             f.dato = g;
             f.descripcion = g.descripcion + ", " + sub + ", " + Formatos.pesosHablado(g.monto)
+                    + (g.usuarioNombre.isEmpty() ? "" : ", registró " + g.usuarioNombre)
                     + ". Toca para editar.";
             filas.add(f);
         }

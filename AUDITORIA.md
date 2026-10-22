@@ -1,5 +1,24 @@
-# Auditoría de Mi Negocio — base 1.3 y actualización 1.10 (21/10/2026)
+# Auditoría de Mi Negocio — base 1.3, actualizaciones 1.10 y 1.11 (21/10/2026)
 
+
+
+## Actualización 1.11 — personas y accesos (21/10/2026)
+
+- **Datos locales:** las cuentas, el orden del menú y la autoría de ventas/compras/pagos/gastos
+  viven en la misma base SQLite; no se agregó internet ni un servicio de identidad.
+- **Migración v2 → v3:** se crea la cuenta «Administrador» y se asignan las filas existentes
+  a esa cuenta. Verificado con una copia real de la versión 1.10 (3 ventas, 1 compra, 1 pago,
+  1 gasto): `user_version=3`, todas con `usuario_id=1`.
+- **Autoría:** cada venta, compra, pago y gasto guarda `usuario_id` y muestra el nombre en
+  listas/detalles; el Excel de ventas y gastos incluye la columna.
+- **Riesgo aceptado:** no hay PIN ni contraseña. Cualquier persona con el dispositivo puede
+  cambiar de cuenta y ver los datos; el selector es de confianza, no autenticación. Si el
+  negocio necesita separar cajas con seguridad, el siguiente paso es un PIN por cuenta o
+  perfiles de Android.
+- **Roles:** Administrador/Empleado son informativos; no bloquean funciones. El historial no
+  se borra al desactivar una cuenta.
+- **Privacidad:** no se envían nombres ni historiales; las copias siguen siendo responsabilidad
+  del usuario.
 
 ## Actualización 1.10 — lector de códigos (21/10/2026)
 

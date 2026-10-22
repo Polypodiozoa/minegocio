@@ -310,7 +310,8 @@ public class ClienteDetalleActivity extends BaseActivity {
         textos.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
         TextView t = Ui.texto(this, "Abono · " + Formatos.pesos(pago.monto), 17,
                 getColor(R.color.texto), true);
-        String sub = Fechas.fechaHora(pago.fecha) + " · " + pago.formaPago;
+        String sub = Fechas.fechaHora(pago.fecha) + " · " + pago.formaPago
+                + (pago.usuarioNombre.isEmpty() ? "" : " · " + pago.usuarioNombre);
         if (pago.notas != null && !pago.notas.isEmpty()) sub += "\n" + pago.notas;
         TextView s = Ui.texto(this, sub, 14, getColor(R.color.texto_secundario), false);
         textos.addView(t);
@@ -343,7 +344,8 @@ public class ClienteDetalleActivity extends BaseActivity {
             exterior.addView(ver);
         }
         exterior.setContentDescription("Abono de " + Formatos.pesosHablado(pago.monto) + ", "
-                + Fechas.fechaHora(pago.fecha) + ", " + pago.formaPago);
+                + Fechas.fechaHora(pago.fecha) + ", " + pago.formaPago
+                + (pago.usuarioNombre.isEmpty() ? "" : ", registró " + pago.usuarioNombre));
         return exterior;
     }
 

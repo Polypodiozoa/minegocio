@@ -92,8 +92,8 @@ public final class ReporteExcel {
     }
 
     private static Hoja hojaVentas(BD bd, long desde, long hasta) {
-        Hoja h = new Hoja("Ventas").ancho(8, 18, 26, 18, 11, 14, 14, 12, 13, 14, 14, 14, 10, 14, 14, 46);
-        h.titulo("Venta", "Fecha", "Cliente", "Pago", "Estado", "Vence",
+        Hoja h = new Hoja("Ventas").ancho(8, 18, 26, 20, 18, 11, 14, 14, 12, 13, 14, 14, 14, 10, 14, 14, 46);
+        h.titulo("Venta", "Fecha", "Cliente", "Atendió", "Pago", "Estado", "Vence",
                 "Subtotal", "Descuento", "Impuesto", "Total", "Costo", "Ganancia",
                 "Margen", "Abonado", "Saldo", "Productos");
         List<Modelo.Venta> ventas = bd.ventas("");
@@ -111,6 +111,7 @@ public final class ReporteExcel {
             h.fila(v.id,
                     Fechas.formato("dd/MM/yyyy HH:mm", v.fecha),
                     v.clienteNombre.isEmpty() ? "Consumidor final" : v.clienteNombre,
+                    v.usuarioNombre,
                     v.formaPago,
                     v.anulada ? "Anulada" : "credito".equals(v.estado) ? "Crédito" : "Pagada",
                     v.fechaLimite > 0 ? Fechas.fecha(v.fechaLimite) : "",
@@ -180,19 +181,20 @@ public final class ReporteExcel {
     }
 
     private static Hoja hojaGastos(BD bd, long desde, long hasta) {
-        Hoja h = new Hoja("Gastos").ancho(18, 20, 34, 16, 18, 36);
-        h.titulo("Fecha", "Categoría", "Descripción", "Monto", "Pago", "Notas");
+        Hoja h = new Hoja("Gastos").ancho(18, 20, 34, 16, 18, 20, 36);
+        h.titulo("Fecha", "Categoría", "Descripción", "Monto", "Pago", "Registró", "Notas");
         long total = 0;
         for (Modelo.Gasto g : bd.gastos("")) {
             if (g.fecha < desde || g.fecha >= hasta) continue;
             total += g.monto;
             h.fila(Fechas.fecha(g.fecha), g.categoria, g.descripcion,
-                    Celda.moneda(g.monto), g.formaPago, g.notas);
+                    Celda.moneda(g.monto), g.formaPago, g.usuarioNombre, g.notas);
         }
         h.filaVacia();
         h.fila(Celda.texto("Total gastos", Excel.TITULO), Celda.texto("", Excel.TITULO),
                 Celda.texto("", Excel.TITULO), Celda.moneda(total),
-                Celda.texto("", Excel.TITULO), Celda.texto("", Excel.TITULO));
+                Celda.texto("", Excel.TITULO), Celda.texto("", Excel.TITULO),
+                Celda.texto("", Excel.TITULO));
         return h;
     }
 }

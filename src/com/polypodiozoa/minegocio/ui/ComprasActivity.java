@@ -69,7 +69,8 @@ public class ComprasActivity extends BaseActivity {
             AdaptadorFilas.Fila f = new AdaptadorFilas.Fila();
             f.id = c.id;
             f.titulo = "Compra #" + c.id + (c.proveedorNombre.isEmpty() ? "" : " · " + c.proveedorNombre);
-            String sub = Fechas.fechaHora(c.fecha) + " · " + c.formaPago;
+            String sub = Fechas.fechaHora(c.fecha) + " · " + c.formaPago
+                    + (c.usuarioNombre.isEmpty() ? "" : " · " + c.usuarioNombre);
             if (c.numItems > 0) sub += " · " + c.numItems + (c.numItems == 1 ? " ítem" : " ítems");
             f.subtitulo = sub;
             f.valor = Formatos.pesos(c.total);
@@ -80,6 +81,7 @@ public class ComprasActivity extends BaseActivity {
                     + (c.proveedorNombre.isEmpty() ? ", sin proveedor" : ", " + c.proveedorNombre)
                     + ", " + Fechas.fechaHora(c.fecha) + ", total "
                     + Formatos.pesosHablado(c.total) + ", " + Ui.estadoCompra(c)
+                    + (c.usuarioNombre.isEmpty() ? "" : ", registró " + c.usuarioNombre)
                     + ". Toca para ver el detalle.";
             filas.add(f);
         }

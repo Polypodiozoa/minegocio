@@ -19,6 +19,15 @@
         <item name="android:windowOptOutEdgeToEdgeEnforcement">true</item>
     </style>
 
+    <style name="TemaAdmin" parent="@style/Tema">
+        <item name="android:colorPrimary">@color/admin_verde</item>
+        <item name="android:colorPrimaryDark">@color/admin_verde_oscuro</item>
+        <item name="android:colorAccent">@color/admin_verde</item>
+        <item name="android:windowBackground">@color/admin_verde_fondo</item>
+        <item name="android:statusBarColor">@color/admin_verde_oscuro</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+
     <style name="Tarjeta">
         <item name="android:background">@drawable/fondo_tarjeta</item>
         <item name="android:padding">16dp</item>
@@ -84,6 +93,28 @@
     <style name="BotonSecundario" parent="BotonPrimario">
         <item name="android:background">@drawable/boton_secundario</item>
         <item name="android:textColor">@color/primario</item>
+    </style>
+
+    <style name="TarjetaAdmin">
+        <item name="android:background">@drawable/fondo_tarjeta_admin</item>
+        <item name="android:padding">16dp</item>
+        <item name="android:layout_marginBottom">14dp</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="BotonAdmin" parent="BotonPrimario">
+        <item name="android:background">@drawable/boton_admin</item>
+        <item name="android:textColor">@color/blanco</item>
+    </style>
+
+    <style name="BotonAdminSecundario" parent="BotonPrimario">
+        <item name="android:background">@drawable/boton_admin_secundario</item>
+        <item name="android:textColor">@color/admin_verde</item>
+    </style>
+
+    <style name="BotonAdminTexto" parent="BotonTexto">
+        <item name="android:background">@drawable/boton_admin_texto</item>
+        <item name="android:textColor">@color/admin_verde</item>
     </style>
 
     <style name="BotonPeligro" parent="BotonPrimario">

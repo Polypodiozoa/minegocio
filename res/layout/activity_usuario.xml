@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/admin_verde_fondo">
+
+    <include layout="@layout/barra_superior" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <LinearLayout
+                style="@style/TarjetaAdmin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    style="@style/TituloSeccion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Datos de la persona" />
+
+                <TextView
+                    style="@style/Etiqueta"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:labelFor="@+id/etNombreUsuario"
+                    android:text="Nombre" />
+
+                <EditText
+                    android:id="@+id/etNombreUsuario"
+                    style="@style/Campo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Ej.: Nacho"
+                    android:inputType="textCapWords"
+                    android:maxLength="40" />
+
+                <TextView
+                    style="@style/Etiqueta"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:labelFor="@+id/spRol"
+                    android:text="Rol" />
+
+                <Spinner
+                    android:id="@+id/spRol"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/fondo_campo"
+                    android:minHeight="56dp"
+                    android:paddingLeft="14dp"
+                    android:paddingRight="14dp" />
+
+                <TextView
+                    style="@style/Ayuda"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="El nombre acompaña cada venta, compra, abono y gasto que registre esta cuenta. El rol es informativo; el historial se conserva." />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btnGuardar"
+                style="@style/BotonAdmin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Guardar persona" />
+
+            <Button
+                android:id="@+id/btnDesactivar"
+                style="@style/BotonPeligro"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Desactivar persona"
+                android:visibility="gone" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

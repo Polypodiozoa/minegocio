@@ -14,6 +14,7 @@ import com.polypodiozoa.minegocio.R;
 import com.polypodiozoa.minegocio.modelo.Modelo;
 import com.polypodiozoa.minegocio.util.Fechas;
 import com.polypodiozoa.minegocio.util.Formatos;
+import com.polypodiozoa.minegocio.util.MenuPrincipal;
 import com.polypodiozoa.minegocio.util.Ui;
 
 import java.util.List;
@@ -29,6 +30,7 @@ public class PrincipalActivity extends BaseActivity {
         setContentView(R.layout.activity_principal);
         gridAcciones = findViewById(R.id.gridAcciones);
         listaRecientes = findViewById(R.id.listaRecientes);
+        findViewById(R.id.btnUsuario).setOnClickListener(v -> abrir(AccesosActivity.class));
         prepararAcciones();
         findViewById(R.id.btnVerVentas).setOnClickListener(v -> abrir(VentasActivity.class));
         findViewById(R.id.btnCopia).setOnClickListener(v -> abrir(AjustesActivity.class));
@@ -63,35 +65,62 @@ public class PrincipalActivity extends BaseActivity {
         super.onResume();
         View desplazable = findViewById(R.id.scrollForm);
         if (desplazable != null) desplazable.post(() -> desplazable.scrollTo(0, 0));
+        prepararAcciones();
         cargar();
     }
 
     private void prepararAcciones() {
         gridAcciones.removeAllViews();
-        agregar(R.drawable.ic_venta, "Nueva venta", () -> abrir(VentaActivity.class));
-        agregar(R.drawable.ic_carrito, "Nueva compra", () -> abrir(CompraActivity.class));
-        agregar(R.drawable.ic_recibo, "Ventas", () -> abrir(VentasActivity.class));
-        agregar(R.drawable.ic_camion, "Compras", () -> abrir(ComprasActivity.class));
-        agregar(R.drawable.ic_caja, "Inventario", () -> abrir(InventarioActivity.class));
-        agregar(R.drawable.ic_personas, "Clientes", () -> abrir(ClientesActivity.class));
-        agregar(R.drawable.ic_calendario, "Deudas", () -> abrir(DeudasActivity.class));
-        agregar(R.drawable.ic_edificio, "Proveedores", () -> abrir(ProveedoresActivity.class));
-        agregar(R.drawable.ic_dinero, "Gastos", () -> abrir(GastosActivity.class));
-        agregar(R.drawable.ic_grafico, "Informes", () -> abrir(InformesActivity.class));
-        agregar(R.drawable.ic_ajustes, "Ajustes", () -> abrir(AjustesActivity.class));
+        Modelo.Usuario usuario = bd.usuarioActual();
+        String orden = usuario == null ? "" : usuario.menu;
+        for (MenuPrincipal.Opcion o : MenuPrincipal.opciones(orden)) {
+            agregar(o.icono, o.etiqueta, o.principal, () -> abrirPorClave(o.clave));
+        }
     }
 
-    private void agregar(int icono, String texto, Runnable accion) {
-        View tarjeta = Ui.tarjetaAccion(this, icono, texto, v -> accion.run());
+    private void agregar(int icono, String texto, boolean principal, Runnable accion) {
+        View tarjeta = Ui.tarjetaAccion(this, icono, texto, principal, v -> accion.run());
         Ui.agregarAccion(gridAcciones, tarjeta);
     }
 
+    private void abrirPorClave(String clave) {
+        switch (clave) {
+            case "nueva_venta": abrir(VentaActivity.class); break;
+            case "nueva_compra": abrir(CompraActivity.class); break;
+            case "ventas": abrir(VentasActivity.class); break;
+            case "compras": abrir(ComprasActivity.class); break;
+            case "inventario": abrir(InventarioActivity.class); break;
+            case "clientes": abrir(ClientesActivity.class); break;
+            case "deudas": abrir(DeudasActivity.class); break;
+            case "proveedores": abrir(ProveedoresActivity.class); break;
+            case "gastos": abrir(GastosActivity.class); break;
+            case "informes": abrir(InformesActivity.class); break;
+            case "perfil": abrir(PerfilActivity.class); break;
+            case "ajustes": abrir(AjustesActivity.class); break;
+            default: break;
+        }
+    }
+
     private void cargar() {
+        String nombreNegocio = bd.ajuste("negocio_nombre", "").trim();
         TextView negocio = findViewById(R.id.txtNegocio);
-        negocio.setText(bd.nombreNegocio());
-        negocio.setContentDescription("Negocio: " + bd.nombreNegocio());
+        if (nombreNegocio.isEmpty()) {
+            negocio.setVisibility(View.GONE);
+        } else {
+            negocio.setText(nombreNegocio);
+            negocio.setContentDescription("Negocio: " + nombreNegocio);
+            negocio.setVisibility(View.VISIBLE);
+        }
         TextView fecha = findViewById(R.id.txtFecha);
         fecha.setText(Fechas.hoyTexto());
+
+        Modelo.Usuario usuario = bd.usuarioActual();
+        TextView botonUsuario = findViewById(R.id.btnUsuario);
+        if (usuario != null) {
+            botonUsuario.setText(usuario.nombre);
+            botonUsuario.setContentDescription("Administrador de accesos. Usuario actual: "
+                    + usuario.nombre + ". Toca para cambiar de persona.");
+        }
 
         long[] hoy = Fechas.rango(Fechas.HOY);
         long[] mes = Fechas.rango(Fechas.MES);
@@ -190,7 +219,8 @@ public class PrincipalActivity extends BaseActivity {
         TextView t = Ui.texto(this, titulo, 17, getColor(R.color.texto), true);
         t.setMaxLines(1);
         t.setEllipsize(android.text.TextUtils.TruncateAt.END);
-        String sub = Fechas.fechaHora(v.fecha) + " · " + v.formaPago;
+        String sub = Fechas.fechaHora(v.fecha) + " · " + v.formaPago
+                + (v.usuarioNombre.isEmpty() ? "" : " · " + v.usuarioNombre);
         if (v.anulada) sub += " · Anulada";
         TextView s = Ui.texto(this, sub, 14, getColor(R.color.texto_secundario), false);
         textos.addView(t);

@@ -78,6 +78,9 @@ public class CompraDetalleActivity extends BaseActivity {
             proveedor.setContentDescription("Sin proveedor asociado.");
         }
         ((TextView) findViewById(R.id.txtFormaPago)).setText("Forma de pago: " + compra.formaPago);
+        TextView usuario = findViewById(R.id.txtUsuario);
+        usuario.setText(compra.usuarioNombre.isEmpty() ? "" : "Registró: " + compra.usuarioNombre);
+        usuario.setVisibility(compra.usuarioNombre.isEmpty() ? View.GONE : View.VISIBLE);
 
         LinearLayout contenedor = findViewById(R.id.containerItems);
         contenedor.removeAllViews();

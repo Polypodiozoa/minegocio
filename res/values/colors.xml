@@ -22,4 +22,11 @@
     <color name="barra_inferior">#FFFFFF</color>
     <color name="presionado">#D3E2EA</color>
     <color name="deshabilitado">#8A979F</color>
+    <!-- Administración: verde bosque, sin tonos fluorescentes. -->
+    <color name="admin_verde">#245B43</color>
+    <color name="admin_verde_oscuro">#163A2B</color>
+    <color name="admin_verde_claro">#E7F0EA</color>
+    <color name="admin_verde_fondo">#EDF4EF</color>
+    <color name="admin_verde_borde">#4F7C64</color>
+    <color name="admin_verde_texto">#1B3A2B</color>
 </resources>

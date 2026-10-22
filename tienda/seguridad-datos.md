@@ -17,7 +17,9 @@ respuestas son:
 
 La app no declara el permiso `android.permission.INTERNET` en el manifiesto; toda la
 información se guarda en una base SQLite privada del dispositivo y solo se exporta cuando el
-usuario comparte un informe o guarda una copia de seguridad en el destino que él elige.
+usuario comparte un informe o guarda una copia de seguridad en el destino que él elige. Las
+personas que comparten el dispositivo y la autoría de cada operación también son datos
+locales; no se envían a ningún servidor.
 
 ## Permisos declarados en el manifiesto (21/10/2026)
 
@@ -30,6 +32,9 @@ usuario comparte un informe o guarda una copia de seguridad en el destino que é
   `FileProvider` no exportado.
 - La lectura de códigos es local (ZXing 3.5.3); no se guardan fotogramas ni se envían a
   servidores.
+- Las cuentas de las personas y el orden de su menú son locales. La app no tiene login
+  remoto ni autenticación por PIN; el selector de persona es para un dispositivo compartido
+  de confianza.
 
 ## Clasificación de contenido
 

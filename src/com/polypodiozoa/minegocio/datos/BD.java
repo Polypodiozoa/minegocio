@@ -23,7 +23,7 @@ import java.util.List;
 public class BD extends SQLiteOpenHelper {
 
     public static final String ARCHIVO = "minegocio.db";
-    private static final int VERSION = 2;
+    private static final int VERSION = 3;
     private static BD instancia;
 
     public static synchronized BD get(Context contexto) {
@@ -106,6 +106,13 @@ public class BD extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE ajustes (clave TEXT PRIMARY KEY, valor TEXT NOT NULL)");
+        db.execSQL("CREATE TABLE usuarios (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "nombre TEXT NOT NULL," +
+                "rol TEXT NOT NULL DEFAULT 'empleado'," +
+                "menu TEXT," +
+                "activo INTEGER NOT NULL DEFAULT 1," +
+                "creado INTEGER NOT NULL)");
         db.execSQL("CREATE TABLE productos (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "nombre TEXT NOT NULL," +
@@ -153,6 +160,7 @@ public class BD extends SQLiteOpenHelper {
                 "forma_pago TEXT," +
                 "estado TEXT NOT NULL DEFAULT 'pagada'," +
                 "notas TEXT," +
+                "usuario_id INTEGER NOT NULL DEFAULT 0," +
                 "anulada INTEGER NOT NULL DEFAULT 0," +
                 "creado INTEGER NOT NULL)");
         db.execSQL("CREATE TABLE venta_items (" +
@@ -174,6 +182,7 @@ public class BD extends SQLiteOpenHelper {
                 "total INTEGER NOT NULL DEFAULT 0," +
                 "forma_pago TEXT," +
                 "notas TEXT," +
+                "usuario_id INTEGER NOT NULL DEFAULT 0," +
                 "anulada INTEGER NOT NULL DEFAULT 0," +
                 "creado INTEGER NOT NULL)");
         db.execSQL("CREATE TABLE compra_items (" +
@@ -191,6 +200,7 @@ public class BD extends SQLiteOpenHelper {
                 "monto INTEGER NOT NULL," +
                 "forma_pago TEXT," +
                 "notas TEXT," +
+                "usuario_id INTEGER NOT NULL DEFAULT 0," +
                 "creado INTEGER NOT NULL)");
         db.execSQL("CREATE TABLE pago_aplicaciones (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -205,6 +215,7 @@ public class BD extends SQLiteOpenHelper {
                 "monto INTEGER NOT NULL DEFAULT 0," +
                 "forma_pago TEXT," +
                 "notas TEXT," +
+                "usuario_id INTEGER NOT NULL DEFAULT 0," +
                 "creado INTEGER NOT NULL)");
         db.execSQL("CREATE TABLE adjuntos (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -224,7 +235,13 @@ public class BD extends SQLiteOpenHelper {
         db.execSQL("CREATE INDEX idx_aplicaciones_pago ON pago_aplicaciones(pago_id)");
         db.execSQL("CREATE INDEX idx_aplicaciones_venta ON pago_aplicaciones(venta_id)");
 
+        long usuario = db.insert("usuarios", null, valoresUsuario("Administrador", "admin", ""));
         ContentValues v = new ContentValues();
+        v.put("clave", "usuario_actual_id");
+        v.put("valor", String.valueOf(usuario));
+        db.insert("ajustes", null, v);
+
+        v = new ContentValues();
         v.put("clave", "impuesto_pct");
         v.put("valor", "19");
         db.insert("ajustes", null, v);
@@ -258,6 +275,35 @@ public class BD extends SQLiteOpenHelper {
                     "WHERE estado='credito' AND fecha_limite=0");
             migrarAplicaciones(db);
         }
+        if (anterior < 3) {
+            db.execSQL("CREATE TABLE usuarios (" +
+                    "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    "nombre TEXT NOT NULL," +
+                    "rol TEXT NOT NULL DEFAULT 'empleado'," +
+                    "menu TEXT," +
+                    "activo INTEGER NOT NULL DEFAULT 1," +
+                    "creado INTEGER NOT NULL)");
+            long usuario = db.insert("usuarios", null, valoresUsuario("Administrador", "admin", ""));
+            for (String tabla : new String[]{"ventas", "compras", "pagos", "gastos"}) {
+                db.execSQL("ALTER TABLE " + tabla + " ADD COLUMN usuario_id INTEGER NOT NULL DEFAULT 0");
+                db.execSQL("UPDATE " + tabla + " SET usuario_id=? WHERE usuario_id=0",
+                        new Object[]{usuario});
+            }
+            ContentValues actual = new ContentValues();
+            actual.put("clave", "usuario_actual_id");
+            actual.put("valor", String.valueOf(usuario));
+            db.insertWithOnConflict("ajustes", null, actual, SQLiteDatabase.CONFLICT_IGNORE);
+        }
+    }
+
+    private ContentValues valoresUsuario(String nombre, String rol, String menu) {
+        ContentValues v = new ContentValues();
+        v.put("nombre", nombre == null ? "" : nombre.trim());
+        v.put("rol", "admin".equals(rol) ? "admin" : "empleado");
+        v.put("menu", menu == null ? "" : menu);
+        v.put("activo", 1);
+        v.put("creado", Fechas.ahora());
+        return v;
     }
 
     /** Reparte los abonos antiguos entre las ventas fiadas, del vencimiento más próximo al más lejano. */
@@ -325,6 +371,119 @@ public class BD extends SQLiteOpenHelper {
     public String nombreNegocio() {
         String n = ajuste("negocio_nombre", "").trim();
         return n.isEmpty() ? "Mi Negocio" : n;
+    }
+
+    // --------------------------------------------------------------- usuarios
+
+    public List<Modelo.Usuario> usuarios() {
+        List<Modelo.Usuario> lista = new ArrayList<>();
+        try (Cursor c = getReadableDatabase().rawQuery(
+                "SELECT * FROM usuarios WHERE activo=1 ORDER BY nombre COLLATE NOCASE, id", null)) {
+            while (c.moveToNext()) lista.add(leerUsuario(c));
+        }
+        return lista;
+    }
+
+    public Modelo.Usuario usuario(long id) {
+        if (id <= 0) return null;
+        try (Cursor c = getReadableDatabase().rawQuery(
+                "SELECT * FROM usuarios WHERE id=? AND activo=1", new String[]{String.valueOf(id)})) {
+            if (c.moveToFirst()) return leerUsuario(c);
+        }
+        return null;
+    }
+
+    public Modelo.Usuario usuarioActual() {
+        Modelo.Usuario u = usuario(usuarioActualId());
+        if (u != null) return u;
+        List<Modelo.Usuario> lista = usuarios();
+        return lista.isEmpty() ? null : lista.get(0);
+    }
+
+    public long usuarioActualId() {
+        long id = ajusteNumero("usuario_actual_id", 0);
+        if (usuario(id) != null) return id;
+        List<Modelo.Usuario> lista = usuarios();
+        if (lista.isEmpty()) {
+            long nuevo = getWritableDatabase().insert("usuarios", null,
+                    valoresUsuario("Administrador", "admin", ""));
+            guardarAjuste("usuario_actual_id", nuevo);
+            return nuevo;
+        }
+        long primero = lista.get(0).id;
+        guardarAjuste("usuario_actual_id", primero);
+        return primero;
+    }
+
+    public long guardarUsuario(Modelo.Usuario u) {
+        ContentValues v = valoresUsuario(u.nombre, u.rol, u.menu);
+        SQLiteDatabase db = getWritableDatabase();
+        if (u.id > 0) {
+            db.update("usuarios", v, "id=?", new String[]{String.valueOf(u.id)});
+            return u.id;
+        }
+        u.id = db.insert("usuarios", null, v);
+        return u.id;
+    }
+
+    /** Desactiva la cuenta sin borrar sus ventas ni compras. */
+    public boolean desactivarUsuario(long id) {
+        if (id <= 0) return false;
+        List<Modelo.Usuario> activos = usuarios();
+        if (activos.size() <= 1) return false;
+        getWritableDatabase().execSQL("UPDATE usuarios SET activo=0 WHERE id=?",
+                new Object[]{id});
+        if (usuarioActualId() == id) {
+            for (Modelo.Usuario u : activos) {
+                if (u.id != id) {
+                    guardarAjuste("usuario_actual_id", u.id);
+                    break;
+                }
+            }
+        }
+        return true;
+    }
+
+    public void cambiarUsuario(long id) {
+        if (usuario(id) != null) guardarAjuste("usuario_actual_id", id);
+    }
+
+    public String menuUsuario(long id) {
+        Modelo.Usuario u = usuario(id);
+        return u == null || u.menu == null ? "" : u.menu;
+    }
+
+    public void guardarMenuUsuario(long id, String menu) {
+        ContentValues v = new ContentValues();
+        v.put("menu", menu == null ? "" : menu);
+        getWritableDatabase().update("usuarios", v, "id=?", new String[]{String.valueOf(id)});
+    }
+
+    public long totalVentasUsuario(long id, long desde, long hasta) {
+        return suma("SELECT COALESCE(SUM(total),0) FROM ventas WHERE anulada=0 AND usuario_id=? " +
+                "AND fecha>=? AND fecha<?", String.valueOf(id), String.valueOf(desde), String.valueOf(hasta));
+    }
+
+    public int cantidadVentasUsuario(long id, long desde, long hasta) {
+        return (int) suma("SELECT COUNT(*) FROM ventas WHERE anulada=0 AND usuario_id=? " +
+                "AND fecha>=? AND fecha<?", String.valueOf(id), String.valueOf(desde), String.valueOf(hasta));
+    }
+
+    public long totalGastosUsuario(long id, long desde, long hasta) {
+        return suma("SELECT COALESCE(SUM(monto),0) FROM gastos WHERE usuario_id=? " +
+                "AND fecha>=? AND fecha<?", String.valueOf(id), String.valueOf(desde), String.valueOf(hasta));
+    }
+
+    private Modelo.Usuario leerUsuario(Cursor c) {
+        Modelo.Usuario u = new Modelo.Usuario();
+        u.id = c.getLong(c.getColumnIndexOrThrow("id"));
+        u.nombre = n(c.getString(c.getColumnIndexOrThrow("nombre")));
+        u.rol = n(c.getString(c.getColumnIndexOrThrow("rol")));
+        int idxMenu = c.getColumnIndex("menu");
+        u.menu = idxMenu >= 0 ? n(c.getString(idxMenu)) : "";
+        u.activo = c.getInt(c.getColumnIndexOrThrow("activo")) != 0;
+        u.creado = c.getLong(c.getColumnIndexOrThrow("creado"));
+        return u;
     }
 
     // --------------------------------------------------------------- productos
@@ -656,18 +815,23 @@ public class BD extends SQLiteOpenHelper {
         v.saldo = "credito".equals(v.estado) ? Math.max(0, v.total - v.abonado) : 0;
         v.notas = n(c.getString(c.getColumnIndexOrThrow("notas")));
         v.anulada = c.getInt(c.getColumnIndexOrThrow("anulada")) != 0;
+        int idxUsuario = c.getColumnIndex("usuario_id");
+        v.usuarioId = idxUsuario >= 0 ? c.getLong(idxUsuario) : 0;
         int idx = c.getColumnIndex("cliente_nombre");
         v.clienteNombre = idx >= 0 ? n(c.getString(idx)) : "";
+        idx = c.getColumnIndex("usuario_nombre");
+        v.usuarioNombre = idx >= 0 ? n(c.getString(idx)) : "";
         idx = c.getColumnIndex("num_items");
         v.numItems = idx >= 0 ? c.getInt(idx) : 0;
         return v;
     }
 
     private static final String SQL_VENTA =
-            "SELECT v.*, c.nombre AS cliente_nombre, " +
+            "SELECT v.*, c.nombre AS cliente_nombre, u.nombre AS usuario_nombre, " +
             "(SELECT COUNT(*) FROM venta_items vi WHERE vi.venta_id=v.id) AS num_items, " +
             "COALESCE((SELECT SUM(a.monto) FROM pago_aplicaciones a WHERE a.venta_id=v.id),0) AS abonado " +
-            "FROM ventas v LEFT JOIN clientes c ON c.id=v.cliente_id ";
+            "FROM ventas v LEFT JOIN clientes c ON c.id=v.cliente_id " +
+            "LEFT JOIN usuarios u ON u.id=v.usuario_id ";
 
     public List<Modelo.Venta> ventas(String filtro) {
         List<Modelo.Venta> lista = new ArrayList<>();
@@ -757,6 +921,7 @@ public class BD extends SQLiteOpenHelper {
             cv.put("forma_pago", v.formaPago);
             cv.put("estado", v.estado);
             cv.put("notas", v.notas);
+            cv.put("usuario_id", v.usuarioId > 0 ? v.usuarioId : usuarioActualId());
             cv.put("anulada", 0);
             cv.put("creado", Fechas.ahora());
             v.id = db.insert("ventas", null, cv);
@@ -830,17 +995,22 @@ public class BD extends SQLiteOpenHelper {
         p.formaPago = n(c.getString(c.getColumnIndexOrThrow("forma_pago")));
         p.notas = n(c.getString(c.getColumnIndexOrThrow("notas")));
         p.anulada = c.getInt(c.getColumnIndexOrThrow("anulada")) != 0;
+        int idxUsuario = c.getColumnIndex("usuario_id");
+        p.usuarioId = idxUsuario >= 0 ? c.getLong(idxUsuario) : 0;
         int idx = c.getColumnIndex("proveedor_nombre");
         p.proveedorNombre = idx >= 0 ? n(c.getString(idx)) : "";
+        idx = c.getColumnIndex("usuario_nombre");
+        p.usuarioNombre = idx >= 0 ? n(c.getString(idx)) : "";
         idx = c.getColumnIndex("num_items");
         p.numItems = idx >= 0 ? c.getInt(idx) : 0;
         return p;
     }
 
     private static final String SQL_COMPRA =
-            "SELECT c.*, p.nombre AS proveedor_nombre, " +
+            "SELECT c.*, p.nombre AS proveedor_nombre, u.nombre AS usuario_nombre, " +
             "(SELECT COUNT(*) FROM compra_items ci WHERE ci.compra_id=c.id) AS num_items " +
-            "FROM compras c LEFT JOIN proveedores p ON p.id=c.proveedor_id ";
+            "FROM compras c LEFT JOIN proveedores p ON p.id=c.proveedor_id " +
+            "LEFT JOIN usuarios u ON u.id=c.usuario_id ";
 
     public List<Modelo.Compra> compras(String filtro) {
         List<Modelo.Compra> lista = new ArrayList<>();
@@ -915,6 +1085,7 @@ public class BD extends SQLiteOpenHelper {
             cv.put("total", compra.total);
             cv.put("forma_pago", compra.formaPago);
             cv.put("notas", compra.notas);
+            cv.put("usuario_id", compra.usuarioId > 0 ? compra.usuarioId : usuarioActualId());
             cv.put("anulada", 0);
             cv.put("creado", Fechas.ahora());
             compra.id = db.insert("compras", null, cv);
@@ -1001,6 +1172,7 @@ public class BD extends SQLiteOpenHelper {
             cv.put("monto", p.monto);
             cv.put("forma_pago", p.formaPago);
             cv.put("notas", p.notas);
+            cv.put("usuario_id", p.usuarioId > 0 ? p.usuarioId : usuarioActualId());
             cv.put("creado", Fechas.ahora());
             p.id = db.insert("pagos", null, cv);
             insertarAdjuntos(db, "pago", p.id, adjuntos);
@@ -1017,7 +1189,9 @@ public class BD extends SQLiteOpenHelper {
     public List<Modelo.Pago> pagosCliente(long clienteId) {
         List<Modelo.Pago> lista = new ArrayList<>();
         try (Cursor c = getReadableDatabase().rawQuery(
-                "SELECT p.*, c.nombre AS cliente_nombre FROM pagos p LEFT JOIN clientes c ON c.id=p.cliente_id " +
+                "SELECT p.*, c.nombre AS cliente_nombre, u.nombre AS usuario_nombre " +
+                        "FROM pagos p LEFT JOIN clientes c ON c.id=p.cliente_id " +
+                        "LEFT JOIN usuarios u ON u.id=p.usuario_id " +
                         "WHERE p.cliente_id=? ORDER BY p.fecha DESC, p.id DESC",
                 new String[]{String.valueOf(clienteId)})) {
             while (c.moveToNext()) {
@@ -1029,6 +1203,10 @@ public class BD extends SQLiteOpenHelper {
                 p.formaPago = n(c.getString(c.getColumnIndexOrThrow("forma_pago")));
                 p.notas = n(c.getString(c.getColumnIndexOrThrow("notas")));
                 p.clienteNombre = n(c.getString(c.getColumnIndexOrThrow("cliente_nombre")));
+                int idxUsuario = c.getColumnIndex("usuario_id");
+                p.usuarioId = idxUsuario >= 0 ? c.getLong(idxUsuario) : 0;
+                int idxNombre = c.getColumnIndex("usuario_nombre");
+                p.usuarioNombre = idxNombre >= 0 ? n(c.getString(idxNombre)) : "";
                 lista.add(p);
             }
         }
@@ -1215,21 +1393,26 @@ public class BD extends SQLiteOpenHelper {
         g.monto = c.getLong(c.getColumnIndexOrThrow("monto"));
         g.formaPago = n(c.getString(c.getColumnIndexOrThrow("forma_pago")));
         g.notas = n(c.getString(c.getColumnIndexOrThrow("notas")));
+        int idxUsuario = c.getColumnIndex("usuario_id");
+        g.usuarioId = idxUsuario >= 0 ? c.getLong(idxUsuario) : 0;
+        int idxNombre = c.getColumnIndex("usuario_nombre");
+        g.usuarioNombre = idxNombre >= 0 ? n(c.getString(idxNombre)) : "";
         return g;
     }
 
     public List<Modelo.Gasto> gastos(String filtro) {
         List<Modelo.Gasto> lista = new ArrayList<>();
         String f = filtro == null ? "" : filtro.trim().replace("%", " ").replace("_", " ");
-        String sql = "SELECT * FROM gastos ";
+        String sql = "SELECT g.*, u.nombre AS usuario_nombre FROM gastos g " +
+                "LEFT JOIN usuarios u ON u.id=g.usuario_id ";
         List<String> args = new ArrayList<>();
         if (!f.isEmpty()) {
-            sql += "WHERE descripcion LIKE ? OR categoria LIKE ? ";
+            sql += "WHERE g.descripcion LIKE ? OR g.categoria LIKE ? ";
             String patron = "%" + f + "%";
             args.add(patron);
             args.add(patron);
         }
-        sql += "ORDER BY fecha DESC, id DESC";
+        sql += "ORDER BY g.fecha DESC, g.id DESC";
         try (Cursor c = getReadableDatabase().rawQuery(sql, args.toArray(new String[0]))) {
             while (c.moveToNext()) lista.add(leerGasto(c));
         }
@@ -1237,7 +1420,9 @@ public class BD extends SQLiteOpenHelper {
     }
 
     public Modelo.Gasto gasto(long id) {
-        try (Cursor c = getReadableDatabase().rawQuery("SELECT * FROM gastos WHERE id=?",
+        try (Cursor c = getReadableDatabase().rawQuery(
+                "SELECT g.*, u.nombre AS usuario_nombre FROM gastos g " +
+                        "LEFT JOIN usuarios u ON u.id=g.usuario_id WHERE g.id=?",
                 new String[]{String.valueOf(id)})) {
             if (c.moveToFirst()) return leerGasto(c);
         }
@@ -1253,6 +1438,7 @@ public class BD extends SQLiteOpenHelper {
         v.put("monto", Math.max(0, g.monto));
         v.put("forma_pago", g.formaPago);
         v.put("notas", g.notas == null ? "" : g.notas);
+        v.put("usuario_id", g.usuarioId > 0 ? g.usuarioId : usuarioActualId());
         v.put("creado", Fechas.ahora());
         SQLiteDatabase db = getWritableDatabase();
         if (g.id > 0) {

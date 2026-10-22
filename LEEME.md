@@ -1,20 +1,42 @@
-# Mi Negocio 1.10 — inventario, ventas, fiados, lector y reportes para micronegocios colombianos
+# Mi Negocio 1.11 — inventario, ventas, fiados, personas, lector y reportes para micronegocios colombianos
 
 Aplicación Android nativa para llevar el día a día de un negocio pequeño en Colombia:
 inventario con fotos, ventas, compras, clientes, proveedores, gastos, **cartera de fiados**,
 impuestos opcionales, abonos, informes, **reportes en Excel** y **lector de códigos de barras
-o QR**. Funciona sin internet. Solo pide permiso de cámara al abrir el lector; no usa
-ubicación, contactos ni almacenamiento general.
+o QR** y **varias personas en el mismo dispositivo**. Funciona sin internet. Solo pide permiso de cámara al abrir el lector; no usa ubicación, contactos ni almacenamiento general.
 
-- **APK instalado en el dispositivo de prueba:** `minegocio.apk` (531 KB)
-- **SHA-256:** `14c5cb0747954102af94b4855f9bcdd5173b8e375b33e54ee5e66c18ca77478d`
+- **APK instalado en el dispositivo de prueba:** `minegocio.apk` (556 KB)
+- **SHA-256 del APK:** `c8a3a68b99162373e93abfecb84062778c438b8cffaecd6bc8b7206970116429`
+- **AAB de Play:** `minegocio.aab` (553 KB), SHA-256
+  `321927d9c8c41157da945bd7cbb789c19fde095646cc6d224ec91694a0ebfbee`
 - **Paquete:** `com.polypodiozoa.minegocio`
-- **Versión:** 1.10 (versionCode 11)
+- **Versión:** 1.11 (versionCode 12)
 - **Tablet de prueba:** Amazon Fire HD 8 `KFONWI`, Fire OS 9 / Android 9 (API 28),
   800 × 1280 px, densidad 213 dpi.
 - **Requisito mínimo:** Android 7.0 (API 24) · **targetSdk:** 35 (Android 15).
 - **Estado:** instalada, probada y actualizada el 21 de octubre de 2026. Al final se borraron los datos
   de prueba; la app quedó limpia, con **Ajustes → Cargar datos de ejemplo** para recorrerla.
+
+## Novedades de la versión 1.11 — personas y accesos
+
+- **Varias cuentas en una tablet o teléfono**, cada una con nombre y rol. La cuenta actual
+  firma ventas, compras, abonos y gastos; su nombre aparece en listas, detalles y Excel.
+- **Botón de usuario arriba a la derecha** con icono de persona y el nombre actual. Lleva al
+  **Administrador de Accesos**.
+- **Administrador de Accesos verde** con tarjetas de las personas: tocar una cambia la cuenta.
+  Desde ahí se agregan y editan personas.
+- **Perfil** como botón principal: resumen de ventas de hoy/mes, gastos, edición del perfil,
+  cambio de persona y **Personalizar mi menú**.
+- **Menú propio por cuenta:** cada persona ordena los botones de «¿Qué quieres hacer?»; el
+  orden queda guardado solo para ella. Nueva venta y Nueva compra mantienen el borde grueso.
+- **Nombre del negocio debajo de la fecha** en Inicio; se quitó el texto fijo
+  «Inventario, ventas, compras y clientes en un solo lugar».
+- **Páginas de administración verdes** (accesos, perfil, personas y menú), en verde bosque,
+  separadas del azul de la terminal.
+- **Base de datos v3** con migración automática desde v2: crea «Administrador» y asigna las
+  ventas, compras, pagos y gastos existentes a esa cuenta.
+- **Límite de seguridad:** no hay PIN ni contraseña por persona; el selector es para
+  compartir el dispositivo, no para impedir que alguien cambie de cuenta.
 
 ## Novedades de la versión 1.10 — lector de códigos
 
@@ -195,6 +217,23 @@ La ficha del cliente muestra:
 - **Deudas pendientes** con vencimiento, abono y saldo, con acceso a la venta.
 - Historial completo de ventas y abonos, y acceso a registrar abono o nueva venta.
 
+## Personas y accesos
+
+- **Cuenta actual:** se muestra arriba a la derecha en Inicio. Tocar el botón abre el
+  **Administrador de Accesos**.
+- **Cambiar de persona:** tocar su tarjeta verde. La app vuelve a Inicio con el nombre y el
+  menú de esa persona. Cada cuenta conserva su propio orden.
+- **Agregar o editar:** “Agregar persona” y “Editar personas”. Se puede elegir rol
+  Administrador o Empleado (informativo). Una persona con historial no se borra: se desactiva.
+- **Perfil:** botón principal con el resumen de la cuenta; desde allí se personaliza el menú
+  o se edita el nombre.
+- **Autoría:** las ventas, compras, abonos y gastos guardan la cuenta que los registró y
+  muestran “Atendió” o “Registró” en el detalle. El Excel de ventas y gastos incluye la
+  columna de la persona.
+- **Borrar todos los datos** elimina la operación pero conserva las cuentas y el orden de sus
+  menús; así el negocio no tiene que volver a crear a su gente.
+- **Privacidad:** las cuentas son locales; no hay nube, login remoto ni envío de nombres.
+
 ## Inventario actualizado
 
 - **Todos (N)**, **Agotados (N)** y **Por agotarse (N)** son botones de filtro.
@@ -298,8 +337,9 @@ LibreOffice. El informe de prueba tenía 5 hojas y 7.510 bytes; la cartera, 2.76
 
 - **Ajustes → Crear copia de seguridad** → `minegocio-AAAAMMDD-HHMM.zip` (base + fotos + PDF).
 - **Ajustes → Restaurar una copia** → elegir el ZIP → confirmar → reinicia.
-- La copia de la versión 1.1 conserva la base con esquema 2 (`clientes.cupo`,
-  `ventas.fecha_limite`, `pago_aplicaciones`).
+- La copia de la versión 1.11 conserva la base con esquema 3 (`usuarios`,
+  `usuario_id` en ventas/compras/pagos/gastos, `clientes.cupo`, `ventas.fecha_limite`,
+  `pago_aplicaciones`).
 - Verificado: la copia v2 incluyó las tablas y datos nuevos; la restauración se probó con el
   flujo completo de la app (en la versión anterior) y el mismo procedimiento copia el archivo
   completo de la base v2.
@@ -317,6 +357,24 @@ LibreOffice. El informe de prueba tenía 5 hojas y 7.510 bytes; la cartera, 2.76
 - **Sin gestos obligatorios**; funciona en vertical y horizontal.
 - **Nota honesta:** esta Fire OS no tiene TalkBack instalado; se validaron etiquetas con
   `uiautomator`, contraste calculado y prueba de texto grande, no con lector de pantalla real.
+
+## Verificación 1.11 (21-10-2026)
+
+- Migración real v2 → v3 sobre una copia de la versión 1.10 con 3 ventas, 1 compra, 1 pago y
+  1 gasto: `PRAGMA user_version=3`, cuenta «Administrador» creada y todas las filas con
+  `usuario_id=1`. Las ventas migradas muestran «Administrador».
+- Cambio de cuenta probado con Administrador, Nacho, Sonia y Andrea; el nombre del botón
+  superior y el menú cambian. Venta #4 registrada como **Nacho** y mostrada como
+  “Atendió: Nacho”.
+- Menú personalizable: “Bajar” a Nueva venta la intercambió con Nueva compra y el orden quedó
+  guardado; las dos conservan el borde grueso.
+- Nombre del negocio “Papelería Somor” visible debajo de la fecha; el texto fijo anterior ya
+  no aparece.
+- Páginas de accesos, perfil, personas y menú en verde bosque (#245B43) con fondos claros;
+  terminal de ventas en azul.
+- APK 1.11 (12), AAB validado; solo permiso de cámara; sin internet.
+- **Limpieza final:** se borraron los datos y las copias de prueba; la app quedó con la
+  cuenta Administrador y sin datos de negocio.
 
 ## Verificación 1.10 (21-10-2026)
 
@@ -388,7 +446,9 @@ En el dispositivo por USB:
 | ![Crédito pagado](capturas/21-credito-pagado.png) | ![Rentabilidad por unidad](capturas/22-rentabilidad-producto.png) |
 | ![Iconos de Compras y Proveedores separados](capturas/23-inicio-proveedores.png) | ![Lector de códigos](capturas/24-escaner.png) |
 | ![Venta con producto escaneado](capturas/25-venta-escaneada.png) | ![Ajustes del lector](capturas/26-ajustes-lector.png) |
-| ![Lector sin permiso de cámara](capturas/27-escaner-sin-permiso.png) | |
+| ![Lector sin permiso de cámara](capturas/27-escaner-sin-permiso.png) | ![Administrador de Accesos](capturas/28-accesos.png) |
+| ![Perfil de la cuenta](capturas/29-perfil.png) | ![Orden del menú por cuenta](capturas/30-menu-cuenta.png) |
+| ![Inicio con nombre del negocio](capturas/31-inicio-negocio.png) | ![Venta con la persona que atendió](capturas/32-venta-atendio.png) |
 
 ## Compilar e instalar
 
@@ -398,18 +458,18 @@ Requisitos: Android SDK en `~/android-sdk` con **build-tools/35.0.0** y
 
 ```bash
 cd ~/proyectos/minegocio-tablet
-./compilar.sh
+VERSION_CODE=12 VERSION_NAME=1.11 ./compilar.sh
 adb install -r minegocio.apk
 ```
 
 El script compila recursos, Java, DEX (incluye ZXing), alinea, firma con la llave de
 desarrollo y verifica. Para cambiar la versión:
-`VERSION_CODE=12 VERSION_NAME=1.11 ./compilar.sh`.
+`VERSION_CODE=13 VERSION_NAME=1.12 ./compilar.sh`.
 
 Para Play:
 
 ```bash
-./empaquetar-aab.sh
+VERSION_CODE=12 VERSION_NAME=1.11 ./empaquetar-aab.sh
 ```
 
 Genera `minegocio.aab` y lo valida con `bundletool`.
@@ -438,7 +498,7 @@ minegocio-tablet/
 │   ├── drawable/        # iconos y fondos
 │   └── values/          # colores, estilos y textos
 └── src/com/polypodiozoa/minegocio/
-    ├── datos/           # SQLite v2, deudas, adjuntos, respaldo
+    ├── datos/           # SQLite v3, usuarios, deudas, adjuntos, respaldo
     ├── modelo/Modelo.java
     ├── ui/              # actividades (incluye DeudasActivity y EscanerActivity)
     └── util/            # COP, fechas, imágenes, Excel, PDF, lector ZXing, UI

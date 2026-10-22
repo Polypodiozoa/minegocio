@@ -69,7 +69,8 @@ public class VentasActivity extends BaseActivity {
             AdaptadorFilas.Fila f = new AdaptadorFilas.Fila();
             f.id = v.id;
             f.titulo = "Venta #" + v.id + (v.clienteNombre.isEmpty() ? "" : " · " + v.clienteNombre);
-            String sub = Fechas.fechaHora(v.fecha) + " · " + v.formaPago;
+            String sub = Fechas.fechaHora(v.fecha) + " · " + v.formaPago
+                    + (v.usuarioNombre.isEmpty() ? "" : " · " + v.usuarioNombre);
             if (v.numItems > 0) sub += " · " + v.numItems + (v.numItems == 1 ? " ítem" : " ítems");
             f.subtitulo = sub;
             f.valor = Formatos.pesos(v.total);
@@ -80,6 +81,7 @@ public class VentasActivity extends BaseActivity {
                     + (v.clienteNombre.isEmpty() ? ", consumidor final" : ", " + v.clienteNombre)
                     + ", " + Fechas.fechaHora(v.fecha) + ", total "
                     + Formatos.pesosHablado(v.total) + ", " + Ui.estadoVenta(v)
+                    + (v.usuarioNombre.isEmpty() ? "" : ", atendió " + v.usuarioNombre)
                     + ". Toca para ver el detalle.";
             filas.add(f);
         }

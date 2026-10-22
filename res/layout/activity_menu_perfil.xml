@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/admin_verde_fondo">
+
+    <include layout="@layout/barra_superior" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Orden de mi menú"
+                android:textColor="@color/admin_verde_texto"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+
+            <TextView
+                style="@style/Ayuda"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Sube o baja cada botón. Este orden es solo para tu cuenta; las demás personas conservan el suyo. Nueva venta y Nueva compra mantienen el borde más grueso." />
+
+            <LinearLayout
+                android:id="@+id/listaMenu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:orientation="vertical" />
+
+            <Button
+                android:id="@+id/btnRestaurar"
+                style="@style/BotonAdminSecundario"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Restaurar orden recomendado" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

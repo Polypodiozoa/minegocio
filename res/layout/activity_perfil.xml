@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/admin_verde_fondo">
+
+    <include layout="@layout/barra_superior" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <LinearLayout
+                style="@style/TarjetaAdmin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal">
+
+                <TextView
+                    android:id="@+id/txtInicial"
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    android:background="@drawable/fondo_avatar_admin"
+                    android:gravity="center"
+                    android:textColor="@color/admin_verde"
+                    android:textSize="30sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/txtNombrePerfil"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center"
+                    android:textColor="@color/admin_verde_texto"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/txtRolPerfil"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/admin_verde"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:gravity="center"
+                    android:text="Esta es la cuenta que firma las ventas y procesos que registres."
+                    android:textColor="@color/texto_secundario"
+                    android:textSize="15sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                style="@style/TarjetaAdmin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    style="@style/TituloSeccion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Resumen de esta cuenta" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Ventas de hoy"
+                            android:textColor="@color/texto_secundario"
+                            android:textSize="15sp" />
+
+                        <TextView
+                            android:id="@+id/txtVentasHoy"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="$ 0"
+                            android:textColor="@color/admin_verde_texto"
+                            android:textSize="22sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Ventas del mes"
+                            android:textColor="@color/texto_secundario"
+                            android:textSize="15sp" />
+
+                        <TextView
+                            android:id="@+id/txtVentasMes"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="$ 0"
+                            android:textColor="@color/admin_verde_texto"
+                            android:textSize="22sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/txtDetalleVentas"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:textColor="@color/texto_secundario"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/txtGastosMes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:textColor="@color/texto_secundario"
+                    android:textSize="15sp" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btnMenu"
+                style="@style/BotonAdmin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Personalizar mi menú" />
+
+            <Button
+                android:id="@+id/btnEditarPerfil"
+                style="@style/BotonAdminSecundario"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Editar mi perfil" />
+
+            <Button
+                android:id="@+id/btnCambiar"
+                style="@style/BotonAdminSecundario"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Cambiar de persona" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

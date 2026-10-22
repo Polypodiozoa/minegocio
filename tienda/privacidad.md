@@ -8,8 +8,8 @@ política explica qué pasa con la información que se escribe en la app.
 ## Resumen
 
 **La app no recoge, no transmite y no comparte datos personales.** Todo lo que registras
-(productos, ventas, clientes, proveedores, gastos, fotos y comprobantes) se queda en el
-almacenamiento privado de tu dispositivo. No hay cuentas, no hay servidores y la app no pide
+(productos, ventas, clientes, proveedores, gastos, fotos, comprobantes y las personas que
+usan la app) se queda en el almacenamiento privado de tu dispositivo. No hay cuentas, no hay servidores y la app no pide
 permiso de internet. La cámara se usa solo para leer códigos de barras o QR dentro del
 lector; los fotogramas no se guardan ni se envían.
 
@@ -18,6 +18,8 @@ lector; los fotogramas no se guardan ni se envían.
 Solo la que tú escribes, en la base de datos local de la app:
 
 - Datos del negocio: nombre, NIT, teléfono y dirección (opcionales).
+- Personas que comparten el dispositivo: nombre y rol. La app guarda qué persona registró
+  cada venta, compra, abono o gasto.
 - Productos, precios, costos y existencias.
 - Ventas, compras, gastos y abonos.
 - Clientes y proveedores: nombre, teléfono, correo, dirección y notas, si los escribes.

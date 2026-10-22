@@ -37,6 +37,8 @@ cupo de fiado por cliente y aviso de deudas vencidas.
 • Exporta a Excel o CSV, y genera el comprobante de venta en PDF para enviar por WhatsApp.
 • **Lector de códigos de barras (predeterminado) o QR** para cargar el inventario y agregar
   productos a la venta sin teclear la referencia.
+• **Varias personas en la misma tablet o teléfono**, con cambio rápido de cuenta, perfil y
+  menú propio; cada venta queda a nombre de quien la atendió.
 • Copia de seguridad en un archivo que tú guardas donde quieras (Drive, USB, correo).
 
 **Pensada para Colombia**
@@ -46,7 +48,8 @@ Pesos sin centavos, fechas y vencimientos como se usan aquí, y textos claros: �
 
 **Tus datos son tuyos**
 
-La app no pide internet ni cuenta. La cámara se usa solo cuando abres el lector de códigos;
+La app no pide internet ni cuenta. Puedes compartir el dispositivo entre varias personas y
+cambiar de cuenta desde el botón de usuario. La cámara se usa solo cuando abres el lector de códigos;
 puedes negar el permiso y escribir el código o usar una foto. No usa ubicación ni contactos.
 Todo queda en tu dispositivo y solo sale si tú decides compartir un informe o una copia de
 seguridad. Puedes borrar todos los datos desde Ajustes en cualquier momento.
@@ -67,8 +70,9 @@ Android 7.0 o superior. Funciona en celular y en tableta.
 - Sitio web: **(tú)** (puede ser el mismo de la política de privacidad)
 - Política de privacidad: **(tú)** — publicar `privacidad.md` en una URL
 
-## Qué hay de nuevo (versión 1.10)
+## Qué hay de nuevo (versión 1.11)
 
-> Versión 1.10: lector de códigos de barras y QR (local), inventario, ventas, fiados con
-> abonos y vencimientos, compras, clientes, proveedores, gastos, informes con Excel y
-> comprobante en PDF. Sin internet.
+> Versión 1.11: varias personas en el mismo dispositivo con perfil, cambio rápido de cuenta,
+> menú propio y autoría de cada operación; lector de códigos de barras y QR (local);
+> inventario, ventas, fiados con abonos y vencimientos, compras, clientes, proveedores,
+> gastos, informes con Excel y comprobante en PDF. Sin internet.

@@ -94,6 +94,9 @@ public class VentaDetalleActivity extends BaseActivity {
             cliente.setContentDescription("Consumidor final, sin cliente asociado.");
         }
         ((TextView) findViewById(R.id.txtFormaPago)).setText("Forma de pago: " + venta.formaPago);
+        TextView usuario = findViewById(R.id.txtUsuario);
+        usuario.setText(venta.usuarioNombre.isEmpty() ? "" : "Atendió: " + venta.usuarioNombre);
+        usuario.setVisibility(venta.usuarioNombre.isEmpty() ? View.GONE : View.VISIBLE);
 
         TextView vencimiento = findViewById(R.id.txtVencimiento);
         TextView saldoFiado = findViewById(R.id.txtSaldoFiado);

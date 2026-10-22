@@ -45,6 +45,23 @@ public final class Modelo {
         public long creado;
     }
 
+    public static class Usuario {
+        public long id;
+        public String nombre = "";
+        public String rol = "empleado";
+        public String menu = "";
+        public boolean activo = true;
+        public long creado;
+
+        public boolean esAdministrador() {
+            return "admin".equalsIgnoreCase(rol);
+        }
+
+        public String rolVisible() {
+            return esAdministrador() ? "Administrador" : "Empleado";
+        }
+    }
+
     public static class Venta {
         public long id;
         public long fecha;
@@ -62,6 +79,8 @@ public final class Modelo {
         public String estado = "pagada";
         public String notas = "";
         public String clienteNombre = "";
+        public long usuarioId;
+        public String usuarioNombre = "";
         public boolean anulada;
         public int numItems;
     }
@@ -77,6 +96,8 @@ public final class Modelo {
         public String formaPago = "Efectivo";
         public String notas = "";
         public String proveedorNombre = "";
+        public long usuarioId;
+        public String usuarioNombre = "";
         public boolean anulada;
         public int numItems;
     }
@@ -111,6 +132,8 @@ public final class Modelo {
         public String formaPago = "Efectivo";
         public String notas = "";
         public String clienteNombre = "";
+        public long usuarioId;
+        public String usuarioNombre = "";
         public long ventaId;
     }
 
@@ -122,6 +145,8 @@ public final class Modelo {
         public long monto;
         public String formaPago = "Efectivo";
         public String notas = "";
+        public long usuarioId;
+        public String usuarioNombre = "";
     }
 
     public static class Deuda {

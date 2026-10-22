@@ -35,10 +35,16 @@ public final class Ui {
     }
 
     public static View tarjetaAccion(Context ctx, int icono, String etiqueta, View.OnClickListener click) {
+        return tarjetaAccion(ctx, icono, etiqueta, false, click);
+    }
+
+    public static View tarjetaAccion(Context ctx, int icono, String etiqueta,
+                                     boolean principal, View.OnClickListener click) {
         LinearLayout fila = new LinearLayout(ctx);
         fila.setOrientation(LinearLayout.HORIZONTAL);
         fila.setGravity(Gravity.CENTER_VERTICAL);
-        fila.setBackgroundResource(R.drawable.fondo_tarjeta);
+        fila.setBackgroundResource(principal
+                ? R.drawable.fondo_tarjeta_principal : R.drawable.fondo_tarjeta);
         int p = dp(ctx, 12);
         fila.setPadding(p, p, p, p);
         fila.setMinimumHeight(dp(ctx, 78));

@@ -14,39 +14,75 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
             android:background="@color/primario"
             android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:paddingTop="22dp"
-            android:paddingBottom="22dp">
+            android:paddingRight="14dp"
+            android:paddingTop="18dp"
+            android:paddingBottom="18dp">
 
-            <TextView
-                android:id="@+id/txtNegocio"
-                android:layout_width="match_parent"
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Mi Negocio"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/txtTituloApp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Mi Negocio"
+                    android:textColor="@color/blanco"
+                    android:textSize="29sp"
+                    android:textStyle="bold"
+                    android:maxLines="1"
+                    android:ellipsize="end" />
+
+                <TextView
+                    android:id="@+id/txtFecha"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:textColor="#D8E8F0"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/txtNegocio"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:textColor="#E6F1F6"
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    android:visibility="gone"
+                    android:maxLines="2"
+                    android:ellipsize="end" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btnUsuario"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:minHeight="52dp"
+                android:minWidth="52dp"
+                android:maxWidth="220dp"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:background="@drawable/fondo_boton_usuario"
+                android:backgroundTint="@null"
+                android:stateListAnimator="@null"
+                android:drawableStart="@drawable/ic_persona"
+                android:drawableTint="@color/blanco"
+                android:drawablePadding="6dp"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:text="Usuario"
+                android:textAllCaps="false"
                 android:textColor="@color/blanco"
-                android:textSize="29sp"
-                android:textStyle="bold"
-                android:maxLines="2"
-                android:ellipsize="end" />
-
-            <TextView
-                android:id="@+id/txtFecha"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:textColor="#D8E8F0"
-                android:textSize="16sp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="Inventario, ventas, compras y clientes en un solo lugar."
-                android:textColor="#E6F1F6"
-                android:textSize="16sp" />
+                android:textSize="15sp"
+                android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
