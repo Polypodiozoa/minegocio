@@ -326,3 +326,4 @@ La app se va a publicar en Play después de los ciclos de prueba. Lo que falta p
 | 1.27 | 2026-10-22 | Ejemplos de llave y cuenta unificados entre Ajustes y Mostrador. |
 | 1.28 | 2026-10-22 | Personalizar Mostrador con tarjetas, interruptores y botones grandes; texto de ayuda retirado. |
 | 1.29 | 2026-10-22 | Caja con apertura/cierre/reporte, permiso global de cámara y orientación del escáner. |
+| 1.30 | 2026-10-22 | Caja: estado actual y reporte separado por efectivo y otros métodos. |

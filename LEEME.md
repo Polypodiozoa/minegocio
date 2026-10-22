@@ -1,4 +1,4 @@
-# Mi Negocio 1.29 — inventario, ventas, fiados, caja, mostrador y reportes para negocios colombianos
+# Mi Negocio 1.30 — inventario, ventas, fiados, caja, mostrador y reportes para negocios colombianos
 
 Aplicación Android nativa para llevar el día a día de un negocio pequeño en Colombia:
 inventario con fotos, ventas, compras, clientes, proveedores, gastos, **cartera de fiados**,
@@ -6,16 +6,27 @@ impuestos opcionales, abonos, informes, **reportes en Excel** y **lector de cód
 o QR** y **varias personas en el mismo dispositivo**. Funciona sin internet. Solo pide permiso de cámara al abrir el lector; no usa ubicación, contactos ni almacenamiento general.
 
 - **APK instalado en el dispositivo de prueba:** `minegocio.apk` (564 KB)
-- **SHA-256 del APK:** `2435ff0b39f8ff5d9eaf5b5335b1286606d659a636aaa6055e52fdd719dadef5`
+- **SHA-256 del APK:** `1bea9191e7fb4af87d0b8754dc841a0a922a93012fe758493152db11721a5eda`
 - **AAB de Play:** `minegocio.aab` (578 KB), SHA-256
-  `87b1a0e188820db68653626655bf56093f464a40d009b375b46c691465052aa8`
+  `16dfa41f25243530a14de67ff816376b4fe1c89203d21a6c8e0339e406e23fb4`
 - **Paquete:** `com.polypodiozoa.minegocio`
-- **Versión:** 1.29 (versionCode 30)
+- **Versión:** 1.30 (versionCode 31)
 - **Tablet de prueba:** Amazon Fire HD 8 `KFONWI`, Fire OS 9 / Android 9 (API 28),
   800 × 1280 px, densidad 213 dpi.
 - **Requisito mínimo:** Android 7.0 (API 24) · **targetSdk:** 35 (Android 15).
 - **Estado:** instalada, probada y actualizada el 21 de octubre de 2026. Al final se borraron los datos
   de prueba; la app quedó limpia, con **Ajustes → Cargar datos de ejemplo** para recorrerla.
+
+## Novedades de la versión 1.30 — caja más clara
+
+- Se eliminó el título “Caja” repetido dentro de la pantalla; queda el de la barra.
+- El estado ahora dice **Estado actual: Abierta** o **Estado actual: Cerrada**.
+- El reporte separa claramente:
+  - Ventas totales / en efectivo / con otros métodos.
+  - Pagos en efectivo (abonos) / con otros métodos.
+  - Compras totales / en efectivo / con otros métodos.
+  - Gastos totales / en efectivo / con otros métodos.
+- Una nota explica que **otros métodos** incluye transferencia, tarjeta y crédito.
 
 ## Novedades de la versión 1.29 — caja y cámara
 
@@ -562,6 +573,13 @@ LibreOffice. El informe de prueba tenía 5 hojas y 7.510 bytes; la cartera, 2.76
 - **No se probó** una copia v1 de la versión 1.0 ni una copia v3 abierta en una app 1.10
   (esta última no es compatible por diseño).
 
+## Verificación 1.30 (22-10-2026)
+
+- **Caja:** la pantalla muestra solo el título de la barra y **Estado actual: Cerrada/Abierta**.
+- **Reporte:** filas separadas para ventas, pagos, compras y gastos en efectivo y con otros
+  métodos; nota aclaratoria visible.
+- APK 1.30 (31) firmado; AAB validado; solo permiso de cámara; sin internet.
+
 ## Verificación 1.29 (22-10-2026)
 
 - **Caja:** se abrió con $100.000, el reporte mostró los totales y el efectivo esperado, y se
@@ -852,18 +870,18 @@ Requisitos: Android SDK en `~/android-sdk` con **build-tools/35.0.0** y
 
 ```bash
 cd ~/proyectos/minegocio-tablet
-VERSION_CODE=30 VERSION_NAME=1.29 ./compilar.sh
+VERSION_CODE=31 VERSION_NAME=1.30 ./compilar.sh
 adb install -r minegocio.apk
 ```
 
 El script compila recursos, Java, DEX (incluye ZXing), alinea, firma con la llave de
 desarrollo y verifica. Para cambiar la versión:
-`VERSION_CODE=31 VERSION_NAME=1.30 ./compilar.sh`.
+`VERSION_CODE=32 VERSION_NAME=1.31 ./compilar.sh`.
 
 Para Play:
 
 ```bash
-VERSION_CODE=30 VERSION_NAME=1.29 ./empaquetar-aab.sh
+VERSION_CODE=31 VERSION_NAME=1.30 ./empaquetar-aab.sh
 ```
 
 Genera `minegocio.aab` y lo valida con `bundletool`.

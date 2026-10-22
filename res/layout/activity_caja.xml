@@ -19,14 +19,6 @@
             android:padding="16dp">
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Caja"
-                android:textColor="@color/texto"
-                android:textSize="26sp"
-                android:textStyle="bold" />
-
-            <TextView
                 style="@style/Ayuda"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -43,7 +35,7 @@
                     style="@style/TituloSeccion"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Caja cerrada" />
+                    android:text="Estado actual: Cerrada" />
 
                 <TextView
                     android:id="@+id/txtInfoCaja"

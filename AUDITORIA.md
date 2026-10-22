@@ -1,4 +1,4 @@
-# Auditoría de Mi Negocio — base 1.3, actualizaciones 1.10 a 1.29 (22/10/2026)
+# Auditoría de Mi Negocio — base 1.3, actualizaciones 1.10 a 1.30 (22/10/2026)
 
 
 
@@ -17,6 +17,14 @@
 
 
 
+
+
+## Actualización 1.30 — reporte de caja claro (22/10/2026)
+
+- **Título:** se quitó el “Caja” interno repetido; solo queda el de la barra.
+- **Estado:** “Estado actual: Abierta/Cerrada”.
+- **Reporte:** ventas, pagos, compras y gastos separados en efectivo y otros métodos; nota
+  aclara que otros métodos incluye transferencia, tarjeta y crédito.
 
 ## Actualización 1.29 — caja y cámara (22/10/2026)
 

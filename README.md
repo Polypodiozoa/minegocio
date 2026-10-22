@@ -6,7 +6,7 @@ fiados, informes, reportes en Excel y **varias personas en el mismo dispositivo*
 sin internet. Solo pide permiso de **cámara** cuando se abre el lector de códigos; no usa
 ubicación, contactos ni almacenamiento general.
 
-- **Versión:** 1.29 (versionCode 30) · **targetSdk 35**
+- **Versión:** 1.30 (versionCode 31) · **targetSdk 35**
 - **Paquete:** `com.polypodiozoa.minegocio`
 - **Android:** 7.0 (API 24) o superior. Probada en una tablet Amazon Fire HD 8 (API 28).
 - **Privacidad:** no recoge ni envía datos; no declara el permiso de internet.
@@ -18,8 +18,8 @@ ubicación, contactos ni almacenamiento general.
 | [`minegocio.apk`](minegocio.apk) · 568 KB | **Instalar a mano o compartir** con alguien (WhatsApp, Drive, USB). | Se abre en el dispositivo y se acepta el origen desconocido. |
 | [`minegocio.aab`](minegocio.aab) · 578 KB | **Subir a Google Play Console.** Es un *Android App Bundle*: un paquete de entrega, no un instalador. | Play lo convierte en el APK que corresponde a cada dispositivo. **No se puede instalar directamente.** |
 
-- APK SHA-256: `2435ff0b39f8ff5d9eaf5b5335b1286606d659a636aaa6055e52fdd719dadef5`
-- AAB SHA-256: `87b1a0e188820db68653626655bf56093f464a40d009b375b46c691465052aa8`
+- APK SHA-256: `1bea9191e7fb4af87d0b8754dc841a0a922a93012fe758493152db11721a5eda`
+- AAB SHA-256: `16dfa41f25243530a14de67ff816376b4fe1c89203d21a6c8e0339e406e23fb4`
 
 El APK del repositorio va firmado con la llave de **desarrollo** (sirve para probar y para
 compartir). La versión de Play la firma la llave de subida del dueño; si se instala encima de
@@ -48,7 +48,7 @@ la de desarrollo, Android pide desinstalar antes (y eso borra los datos): hacer 
 ## Caja
 
 - **Caja** está en el menú. Se abre con el efectivo inicial y se cierra con el efectivo contado.
-- **Reporte general del turno:** ventas, ventas en efectivo, abonos, compras, gastos, efectivo esperado y diferencia.
+- **Reporte general del turno:** ventas totales, ventas en efectivo, ventas con otros métodos, pagos en efectivo y con otros métodos, compras y gastos separados, efectivo esperado y diferencia.
 - **Cierre:** confirmación con el efectivo esperado y la diferencia (cuadra, sobrante o faltante).
 - **Historial:** últimos cierres, con opción de ver su reporte.
 - **Cálculo del efectivo esperado:** inicial + ventas en efectivo + abonos en efectivo − compras en efectivo − gastos en efectivo.
@@ -111,8 +111,8 @@ Requiere el SDK de Android (**platforms;android-35** y **build-tools;35.0.0**) y
 Gradle. ZXing está en `herramientas/zxing-core-3.5.3.jar` y se incluye solo en el DEX.
 
 ```bash
-VERSION_CODE=30 VERSION_NAME=1.29 ./compilar.sh        # → minegocio.apk (firmado)
-VERSION_CODE=30 VERSION_NAME=1.29 ./empaquetar-aab.sh  # → minegocio.aab (para Play)
+VERSION_CODE=31 VERSION_NAME=1.30 ./compilar.sh        # → minegocio.apk (firmado)
+VERSION_CODE=31 VERSION_NAME=1.30 ./empaquetar-aab.sh  # → minegocio.aab (para Play)
 ```
 
 El AAB se arma con `aapt2` en formato proto y `herramientas/bundletool.jar`; se valida con

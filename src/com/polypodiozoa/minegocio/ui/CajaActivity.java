@@ -54,7 +54,7 @@ public class CajaActivity extends BaseActivity {
         listaResumen.removeAllViews();
         listaHistorial.removeAllViews();
         if (cajaAbierta != null) {
-            txtEstado.setText("Caja abierta");
+            txtEstado.setText("Estado actual: Abierta");
             txtInfo.setText("Abierta el " + Fechas.fechaHora(cajaAbierta.apertura)
                     + " por " + cajaAbierta.usuarioNombre + ".\nEfectivo inicial: "
                     + Formatos.pesos(cajaAbierta.montoInicial) + ".");
@@ -65,7 +65,7 @@ public class CajaActivity extends BaseActivity {
                     cajaAbierta.montoInicial);
             mostrarResumen(r, cajaAbierta, false);
         } else {
-            txtEstado.setText("Caja cerrada");
+            txtEstado.setText("Estado actual: Cerrada");
             List<Modelo.Caja> cerradas = bd.cajasCerradas(5);
             Modelo.Caja ultima = cerradas.isEmpty() ? null : cerradas.get(0);
             if (ultima != null) {
@@ -179,14 +179,22 @@ public class CajaActivity extends BaseActivity {
     }
 
     private void mostrarResumen(Modelo.ResumenCaja r, Modelo.Caja caja, boolean cerrada) {
-        agregarFila("Ventas", r.ventasCantidad + " · " + Formatos.pesos(r.ventasTotal));
+        long ventasOtros = Math.max(0, r.ventasTotal - r.ventasEfectivo);
+        long pagosOtros = Math.max(0, r.pagosTotal - r.pagosEfectivo);
+        long comprasOtros = Math.max(0, r.comprasTotal - r.comprasEfectivo);
+        long gastosOtros = Math.max(0, r.gastosTotal - r.gastosEfectivo);
+
+        agregarFila("Ventas totales", r.ventasCantidad + " · " + Formatos.pesos(r.ventasTotal));
         agregarFila("Ventas en efectivo", Formatos.pesos(r.ventasEfectivo));
-        agregarFila("Abonos", Formatos.pesos(r.pagosTotal)
-                + " · efectivo " + Formatos.pesos(r.pagosEfectivo));
-        agregarFila("Compras", Formatos.pesos(r.comprasTotal)
-                + " · efectivo " + Formatos.pesos(r.comprasEfectivo));
-        agregarFila("Gastos", Formatos.pesos(r.gastosTotal)
-                + " · efectivo " + Formatos.pesos(r.gastosEfectivo));
+        agregarFila("Ventas con otros métodos", Formatos.pesos(ventasOtros));
+        agregarFila("Pagos en efectivo (abonos)", Formatos.pesos(r.pagosEfectivo));
+        agregarFila("Pagos con otros métodos", Formatos.pesos(pagosOtros));
+        agregarFila("Compras totales", Formatos.pesos(r.comprasTotal));
+        agregarFila("Compras en efectivo", Formatos.pesos(r.comprasEfectivo));
+        agregarFila("Compras con otros métodos", Formatos.pesos(comprasOtros));
+        agregarFila("Gastos totales", Formatos.pesos(r.gastosTotal));
+        agregarFila("Gastos en efectivo", Formatos.pesos(r.gastosEfectivo));
+        agregarFila("Gastos con otros métodos", Formatos.pesos(gastosOtros));
         agregarFila("Efectivo esperado", Formatos.pesos(r.efectivoEsperado));
         if (cerrada && caja != null) {
             agregarFila("Efectivo contado", Formatos.pesos(caja.montoContado));
@@ -194,6 +202,11 @@ public class CajaActivity extends BaseActivity {
                     : caja.diferencia > 0 ? "Sobrante" : "Faltante";
             agregarFila("Diferencia", Formatos.pesos(caja.diferencia) + " · " + etiqueta);
         }
+        TextView nota = Ui.texto(this,
+                "Otros métodos incluye transferencia, tarjeta y crédito.", 14,
+                getColor(R.color.texto_secundario), false);
+        nota.setPadding(0, Ui.dp(this, 8), 0, 0);
+        listaResumen.addView(nota);
     }
 
     private void mostrarHistorial(List<Modelo.Caja> cajas) {
@@ -226,12 +239,19 @@ public class CajaActivity extends BaseActivity {
     private void verReporte(Modelo.Caja c) {
         Modelo.ResumenCaja r = bd.resumenCaja(c.apertura, c.cierre, c.montoInicial);
         StringBuilder s = new StringBuilder();
-        s.append("Ventas: ").append(r.ventasCantidad).append(" · ")
+        s.append("Ventas totales: ").append(r.ventasCantidad).append(" · ")
                 .append(Formatos.pesos(r.ventasTotal)).append("\n");
-        s.append("Efectivo de ventas: ").append(Formatos.pesos(r.ventasEfectivo)).append("\n");
-        s.append("Abonos: ").append(Formatos.pesos(r.pagosTotal)).append("\n");
-        s.append("Compras: ").append(Formatos.pesos(r.comprasTotal)).append("\n");
-        s.append("Gastos: ").append(Formatos.pesos(r.gastosTotal)).append("\n");
+        s.append("Ventas en efectivo: ").append(Formatos.pesos(r.ventasEfectivo)).append("\n");
+        s.append("Ventas con otros métodos: ")
+                .append(Formatos.pesos(Math.max(0, r.ventasTotal - r.ventasEfectivo))).append("\n");
+        s.append("Pagos en efectivo (abonos): ")
+                .append(Formatos.pesos(r.pagosEfectivo)).append("\n");
+        s.append("Pagos con otros métodos: ")
+                .append(Formatos.pesos(Math.max(0, r.pagosTotal - r.pagosEfectivo))).append("\n");
+        s.append("Compras totales: ").append(Formatos.pesos(r.comprasTotal)).append("\n");
+        s.append("Compras en efectivo: ").append(Formatos.pesos(r.comprasEfectivo)).append("\n");
+        s.append("Gastos totales: ").append(Formatos.pesos(r.gastosTotal)).append("\n");
+        s.append("Gastos en efectivo: ").append(Formatos.pesos(r.gastosEfectivo)).append("\n");
         s.append("Efectivo esperado: ").append(Formatos.pesos(r.efectivoEsperado)).append("\n");
         s.append("Efectivo contado: ").append(Formatos.pesos(c.montoContado)).append("\n");
         s.append("Diferencia: ").append(Formatos.pesos(c.diferencia));
