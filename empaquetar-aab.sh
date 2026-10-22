@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Empaqueta Mi Negocio como AAB (Android App Bundle) para Google Play.
 # Usa aapt2 en formato proto + bundletool, sin Gradle.
-# Uso:  VERSION_CODE=21 VERSION_NAME=1.20 ./empaquetar-aab.sh
+# Uso:  VERSION_CODE=22 VERSION_NAME=1.21 ./empaquetar-aab.sh
 set -euo pipefail
 
 SDK="${ANDROID_SDK:-$HOME/android-sdk}"
@@ -11,8 +11,8 @@ PROY="$(cd "$(dirname "$0")" && pwd)"
 ZXING="$PROY/herramientas/zxing-core-3.5.3.jar"
 SALIDA="$PROY/build-aab"
 BUNDLETOOL="$PROY/herramientas/bundletool.jar"
-VERSION_CODE="${VERSION_CODE:-21}"
-VERSION_NAME="${VERSION_NAME:-1.20}"
+VERSION_CODE="${VERSION_CODE:-22}"
+VERSION_NAME="${VERSION_NAME:-1.21}"
 AAB="$PROY/minegocio.aab"
 
 for f in "$BT/aapt2" "$BT/d8" "$JAR" "$ZXING" "$BUNDLETOOL"; do

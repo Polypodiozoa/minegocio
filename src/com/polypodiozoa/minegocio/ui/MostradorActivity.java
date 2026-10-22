@@ -108,16 +108,16 @@ public class MostradorActivity extends BaseActivity {
         if (foto != null) {
             imgQr.setImageBitmap(foto);
             imgQr.setScaleType(ImageView.ScaleType.FIT_CENTER);
-            txtQrTitulo.setText("Escanea el QR de Bre-B");
+            txtQrTitulo.setText("QR");
             txtQrAyuda.setVisibility(View.VISIBLE);
             imgQr.setClickable(true);
             imgQr.setFocusable(true);
-            imgQr.setContentDescription("Código QR de Bre-B. Toca para verlo en grande.");
+            imgQr.setContentDescription("Código QR. Toca para verlo en grande.");
             imgQr.setOnClickListener(v -> {
                 Intent i = new Intent(this, FotoActivity.class);
                 i.putExtra("ruta", rutaQr);
-                i.putExtra("titulo", "QR de Bre-B");
-                i.putExtra("descripcion", "Código QR de Bre-B");
+                i.putExtra("titulo", "QR");
+                i.putExtra("descripcion", "Código QR");
                 startActivity(i);
             });
         } else {
@@ -126,12 +126,12 @@ public class MostradorActivity extends BaseActivity {
             if (generado != null) imgQr.setImageBitmap(generado);
             else imgQr.setImageResource(R.drawable.ic_qr);
             imgQr.setScaleType(ImageView.ScaleType.FIT_CENTER);
-            txtQrTitulo.setText(llaveVacia ? "QR de Bre-B de ejemplo" : "Escanea el QR de Bre-B");
+            txtQrTitulo.setText(llaveVacia ? "QR de ejemplo" : "QR");
             txtQrAyuda.setVisibility(View.GONE);
             imgQr.setClickable(false);
             imgQr.setFocusable(false);
             imgQr.setContentDescription(llaveVacia
-                    ? "Código QR de Bre-B de ejemplo" : "Código QR de Bre-B");
+                    ? "Código QR de ejemplo" : "Código QR");
             imgQr.setOnClickListener(null);
         }
     }

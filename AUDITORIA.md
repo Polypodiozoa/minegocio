@@ -1,4 +1,4 @@
-# Auditoría de Mi Negocio — base 1.3, actualizaciones 1.10 a 1.20 (22/10/2026)
+# Auditoría de Mi Negocio — base 1.3, actualizaciones 1.10 a 1.21 (22/10/2026)
 
 
 
@@ -8,10 +8,17 @@
 
 
 
+
+
+## Actualización 1.21 — QR sin “Bre-B” (22/10/2026)
+
+- El QR se rotula **“QR”** o **“QR de ejemplo”**; se quitó “de Bre-B” del código para evitar
+  confusión. La **llave** sigue siendo “Llave Bre-B”.
+- Ajustes y la vista ampliada usan **“QR”** y **“Código QR”**.
 
 ## Actualización 1.20 — sin métodos (22/10/2026)
 
-- **El mostrador:** se retiró la lista de métodos y su edición. Queda QR de Bre-B, llave,
+- **El mostrador:** se retiró la lista de métodos y su edición. Queda QR, llave,
   cuenta, banco y titular.
 - **Ajustes:** se retiraron las casillas Bre-B/Nequi/Daviplata/transferencia y “Otros métodos”.
 - **Motivo:** Nequi y Daviplata ya operan con Bre-B; el flujo se centra en QR/llave y deja el

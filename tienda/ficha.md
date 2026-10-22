@@ -72,9 +72,9 @@ Android 7.0 o superior. Funciona en celular y en tableta.
 - Sitio web: **(tú)** (puede ser el mismo de la política de privacidad)
 - Política de privacidad: **(tú)** — publicar `privacidad.md` en una URL
 
-## Qué hay de nuevo (versión 1.20)
+## Qué hay de nuevo (versión 1.21)
 
-> Versión 1.20: El mostrador con QR de Bre-B, llave Bre-B, cuenta y banco;
+> Versión 1.21: El mostrador con QR, llave Bre-B, cuenta y banco;
 > foto del QR que la app limpia y convierte a blanco y negro; botones Editar que desaparecen
 > al confirmar, con aviso y confirmación en dos pasos;
 > varias personas con perfil y menú propio; lector de códigos de barras y QR (local);

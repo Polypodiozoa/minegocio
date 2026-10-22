@@ -61,7 +61,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="QR de Bre-B"
+                    android:text="QR"
                     android:textColor="@color/texto"
                     android:textSize="20sp"
                     android:textStyle="bold" />
@@ -72,7 +72,7 @@
                     android:layout_height="280dp"
                     android:layout_marginTop="10dp"
                     android:background="@color/blanco"
-                    android:contentDescription="Código QR de Bre-B"
+                    android:contentDescription="Código QR"
                     android:padding="8dp"
                     android:scaleType="centerInside"
                     android:src="@drawable/ic_qr" />
@@ -238,7 +238,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="1. Escanea el QR de Bre-B con la app del banco o billetera.\n2. Si no puedes escanear, dicta la llave Bre-B.\n3. Si algo falla, comparte el número de cuenta.\n4. Confirma el valor y guarda el comprobante."
+                    android:text="1. Escanea el QR con la app del banco o billetera.\n2. Si no puedes escanear, dicta la llave Bre-B.\n3. Si algo falla, comparte el número de cuenta.\n4. Confirma el valor y guarda el comprobante."
                     android:textColor="@color/texto"
                     android:textSize="17sp"
                     android:lineSpacingExtra="5dp" />
