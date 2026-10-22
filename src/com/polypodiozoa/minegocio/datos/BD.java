@@ -377,6 +377,17 @@ public class BD extends SQLiteOpenHelper {
         return null;
     }
 
+    /** Busca un producto activo por el código escaneado. */
+    public Modelo.Producto productoPorCodigo(String codigo) {
+        if (codigo == null || codigo.trim().isEmpty()) return null;
+        try (Cursor c = getReadableDatabase().rawQuery(
+                "SELECT * FROM productos WHERE activo=1 AND TRIM(codigo)=? COLLATE NOCASE LIMIT 1",
+                new String[]{codigo.trim()})) {
+            if (c.moveToFirst()) return leerProducto(c);
+        }
+        return null;
+    }
+
     public long guardarProducto(Modelo.Producto p) {
         ContentValues v = new ContentValues();
         v.put("nombre", p.nombre == null ? "" : p.nombre.trim());

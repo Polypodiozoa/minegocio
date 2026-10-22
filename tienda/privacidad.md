@@ -1,6 +1,6 @@
 # Política de privacidad de Mi Negocio
 
-**Última actualización:** 18 de octubre de 2026
+**Última actualización:** 21 de octubre de 2026
 
 Mi Negocio es una aplicación de inventario, ventas y cuentas para micronegocios. Esta
 política explica qué pasa con la información que se escribe en la app.
@@ -10,7 +10,8 @@ política explica qué pasa con la información que se escribe en la app.
 **La app no recoge, no transmite y no comparte datos personales.** Todo lo que registras
 (productos, ventas, clientes, proveedores, gastos, fotos y comprobantes) se queda en el
 almacenamiento privado de tu dispositivo. No hay cuentas, no hay servidores y la app no pide
-permiso de internet.
+permiso de internet. La cámara se usa solo para leer códigos de barras o QR dentro del
+lector; los fotogramas no se guardan ni se envían.
 
 ## Qué información se guarda
 
@@ -40,9 +41,11 @@ El desarrollador no recibe copia de nada de esto.
 
 ## Permisos
 
-La app no declara permisos de internet, ubicación, contactos, teléfono ni almacenamiento
-general. Para la cámara y para elegir archivos usa los selectores del sistema, que te piden
-confirmación cada vez.
+La app **solo declara el permiso de cámara** (`android.permission.CAMERA`), necesario para
+el lector de códigos. Android lo pide la primera vez que abres el lector; puedes negarlo y
+usar el código escrito o una imagen. No declara permisos de internet, ubicación, contactos,
+teléfono ni almacenamiento general. Para tomar una foto o elegir archivos usa los selectores
+del sistema, que te piden confirmación cada vez.
 
 ## Eliminación de los datos
 

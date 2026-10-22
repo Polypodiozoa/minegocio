@@ -141,6 +141,14 @@ android:id="@+id/scrollForm"
                     android:hint="Ej.: LAP-012"
                     android:inputType="text" />
 
+                <Button
+                    android:id="@+id/btnEscanearCodigo"
+                    style="@style/BotonSecundario"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Escanear código de barras o QR" />
+
                 <TextView
                     style="@style/Etiqueta"
                     android:layout_width="match_parent"

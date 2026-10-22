@@ -27,6 +27,7 @@ public class AjustesActivity extends BaseActivity {
     private EditText etNegocio, etNit, etTelefono, etDireccion, etImpuesto;
     private Switch swImpuesto, swStockNegativo;
     private RadioGroup grupoTexto;
+    private RadioGroup grupoEscaner;
     private TextView txtUltimaCopia;
     private Button btnCrearCopia, btnRestaurar;
 
@@ -43,6 +44,7 @@ public class AjustesActivity extends BaseActivity {
         swImpuesto = findViewById(R.id.swImpuesto);
         swStockNegativo = findViewById(R.id.swStockNegativo);
         grupoTexto = findViewById(R.id.grupoTexto);
+        grupoEscaner = findViewById(R.id.grupoEscaner);
         txtUltimaCopia = findViewById(R.id.txtUltimaCopia);
         btnCrearCopia = findViewById(R.id.btnCrearCopia);
         btnRestaurar = findViewById(R.id.btnRestaurar);
@@ -64,6 +66,11 @@ public class AjustesActivity extends BaseActivity {
         etImpuesto.setText(Formatos.decimal(bd.ajusteDecimal("impuesto_pct", 19)));
         swImpuesto.setChecked(bd.ajusteSi("impuesto_activado", true));
         swStockNegativo.setChecked(bd.ajusteSi("permitir_stock_negativo", false));
+        if ("qr".equals(bd.ajuste("escaner_formato", "barras"))) {
+            grupoEscaner.check(R.id.rbEscanerQr);
+        } else {
+            grupoEscaner.check(R.id.rbEscanerBarras);
+        }
 
         SharedPreferences p = getSharedPreferences(PREFS_UI, MODE_PRIVATE);
         float escala = p.getFloat(CLAVE_ESCALA, 1f);
@@ -103,6 +110,8 @@ public class AjustesActivity extends BaseActivity {
         bd.guardarAjuste("impuesto_pct", Formatos.decimal(tasa));
         bd.guardarAjuste("impuesto_activado", swImpuesto.isChecked());
         bd.guardarAjuste("permitir_stock_negativo", swStockNegativo.isChecked());
+        bd.guardarAjuste("escaner_formato",
+                grupoEscaner.getCheckedRadioButtonId() == R.id.rbEscanerQr ? "qr" : "barras");
 
         float nueva = 1f;
         if (grupoTexto.getCheckedRadioButtonId() == R.id.rbGrande) nueva = 1.15f;

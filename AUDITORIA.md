@@ -1,4 +1,22 @@
-# Auditoría de Mi Negocio 1.3 — 18 de octubre de 2026
+# Auditoría de Mi Negocio — base 1.3 y actualización 1.10 (21/10/2026)
+
+
+## Actualización 1.10 — lector de códigos (21/10/2026)
+
+- **Permiso nuevo:** `android.permission.CAMERA`, solicitado solo al abrir
+  `EscanerActivity`. No se agregó internet, ubicación, contactos ni almacenamiento general.
+- **Procesamiento local:** ZXing 3.5.3 (Apache 2.0) decodifica en el dispositivo. No se
+  guardan fotogramas ni se envían códigos o imágenes.
+- **Negación del permiso:** el lector sigue usable con código escrito o imagen elegida por el
+  usuario; no hay bloqueo de la venta.
+- **Duplicados:** al guardar un producto se comprueba que el código no pertenezca a otro; si
+  ya existe, se marca el campo y no se guarda.
+- **Superficie de riesgo:** la cámara es un permiso sensible; se limita a la pantalla del
+  lector y no hay servicio en segundo plano. Se recomienda política de privacidad publicada
+  antes de Play (ya actualizada en `tienda/privacidad.md`).
+- **Verificación:** EAN-13 y QR leídos desde imágenes; permiso concedido/denegado; modo
+  predeterminado persistido; AAB validado. No se pudo probar con un código físico porque la
+  lente de la tablet estaba tapada en el escritorio.
 
 Revisión pedida por Alejandro: **cálculos, accesibilidad, usabilidad, bugs, seguridad de
 datos y fallas**. Método: lectura completa del código (8.729 líneas Java, 75 layouts,

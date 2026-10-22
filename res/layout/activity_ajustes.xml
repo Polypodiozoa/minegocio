@@ -221,6 +221,55 @@ android:id="@+id/scrollForm"
                     style="@style/TituloSeccion"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:text="Lector de códigos" />
+
+                <TextView
+                    style="@style/Ayuda"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Elige el modo predeterminado al escanear en el inventario y en las ventas. También puedes cambiarlo dentro del lector." />
+
+                <RadioGroup
+                    android:id="@+id/grupoEscaner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp">
+
+                    <RadioButton
+                        android:id="@+id/rbEscanerBarras"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="52dp"
+                        android:text="Código de barras (predeterminado)"
+                        android:textColor="@color/texto"
+                        android:textSize="18sp" />
+
+                    <RadioButton
+                        android:id="@+id/rbEscanerQr"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="52dp"
+                        android:text="Código QR"
+                        android:textColor="@color/texto"
+                        android:textSize="18sp" />
+                </RadioGroup>
+
+                <TextView
+                    style="@style/Ayuda"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Solo se usa la cámara mientras escaneas. Si no das permiso, puedes escribir el código o leerlo desde una imagen." />
+            </LinearLayout>
+
+            <LinearLayout
+                style="@style/Tarjeta"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    style="@style/TituloSeccion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:text="Copia de seguridad" />
 
                 <TextView
@@ -331,7 +380,7 @@ android:id="@+id/scrollForm"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="Funciona sin internet. La app no pide permisos de cámara, ubicación ni contactos y no envía tus datos a ningún servidor. Todo queda en este dispositivo hasta que tú decidas compartir una copia." />
+                    android:text="Funciona sin internet. Solo pide permiso de cámara cuando abres el lector de códigos; no usa ubicación, contactos ni almacenamiento general y no envía tus datos a ningún servidor. Todo queda en este dispositivo hasta que tú decidas compartir una copia." />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

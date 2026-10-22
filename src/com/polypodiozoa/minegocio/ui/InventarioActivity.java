@@ -19,6 +19,8 @@ import java.util.List;
 
 public class InventarioActivity extends BaseActivity {
 
+    private static final int PEDIR_ESCANEO = 404;
+
     private EditText etBuscar;
     private ListView lista;
     private TextView txtVacio, txtResumen;
@@ -48,6 +50,8 @@ public class InventarioActivity extends BaseActivity {
         findViewById(R.id.btnAgotados).setOnClickListener(v -> cambiarFiltro(1));
         findViewById(R.id.btnBajos).setOnClickListener(v -> cambiarFiltro(2));
         findViewById(R.id.btnNuevo).setOnClickListener(v -> abrir(ProductoActivity.class));
+        findViewById(R.id.btnEscanear).setOnClickListener(v ->
+                abrirResultado(EscanerActivity.class, PEDIR_ESCANEO));
         etBuscar.addTextChangedListener(new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int a, int b, int c) {}
             @Override public void onTextChanged(CharSequence s, int a, int b, int c) { cargar(); }
@@ -59,6 +63,25 @@ public class InventarioActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         cargar();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode != PEDIR_ESCANEO || resultCode != RESULT_OK || data == null) return;
+        String codigo = data.getStringExtra(EscanerActivity.EXTRA_CODIGO);
+        if (codigo == null || codigo.trim().isEmpty()) return;
+        codigo = codigo.trim();
+        Modelo.Producto p = bd.productoPorCodigo(codigo);
+        Intent i = new Intent(this, ProductoActivity.class);
+        if (p != null) {
+            i.putExtra("id", p.id);
+            aviso("Código " + codigo + ": " + p.nombre + ".");
+        } else {
+            i.putExtra("codigo", codigo);
+            aviso("Código " + codigo + " no registrado. Completa el producto nuevo.");
+        }
+        startActivity(i);
     }
 
     private void cambiarFiltro(int nuevo) {

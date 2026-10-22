@@ -18,6 +18,7 @@ public class ProductoActivity extends BaseActivity {
 
     private static final int PEDIR_FOTO = 401;
     private static final int PEDIR_ARCHIVO = 402;
+    private static final int PEDIR_ESCANEO = 403;
 
     private EditText etNombre, etCategoria, etCodigo, etUnidad, etPrecio, etCosto,
             etStock, etStockMinimo;
@@ -60,6 +61,8 @@ public class ProductoActivity extends BaseActivity {
 
         findViewById(R.id.btnTomarFoto).setOnClickListener(v -> tomarFoto(PEDIR_FOTO));
         findViewById(R.id.btnElegirFoto).setOnClickListener(v -> elegirArchivo(PEDIR_ARCHIVO));
+        findViewById(R.id.btnEscanearCodigo).setOnClickListener(v ->
+                abrirResultado(EscanerActivity.class, PEDIR_ESCANEO));
         findViewById(R.id.btnGuardar).setOnClickListener(v -> guardar());
         btnQuitarFoto.setOnClickListener(v -> quitarFoto());
         Button eliminar = findViewById(R.id.btnEliminar);
@@ -83,6 +86,8 @@ public class ProductoActivity extends BaseActivity {
             etStockMinimo.setText(String.valueOf(producto.stockMinimo));
             rutaFoto = producto.foto;
             fotoOriginal = producto.foto;
+        } else if (getIntent().hasExtra("codigo")) {
+            etCodigo.setText(getIntent().getStringExtra("codigo"));
         }
         actualizarFoto();
         actualizarRentabilidad();
@@ -152,6 +157,24 @@ public class ProductoActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PEDIR_ESCANEO) {
+            if (resultCode == RESULT_OK && data != null) {
+                String codigo = data.getStringExtra(EscanerActivity.EXTRA_CODIGO);
+                if (codigo != null && !codigo.trim().isEmpty()) {
+                    codigo = codigo.trim();
+                    Modelo.Producto existente = bd.productoPorCodigo(codigo);
+                    if (existente != null && (producto == null || existente.id != producto.id)) {
+                        informar("Código ya registrado",
+                                "El código " + codigo + " ya pertenece a “" + existente.nombre
+                                        + "”. Puedes cambiarlo antes de guardar.");
+                    }
+                    etCodigo.setText(codigo);
+                    etCodigo.setSelection(etCodigo.getText().length());
+                    etCodigo.announceForAccessibility("Código escaneado: " + codigo);
+                }
+            }
+            return;
+        }
         if (requestCode != PEDIR_FOTO && requestCode != PEDIR_ARCHIVO) return;
         String nueva = requestCode == PEDIR_FOTO
                 ? resultadoFoto(resultCode, data)
@@ -187,11 +210,17 @@ public class ProductoActivity extends BaseActivity {
             error(etPrecio, "Escribe un precio de venta mayor que cero.");
             return;
         }
+        String codigo = texto(etCodigo);
+        Modelo.Producto duplicado = bd.productoPorCodigo(codigo);
+        if (duplicado != null && (producto == null || duplicado.id != producto.id)) {
+            error(etCodigo, "Ese código ya está asignado a “" + duplicado.nombre + "”.");
+            return;
+        }
 
         Modelo.Producto p = producto != null ? producto : new Modelo.Producto();
         p.nombre = nombre;
         p.categoria = texto(etCategoria);
-        p.codigo = texto(etCodigo);
+        p.codigo = codigo;
         p.unidad = texto(etUnidad).isEmpty() ? "unidad" : texto(etUnidad);
         p.precio = precio;
         p.costo = costo;

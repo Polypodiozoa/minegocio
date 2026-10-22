@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#101418"
+    android:orientation="vertical">
+
+    <include layout="@layout/barra_superior" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#101418">
+
+        <SurfaceView
+            android:id="@+id/vistaCamara"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:importantForAccessibility="no" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="28dp"
+            android:background="@drawable/guia_escaner"
+            android:importantForAccessibility="no" />
+
+        <TextView
+            android:id="@+id/txtEstado"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_margin="16dp"
+            android:background="@drawable/fondo_estado_escaner"
+            android:paddingLeft="14dp"
+            android:paddingRight="14dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:text="Apunta al código de barras"
+            android:textColor="@color/blanco"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+    </FrameLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/superficie"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="12dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Modo de lectura"
+                android:textColor="@color/texto"
+                android:textSize="17sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btnBarras"
+                    style="@style/BotonSecundario"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:minHeight="52dp"
+                    android:text="Barras" />
+
+                <Button
+                    android:id="@+id/btnQr"
+                    style="@style/BotonSecundario"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:layout_weight="1"
+                    android:minHeight="52dp"
+                    android:text="QR" />
+
+                <Button
+                    android:id="@+id/btnLinterna"
+                    style="@style/BotonSecundario"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:layout_weight="1"
+                    android:minHeight="52dp"
+                    android:text="Linterna" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/txtAyuda"
+                style="@style/Ayuda"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Apunta la cámara al código. Si no puedes, escribe el código o elige una foto." />
+
+            <TextView
+                style="@style/Etiqueta"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:labelFor="@+id/etManual"
+                android:text="Escribir código manualmente" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/etManual"
+                    style="@style/Campo"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="Ej.: 4006381333931"
+                    android:inputType="text"
+                    android:imeOptions="actionDone" />
+
+                <Button
+                    android:id="@+id/btnUsarManual"
+                    style="@style/BotonSecundario"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:minHeight="56dp"
+                    android:text="Usar" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btnImagen"
+                style="@style/BotonTexto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Elegir imagen del código" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

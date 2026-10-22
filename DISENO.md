@@ -15,14 +15,14 @@ Lo que esa persona necesita del sistema, en sus palabras:
 - «Que no se me pierda la plata»: saber qué vendió hoy, cuánto ganó y quién le debe.
 - «Que no me toque escribir mucho»: precios y cantidades grandes, sin fórmulas.
 - «Que el fiado quede anotado»: a quién le fió, cuánto, para cuándo y cuánto ha abonado.
-- «Que no me pida internet ni permisos raros»: el dispositivo es del negocio, no de Google.
+- «Que no me pida internet ni permisos raros»: el dispositivo es del negocio, no de Google. La cámara solo se pide cuando se abre el lector de códigos.
 
 Dispositivo de referencia: **Amazon Fire HD 8** (800 × 1280 px, 213 dpi, Android 9), en
 horizontal y vertical, con letra del sistema hasta 1,3×.
 
 ## 2. Principios de diseño
 
-1. **Todo pasa en el dispositivo.** Sin cuentas, sin nube, sin permisos. La base SQLite y las fotos
+1. **Todo pasa en el dispositivo.** Sin cuentas, sin nube, sin internet. El único permiso es la cámara, y solo mientras el usuario escanea un código. La base SQLite y las fotos
    viven en el almacenamiento privado de la app. La única salida son las copias que el
    usuario decide guardar y los informes que decide compartir.
 2. **Pesos enteros, sin centavos.** En Colombia el peso no se usa con centavos en el día a
@@ -38,7 +38,7 @@ horizontal y vertical, con letra del sistema hasta 1,3×.
 
 ## 3. Mapa de pantallas
 
-23 actividades. El inicio es un tablero con **11 accesos grandes** (dos columnas, icono de
+24 actividades. El inicio es un tablero con **11 accesos grandes** (dos columnas, icono de
 34 dp y etiqueta de 18 sp):
 
 | Acceso | Pantalla | Para qué |
@@ -53,10 +53,28 @@ horizontal y vertical, con letra del sistema hasta 1,3×.
 | Proveedores | `ProveedoresActivity` → `ProveedorActivity` / `ProveedorDetalleActivity` | Contacto e historial de compras. |
 | Gastos | `GastosActivity` → `GastoActivity` | Gastos del negocio con comprobante. |
 | Informes | `InformesActivity` | Períodos, utilidad, cartera, exportación a Excel/CSV. |
-| Ajustes | `AjustesActivity` | Datos del negocio, impuesto, tamaño de texto, copia y borrado. |
+| Ajustes | `AjustesActivity` | Datos del negocio, impuesto, tamaño de texto, modo del lector, copia y borrado. |
 
-Apoyo: `SelectorActivity` (elegir producto, cliente o proveedor) y `FotoActivity` (ver una
-foto o comprobante a pantalla completa).
+Apoyo: `SelectorActivity` (elegir producto, cliente o proveedor), `EscanerActivity`
+(leer un código de barras o QR) y `FotoActivity` (ver una foto o comprobante a pantalla
+completa).
+
+## 3.1 Lector de códigos
+
+El lector nace de dos tareas concretas: **cargar el inventario** sin teclear cada referencia y
+**agregar un producto a la venta** sin buscarlo en una lista. Por eso aparece en la ficha del
+producto, en Inventario y en Nueva venta, no en una pantalla aislada.
+
+- **Código de barras por defecto**; QR se elige en Ajustes o dentro del lector y se recuerda.
+- **Cámara en vivo** con guía, estado visible y linterna si el dispositivo la tiene.
+- **Salidas alternas:** código escrito a mano y foto del código. Así el lector no bloquea la
+  venta si el permiso se niega, la cámara falla o el código está impreso en un papel.
+- **Un código = una referencia.** Al guardar un producto se comprueba que el código no esté
+  asignado a otro; si lo está, se avisa en el campo.
+- **Lectura local:** ZXing 3.5.3 (Apache 2.0), sin internet ni servicios externos. No se
+  guardan fotogramas; la foto elegida se procesa en memoria.
+- **Accesibilidad:** botones de 52–56 dp, modo activo escrito, estado anunciado y alternativa
+  manual para quien no pueda sostener la cámara.
 
 ![Inicio con datos de ejemplo](capturas/01-inicio.png)
 ![Nueva venta](capturas/03-nueva-venta.png)
@@ -253,3 +271,4 @@ La app se va a publicar en Play después de los ciclos de prueba. Lo que falta p
 | 1.7 | 2026-10-18 | Claridad de cliente y concepto libre, tamaño de texto en toda la app, formas de pago sin Nequi/Daviplata y costo unitario visible. |
 | 1.8 | 2026-10-18 | «Mi Negocio» con mayúsculas en app y PDF; «dispositivo» en vez de «tablet»; checklist de Google Play. |
 | 1.9 | 2026-10-18 | targetSdk 35, empaquetado AAB y textos de tienda y privacidad. |
+| 1.10 | 2026-10-21 | Lector de códigos de barras (predeterminado) y QR, integrado en producto, inventario y venta; permiso de cámara acotado al lector. |

@@ -1,20 +1,21 @@
 #!/usr/bin/env bash
 # Empaqueta Mi Negocio como AAB (Android App Bundle) para Google Play.
 # Usa aapt2 en formato proto + bundletool, sin Gradle.
-# Uso:  VERSION_CODE=10 VERSION_NAME=1.9 ./empaquetar-aab.sh
+# Uso:  VERSION_CODE=11 VERSION_NAME=1.10 ./empaquetar-aab.sh
 set -euo pipefail
 
 SDK="${ANDROID_SDK:-$HOME/android-sdk}"
 BT="$SDK/build-tools/35.0.0"
 JAR="$SDK/platforms/android-35/android.jar"
 PROY="$(cd "$(dirname "$0")" && pwd)"
+ZXING="$PROY/herramientas/zxing-core-3.5.3.jar"
 SALIDA="$PROY/build-aab"
 BUNDLETOOL="$PROY/herramientas/bundletool.jar"
-VERSION_CODE="${VERSION_CODE:-10}"
-VERSION_NAME="${VERSION_NAME:-1.9}"
+VERSION_CODE="${VERSION_CODE:-11}"
+VERSION_NAME="${VERSION_NAME:-1.10}"
 AAB="$PROY/minegocio.aab"
 
-for f in "$BT/aapt2" "$BT/d8" "$JAR" "$BUNDLETOOL"; do
+for f in "$BT/aapt2" "$BT/d8" "$JAR" "$ZXING" "$BUNDLETOOL"; do
     [ -e "$f" ] || { echo "FALTA: $f"; exit 1; }
 done
 
@@ -33,12 +34,12 @@ echo "[2/6] aapt2 link (proto)"
 
 echo "[3/6] javac"
 javac -encoding UTF-8 -source 8 -target 8 -parameters -nowarn \
-    -classpath "$JAR" -d "$SALIDA/clases" \
+    -classpath "$JAR:$ZXING" -d "$SALIDA/clases" \
     $(find "$PROY/src" "$SALIDA/gen" -name '*.java')
 
 echo "[4/6] d8"
 "$BT/d8" --lib "$JAR" --min-api 24 --output "$SALIDA/dex" \
-    $(find "$SALIDA/clases" -name '*.class')
+    "$ZXING" $(find "$SALIDA/clases" -name '*.class')
 
 echo "[5/6] módulo base"
 unzip -q "$SALIDA/base.apk" -d "$SALIDA/modulo"

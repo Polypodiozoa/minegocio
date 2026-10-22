@@ -1,19 +1,37 @@
-# Mi Negocio 1.9 — inventario, ventas, fiados y reportes para micronegocios colombianos
+# Mi Negocio 1.10 — inventario, ventas, fiados, lector y reportes para micronegocios colombianos
 
 Aplicación Android nativa para llevar el día a día de un negocio pequeño en Colombia:
 inventario con fotos, ventas, compras, clientes, proveedores, gastos, **cartera de fiados**,
-impuestos opcionales, abonos, informes y **reportes en Excel**. Funciona sin internet y no pide
-permisos de cámara, ubicación, contactos ni almacenamiento.
+impuestos opcionales, abonos, informes, **reportes en Excel** y **lector de códigos de barras
+o QR**. Funciona sin internet. Solo pide permiso de cámara al abrir el lector; no usa
+ubicación, contactos ni almacenamiento general.
 
-- **APK instalado en el dispositivo de prueba:** `minegocio.apk` (256 KB)
-- **SHA-256:** `09440eb7532ab9f295a9bab4c0272d8803765d0fd5fd85e93f11a9d637dea561`
+- **APK instalado en el dispositivo de prueba:** `minegocio.apk` (531 KB)
+- **SHA-256:** `14c5cb0747954102af94b4855f9bcdd5173b8e375b33e54ee5e66c18ca77478d`
 - **Paquete:** `com.polypodiozoa.minegocio`
-- **Versión:** 1.9 (versionCode 10)
+- **Versión:** 1.10 (versionCode 11)
 - **Tablet de prueba:** Amazon Fire HD 8 `KFONWI`, Fire OS 9 / Android 9 (API 28),
   800 × 1280 px, densidad 213 dpi.
 - **Requisito mínimo:** Android 7.0 (API 24) · **targetSdk:** 35 (Android 15).
-- **Estado:** instalada, probada y actualizada el 18 de octubre de 2026. Al final se borraron los datos
+- **Estado:** instalada, probada y actualizada el 21 de octubre de 2026. Al final se borraron los datos
   de prueba; la app quedó limpia, con **Ajustes → Cargar datos de ejemplo** para recorrerla.
+
+## Novedades de la versión 1.10 — lector de códigos
+
+- **Lector de códigos de barras** (EAN-13, EAN-8, UPC-A, UPC-E, Code 128, Code 39, Code 93,
+  ITF y Codabar) **por defecto**.
+- **Modo QR cambiable** en **Ajustes → Lector de códigos** o dentro del lector; la elección
+  queda guardada.
+- **Inventario:** el botón “Escanear código para buscar o agregar” abre el producto si existe
+  o crea uno nuevo con el código ya escrito.
+- **Venta:** “Escanear código y agregar producto” busca el producto y lo suma; si no existe,
+  ofrece crearlo.
+- **Ficha del producto:** botón para llenar el código escaneado, con aviso si ya pertenece a
+  otro producto.
+- **Sin cámara o sin permiso:** se puede escribir el código o **elegir una foto** del código.
+  La lectura es local con ZXing; no se guardan ni envían imágenes.
+- **Permiso nuevo:** `android.permission.CAMERA`, solicitado solo al abrir el lector. La app
+  sigue sin permiso de internet ni de almacenamiento general.
 
 ## Novedades de la versión 1.9 — lista para Google Play
 
@@ -187,6 +205,26 @@ La ficha del cliente muestra:
 - Si intentas vender sin existencia suficiente, la app avisa y permite continuar solo con
   confirmación (o de acuerdo con el ajuste “Permitir vender sin existencias”).
 
+## Lector de códigos de barras y QR
+
+- **Modo predeterminado:** código de barras (EAN-13, EAN-8, UPC-A, UPC-E, Code 128,
+  Code 39, Code 93, ITF y Codabar).
+- **Cambio a QR:** **Ajustes → Lector de códigos → Código QR**, o el botón **QR** dentro del
+  lector. La elección se guarda y se usa en la próxima lectura.
+- **Inventario:** “Escanear código para buscar o agregar”. Si el código existe, abre el
+  producto; si no, abre “Nuevo producto” con el código ya escrito.
+- **Venta:** “Escanear código y agregar producto”. Busca el producto y lo suma; si no existe,
+  ofrece crearlo y, al guardarlo, lo agrega a la venta.
+- **Producto:** “Escanear código de barras o QR” llena el campo “Código o referencia”. Si el
+  código ya pertenece a otro producto, avisa antes de guardar.
+- **Respaldo del lector:** si no hay cámara, no se concede el permiso o el código está en una
+  foto, se puede **escribir el código** o **elegir una imagen**. La imagen se decodifica en el
+  dispositivo y no se guarda.
+- **Privacidad:** la cámara solo se abre dentro del lector; no se guardan fotogramas ni se
+  envían a ningún servidor. El permiso se pide en ese momento y se puede negar.
+- **Rendimiento:** la lectura corre en un hilo aparte, prueba giros de 90°, 180° y 270° y
+  descarta fotogramas mientras decodifica para no bloquear la vista previa.
+
 ## Rentabilidad
 
 - **Ganancia estimada de la venta** = total cobrado − impuesto cobrado − costo de los productos.
@@ -237,12 +275,15 @@ LibreOffice. El informe de prueba tenía 5 hojas y 7.510 bytes; la cartera, 2.76
 - **Tomar foto** con la cámara del sistema o **elegir imagen/PDF** desde Archivos.
 - Se adjuntan a ventas, compras, abonos, gastos; foto principal en productos, clientes y proveedores.
 - Los archivos se copian al almacenamiento privado de la app y se pueden ver, abrir o quitar.
-- No se piden permisos de cámara ni de almacenamiento: se usan intentos del sistema y el
-  proveedor de archivos propio.
+- Para **tomar una foto** se usa la cámara del sistema (no requiere el permiso de la app).
+- El **lector de códigos** sí pide permiso de cámara al abrirse; se puede negar y usar el
+  código escrito o una imagen. No se piden permisos de almacenamiento general.
 
 ## Privacidad y seguridad
 
-- **Sin permiso de internet** (verificado con `aapt2 dump permissions`: no lista permisos).
+- **Sin permiso de internet.**
+- **Solo `android.permission.CAMERA`**, necesario para el lector; se pide en tiempo de
+  ejecución al abrir el lector. Verificado con `aapt2 dump permissions`.
 - Sin cuentas, nube, analítica, publicidad ni envío de datos.
 - Base SQLite privada; fotos en `files/adjuntos/`.
 - La copia de seguridad es un ZIP que crea el usuario; **contiene datos personales y
@@ -277,7 +318,30 @@ LibreOffice. El informe de prueba tenía 5 hojas y 7.510 bytes; la cartera, 2.76
 - **Nota honesta:** esta Fire OS no tiene TalkBack instalado; se validaron etiquetas con
   `uiautomator`, contraste calculado y prueba de texto grande, no con lector de pantalla real.
 
-## Verificación realizada (18-10-2026)
+## Verificación 1.10 (21-10-2026)
+
+- Instalación `adb install -r` → `Success`; versión 1.10, versionCode 11, targetSdk 35.
+- APK con **531 KB** y solo el permiso `android.permission.CAMERA`; sin internet.
+- **Lector de códigos de barras** probado con una imagen EAN-13 (`4006381333931`) en
+  Inventario: abrió el producto existente con el código escrito.
+- **Lector QR** probado con una imagen QR (`LAP-012`): agregó “Caja de lápices x12” a una
+  venta; el total y la ganancia se actualizaron.
+- **Modo predeterminado:** Ajustes mostró QR después de cambiarlo dentro del lector; al
+  volver a “Código de barras” y abrir el lector, quedó activo Barras.
+- **Permiso denegado:** se negó la cámara y el lector mostró el aviso, ocultó la linterna y
+  dejó disponibles el código manual y la imagen.
+- **Código manual:** se escribió `MANUAL-123`, “Usar” cerró el lector y devolvió el código.
+- **Cámara:** la actividad abrió la cámara (proceso `cameraserver` activo) y mostró la guía;
+  la lente estaba tapada en el escritorio, así que la lectura se validó con imágenes y no con
+  un código físico.
+- **Decodificador ZXing:** prueba JVM con EAN-13 y QR; EAN leído, QR leído y QR rechazado en
+  modo barras.
+- **AAB:** `bundletool validate` correcto; 529 KB.
+- **Pendiente honesto:** no se pudo probar el escaneo con un código impreso porque la cámara
+  de la tablet está sobre el escritorio/tapada. El flujo de cámara, permiso, imagen y retorno
+  sí quedó probado.
+
+## Verificación histórica (18-10-2026)
 
 En el dispositivo por USB:
 
@@ -322,12 +386,15 @@ En el dispositivo por USB:
 | ![Deudas vencidas](capturas/15-deudas.png) | ![Venta a crédito con vencimiento](capturas/16-venta-credito.png) |
 | ![Reporte Excel](capturas/17-informe-excel.png) | ![Deuda vigente](capturas/20-deudas-vigente.png) |
 | ![Crédito pagado](capturas/21-credito-pagado.png) | ![Rentabilidad por unidad](capturas/22-rentabilidad-producto.png) |
-| ![Iconos de Compras y Proveedores separados](capturas/23-inicio-proveedores.png) | |
+| ![Iconos de Compras y Proveedores separados](capturas/23-inicio-proveedores.png) | ![Lector de códigos](capturas/24-escaner.png) |
+| ![Venta con producto escaneado](capturas/25-venta-escaneada.png) | ![Ajustes del lector](capturas/26-ajustes-lector.png) |
+| ![Lector sin permiso de cámara](capturas/27-escaner-sin-permiso.png) | |
 
 ## Compilar e instalar
 
-Requisitos: Android SDK en `~/android-sdk` con `build-tools/34.0.0` y `platforms/android-28`,
-OpenJDK 21. No hace falta Gradle ni Android Studio.
+Requisitos: Android SDK en `~/android-sdk` con **build-tools/35.0.0** y
+**platforms/android-35**, OpenJDK 21 y ZXing en
+`herramientas/zxing-core-3.5.3.jar`. No hace falta Gradle ni Android Studio.
 
 ```bash
 cd ~/proyectos/minegocio-tablet
@@ -335,8 +402,17 @@ cd ~/proyectos/minegocio-tablet
 adb install -r minegocio.apk
 ```
 
-El script compila recursos, Java, DEX, alinea, firma con la llave de desarrollo y verifica.
-Para cambiar la versión: `VERSION_CODE=3 VERSION_NAME=1.2 ./compilar.sh`.
+El script compila recursos, Java, DEX (incluye ZXing), alinea, firma con la llave de
+desarrollo y verifica. Para cambiar la versión:
+`VERSION_CODE=12 VERSION_NAME=1.11 ./compilar.sh`.
+
+Para Play:
+
+```bash
+./empaquetar-aab.sh
+```
+
+Genera `minegocio.aab` y lo valida con `bundletool`.
 
 Desinstalar (borra datos locales):
 
@@ -353,6 +429,9 @@ minegocio-tablet/
 ├── AndroidManifest.xml
 ├── compilar.sh
 ├── minegocio.apk
+├── minegocio.aab
+├── LICENCIAS.md
+├── herramientas/     # ZXing, bundletool
 ├── capturas/
 ├── res/
 │   ├── layout/          # pantallas, filas, filtros y tarjetas
@@ -361,15 +440,14 @@ minegocio-tablet/
 └── src/com/polypodiozoa/minegocio/
     ├── datos/           # SQLite v2, deudas, adjuntos, respaldo
     ├── modelo/Modelo.java
-    ├── ui/              # actividades (incluye DeudasActivity)
-    └── util/            # COP, fechas, imágenes, Excel, PDF, UI
+    ├── ui/              # actividades (incluye DeudasActivity y EscanerActivity)
+    └── util/            # COP, fechas, imágenes, Excel, PDF, lector ZXing, UI
 ```
 
 ## Límites conocidos
 
 - **No facturación electrónica DIAN** ni retenciones/nómina.
 - **No sincronización en la nube** ni multiusuario; un dispositivo, una base local.
-- **No lector de códigos de barras**.
 - **Compras a crédito no generan cuentas por pagar**; sí se controlan ventas fiadas y abonos.
 - Los abonos se reparten por vencimiento (o por la venta elegida), no con un plan de cuotas
   personalizado.

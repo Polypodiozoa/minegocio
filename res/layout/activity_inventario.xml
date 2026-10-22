@@ -30,6 +30,15 @@
             android:drawableTint="@color/texto_secundario"
             android:contentDescription="Buscar producto por nombre, categoría o código" />
 
+        <Button
+            android:id="@+id/btnEscanear"
+            style="@style/BotonSecundario"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:minHeight="52dp"
+            android:text="Escanear código para buscar o agregar" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

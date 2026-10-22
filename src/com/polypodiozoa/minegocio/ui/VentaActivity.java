@@ -35,6 +35,8 @@ public class VentaActivity extends BaseActivity {
     private static final int PEDIR_PRODUCTO = 602;
     private static final int PEDIR_FOTO = 603;
     private static final int PEDIR_ARCHIVO = 604;
+    private static final int PEDIR_ESCANEO = 605;
+    private static final int PEDIR_PRODUCTO_ESCANEADO = 606;
 
     private final List<Modelo.Item> items = new ArrayList<>();
     private long clienteId;
@@ -96,6 +98,8 @@ public class VentaActivity extends BaseActivity {
         adjuntos = new ListaAdjuntos(this, findViewById(R.id.containerAdjuntos));
         btnCliente.setOnClickListener(v -> elegirCliente());
         findViewById(R.id.btnAgregarProducto).setOnClickListener(v -> elegirProducto());
+        findViewById(R.id.btnEscanearProducto).setOnClickListener(v ->
+                abrirResultado(EscanerActivity.class, PEDIR_ESCANEO));
         findViewById(R.id.btnConcepto).setOnClickListener(v -> dialogoConcepto());
         findViewById(R.id.btnFoto).setOnClickListener(v -> tomarFoto(PEDIR_FOTO));
         findViewById(R.id.btnArchivo).setOnClickListener(v -> elegirArchivo(PEDIR_ARCHIVO));
@@ -209,6 +213,22 @@ public class VentaActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PEDIR_ESCANEO) {
+            if (resultCode == RESULT_OK && data != null) {
+                String codigo = data.getStringExtra(EscanerActivity.EXTRA_CODIGO);
+                if (codigo != null && !codigo.trim().isEmpty()) {
+                    buscarProductoEscaneado(codigo.trim());
+                }
+            }
+            return;
+        }
+        if (requestCode == PEDIR_PRODUCTO_ESCANEADO) {
+            if (resultCode == RESULT_OK && data != null) {
+                long id = data.getLongExtra("id", 0);
+                if (id > 0) agregarProducto(id);
+            }
+            return;
+        }
         if (resultCode != RESULT_OK) return;
         if (requestCode == PEDIR_CLIENTE && data != null) {
             seleccionarCliente(data.getLongExtra("id", 0));
@@ -222,6 +242,23 @@ public class VentaActivity extends BaseActivity {
             String ruta = resultadoArchivo(resultCode, data);
             if (ruta != null) adjuntos.agregar(crearAdjunto(ruta));
         }
+    }
+
+    private void buscarProductoEscaneado(String codigo) {
+        Modelo.Producto p = bd.productoPorCodigo(codigo);
+        if (p != null) {
+            agregarProducto(p.id);
+            aviso("Código " + codigo + ": " + p.nombre + " agregado.");
+            return;
+        }
+        confirmar("Producto no encontrado",
+                "El código " + codigo + " no está en el inventario.\n\n"
+                        + "Puedes crear el producto ahora y quedará agregado a la venta.",
+                "Crear producto", () -> {
+                    Intent i = new Intent(this, ProductoActivity.class);
+                    i.putExtra("codigo", codigo);
+                    startActivityForResult(i, PEDIR_PRODUCTO_ESCANEADO);
+                });
     }
 
     private void agregarProducto(long id) {

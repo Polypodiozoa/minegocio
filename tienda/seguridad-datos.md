@@ -19,12 +19,17 @@ La app no declara el permiso `android.permission.INTERNET` en el manifiesto; tod
 información se guarda en una base SQLite privada del dispositivo y solo se exporta cuando el
 usuario comparte un informe o guarda una copia de seguridad en el destino que él elige.
 
-## Permisos declarados en el manifiesto (18/10/2026)
+## Permisos declarados en el manifiesto (21/10/2026)
 
-Ninguno sensible. Solo se usan componentes del sistema para cámara y selección de archivos
-(`ACTION_IMAGE_CAPTURE`, `ACTION_OPEN_DOCUMENT`, `ACTION_CREATE_DOCUMENT`) y un
-`FileProvider` no exportado para entregar temporalmente el archivo al visor o a la app de
-correo.
+- `android.permission.CAMERA`: solo para el **lector de códigos de barras o QR**. Se pide en
+  tiempo de ejecución al abrir el lector y se puede negar; en ese caso el código se escribe a
+  mano o se lee desde una imagen elegida por el usuario.
+- **No** declara internet, ubicación, contactos, teléfono ni almacenamiento general.
+- Para fotos, archivos y comprobantes se usan componentes del sistema
+  (`ACTION_IMAGE_CAPTURE`, `ACTION_OPEN_DOCUMENT`, `ACTION_CREATE_DOCUMENT`) y un
+  `FileProvider` no exportado.
+- La lectura de códigos es local (ZXing 3.5.3); no se guardan fotogramas ni se envían a
+  servidores.
 
 ## Clasificación de contenido
 

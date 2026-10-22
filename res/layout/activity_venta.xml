@@ -83,6 +83,14 @@ android:id="@+id/scrollForm"
                     android:text="Agregar producto del inventario" />
 
                 <Button
+                    android:id="@+id/btnEscanearProducto"
+                    style="@style/BotonSecundario"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Escanear código y agregar producto" />
+
+                <Button
                     android:id="@+id/btnConcepto"
                     style="@style/BotonTexto"
                     android:layout_width="match_parent"
