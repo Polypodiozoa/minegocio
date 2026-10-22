@@ -1,4 +1,4 @@
-# Auditoría de Mi Negocio — base 1.3, actualizaciones 1.10 a 1.24 (22/10/2026)
+# Auditoría de Mi Negocio — base 1.3, actualizaciones 1.10 a 1.25 (22/10/2026)
 
 
 
@@ -12,6 +12,15 @@
 
 
 
+
+
+## Actualización 1.25 — banco/titular y prioridad del QR (22/10/2026)
+
+- **Sin ficticios:** se quitaron “Banco de ejemplo” y “Titular de ejemplo”; las líneas se
+  ocultan hasta que el dato exista en Ajustes.
+- **QR:** subir una foto es la opción principal porque el limpiador analiza una imagen estable;
+  la cámara queda como alternativa y se advierte que puede fallar más.
+- **Datos:** banco y titular siguen siendo opcionales; no bloquean el botón central.
 
 ## Actualización 1.24 — cámara del QR (22/10/2026)
 

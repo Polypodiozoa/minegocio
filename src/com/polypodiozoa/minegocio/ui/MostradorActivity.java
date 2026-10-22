@@ -40,8 +40,6 @@ public class MostradorActivity extends BaseActivity {
 
     private static final String LLAVE_EJEMPLO = "@EJEMPLO2567";
     private static final String CUENTA_EJEMPLO = "#4004EJEMPLO2145";
-    private static final String BANCO_EJEMPLO = "Banco de ejemplo";
-    private static final String TITULAR_EJEMPLO = "Titular de ejemplo";
     private static final int PEDIR_QR_CAMARA = 401;
     private static final int PEDIR_QR_IMAGEN = 402;
     private static final int PERMISO_CAMARA_QR = 403;
@@ -105,22 +103,21 @@ public class MostradorActivity extends BaseActivity {
         boolean cuentaVacia = cuenta.isEmpty();
         boolean bancoVacio = banco.isEmpty();
         boolean titularVacio = titular.isEmpty();
-        boolean ejemplo = llaveVacia || cuentaVacia || bancoVacio;
+        boolean ejemplo = llaveVacia || cuentaVacia;
         if (llaveVacia) llave = LLAVE_EJEMPLO;
         if (cuentaVacia) cuenta = CUENTA_EJEMPLO;
-        if (bancoVacio) banco = BANCO_EJEMPLO;
-        if (titularVacio) titular = ejemplo ? TITULAR_EJEMPLO : "";
 
         txtLlave.setText(llave);
         txtCuenta.setText(cuenta);
-        txtBanco.setText("Banco: " + banco);
+        txtBanco.setText(banco.isEmpty() ? "" : "Banco: " + banco);
+        txtBanco.setVisibility(banco.isEmpty() ? View.GONE : View.VISIBLE);
         txtTitular.setText(titular.isEmpty() ? "" : "Titular: " + titular);
         txtTitular.setVisibility(titular.isEmpty() ? View.GONE : View.VISIBLE);
 
         Bitmap foto = Imagen.cargar(rutaQr, 1200);
         boolean faltaQr = qrVisible && foto == null;
         boolean faltaLlave = llaveVisible && llaveVacia;
-        boolean faltaCuenta = cuentaVisible && (cuentaVacia || bancoVacio);
+        boolean faltaCuenta = cuentaVisible && cuentaVacia;
         boolean faltan = faltaQr || faltaLlave || faltaCuenta;
         txtAviso.setVisibility(faltan ? View.VISIBLE : View.GONE);
         btnCompletarDatos.setVisibility(faltan ? View.VISIBLE : View.GONE);
@@ -149,7 +146,7 @@ public class MostradorActivity extends BaseActivity {
             else imgQr.setImageResource(R.drawable.ic_qr);
             imgQr.setScaleType(ImageView.ScaleType.FIT_CENTER);
             txtQrTitulo.setText(llaveVacia ? "QR de ejemplo" : "QR");
-            txtQrAyuda.setText("Configúralo una vez aquí; después se cambia en Ajustes.");
+            txtQrAyuda.setText("Sube una foto del QR; es más confiable que tomarla con la cámara.");
             txtQrAyuda.setVisibility(View.VISIBLE);
             imgQr.setClickable(false);
             imgQr.setFocusable(false);
@@ -221,11 +218,12 @@ public class MostradorActivity extends BaseActivity {
     private void ofrecerConfigurarQr() {
         new AlertDialog.Builder(this)
                 .setTitle("Configurar QR")
-                .setMessage("La app limpia la foto y la guarda. Se configura una sola vez desde "
-                        + "el mostrador; para cambiarlo después, entra a Ajustes → Datos para "
+                .setMessage("Sube una foto del QR: es la opción más confiable porque la app "
+                        + "la limpia y analiza. También puedes tomar una foto con la cámara, "
+                        + "aunque puede fallar más. Después se cambia en Ajustes → Datos para "
                         + "recibir pagos.")
-                .setPositiveButton("Tomar foto", (d, w) -> tomarQrConPermiso())
-                .setNeutralButton("Elegir imagen", (d, w) -> elegirQr())
+                .setPositiveButton("Subir foto", (d, w) -> elegirQr())
+                .setNeutralButton("Tomar foto", (d, w) -> tomarQrConPermiso())
                 .setNegativeButton("Cancelar", null)
                 .show();
     }

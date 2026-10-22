@@ -72,10 +72,10 @@ Android 7.0 o superior. Funciona en celular y en tableta.
 - Sitio web: **(tú)** (puede ser el mismo de la política de privacidad)
 - Política de privacidad: **(tú)** — publicar `privacidad.md` en una URL
 
-## Qué hay de nuevo (versión 1.24)
+## Qué hay de nuevo (versión 1.25)
 
-> Versión 1.24: Mostrador personalizable, botón central para completar datos, QR con cámara
-> y permiso correcto, llave Bre-B, cuenta y banco;
+> Versión 1.25: Mostrador personalizable, subir foto del QR como opción principal, banco y
+> titular solo si se configuran, llave Bre-B y cuenta;
 > foto del QR que la app limpia y convierte a blanco y negro; botones Editar que desaparecen
 > al confirmar, con aviso y confirmación en dos pasos;
 > varias personas con perfil y menú propio; lector de códigos de barras y QR (local);

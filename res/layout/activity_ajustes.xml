@@ -365,7 +365,7 @@ android:id="@+id/scrollForm"
                     style="@style/Ayuda"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="QR: tómalo de cerca, sin reflejos y con los cuatro bordes visibles. La app lo lee y lo vuelve a generar limpio, en blanco y negro." />
+                    android:text="Sube una foto del QR para que la app la limpie y analice; es más confiable que tomarla con la cámara. La foto debe estar cerca, sin reflejos y con los cuatro bordes visibles." />
 
                 <ImageView
                     android:id="@+id/imgQrPago"
@@ -380,20 +380,20 @@ android:id="@+id/scrollForm"
                     android:src="@drawable/ic_qr" />
 
                 <Button
+                    android:id="@+id/btnElegirQr"
+                    style="@style/BotonPrimario"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Subir foto del QR" />
+
+                <Button
                     android:id="@+id/btnTomarQr"
                     style="@style/BotonSecundario"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:text="Tomar foto del QR" />
-
-                <Button
-                    android:id="@+id/btnElegirQr"
-                    style="@style/BotonSecundario"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="Elegir imagen del QR" />
 
                 <Button
                     android:id="@+id/btnQuitarQr"

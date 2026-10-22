@@ -1,4 +1,4 @@
-# Mi Negocio 1.24 — inventario, ventas, fiados, personas, mostrador y reportes para negocios colombianos
+# Mi Negocio 1.25 — inventario, ventas, fiados, personas, mostrador y reportes para negocios colombianos
 
 Aplicación Android nativa para llevar el día a día de un negocio pequeño en Colombia:
 inventario con fotos, ventas, compras, clientes, proveedores, gastos, **cartera de fiados**,
@@ -6,16 +6,26 @@ impuestos opcionales, abonos, informes, **reportes en Excel** y **lector de cód
 o QR** y **varias personas en el mismo dispositivo**. Funciona sin internet. Solo pide permiso de cámara al abrir el lector; no usa ubicación, contactos ni almacenamiento general.
 
 - **APK instalado en el dispositivo de prueba:** `minegocio.apk` (564 KB)
-- **SHA-256 del APK:** `e3cdc7103f8cc97f9532cc8b4a323335e814df78492432681a9ec6d2dce284f5`
+- **SHA-256 del APK:** `94d39b9acf7b18a4895491573a42b2ff91bf29a7ad2a893c2acb9ca5553e87a6`
 - **AAB de Play:** `minegocio.aab` (570 KB), SHA-256
-  `efc85a77c819eb61ebd1e9b91ead5578eaf4881333ba2ab971187231c3c09327`
+  `f9de309adc504e4532faf60c7cc56faa36f4474cc4fa217219bb524e53d82275`
 - **Paquete:** `com.polypodiozoa.minegocio`
-- **Versión:** 1.24 (versionCode 25)
+- **Versión:** 1.25 (versionCode 26)
 - **Tablet de prueba:** Amazon Fire HD 8 `KFONWI`, Fire OS 9 / Android 9 (API 28),
   800 × 1280 px, densidad 213 dpi.
 - **Requisito mínimo:** Android 7.0 (API 24) · **targetSdk:** 35 (Android 15).
 - **Estado:** instalada, probada y actualizada el 21 de octubre de 2026. Al final se borraron los datos
   de prueba; la app quedó limpia, con **Ajustes → Cargar datos de ejemplo** para recorrerla.
+
+## Novedades de la versión 1.25 — sin banco/titular ficticios y subir foto primero
+
+- **Banco de ejemplo** y **Titular de ejemplo** se eliminaron. Esas líneas solo aparecen si
+  el banco o el titular están escritos en Ajustes; si están vacíos, no se muestran.
+- El QR prioriza **Subir foto** (selector de imágenes) porque es más confiable: la app limpia
+  y analiza la imagen. **Tomar foto** queda como alternativa, con su aviso de que puede fallar
+  más.
+- En Ajustes, **Subir foto del QR** aparece primero y como botón principal; **Tomar foto del
+  QR** queda debajo.
 
 ## Novedades de la versión 1.24 — cámara del QR y texto
 
@@ -352,6 +362,7 @@ La ficha del cliente muestra:
 - **QR:** se elige una imagen desde Ajustes; se guarda en el almacenamiento privado. Si no
   hay foto, se genera un QR de ejemplo con la llave de ejemplo o con la llave real si ya está
   configurada. Si hay foto, se puede tocar para verla en grande.
+- **Banco y titular:** no tienen texto de ejemplo; solo aparecen si se escribieron en Ajustes.
 - **Datos de ejemplo:** cuando falta un dato de un módulo visible, se muestra arriba
   **“Tienes datos de ejemplo. Completa tu información.”** y un botón central **Completar
   datos**. Al tocarlo se elige qué completar: QR, llave, cuenta, banco o titular. El botón
@@ -514,6 +525,17 @@ LibreOffice. El informe de prueba tenía 5 hojas y 7.510 bytes; la cartera, 2.76
   después.
 - **No se probó** una copia v1 de la versión 1.0 ni una copia v3 abierta en una app 1.10
   (esta última no es compatible por diseño).
+
+## Verificación 1.25 (22-10-2026)
+
+- **Sin ejemplos de banco/titular:** con los campos vacíos, la tarjeta de cuenta muestra solo
+  el número y la ayuda de respaldo; no aparecen “Banco de ejemplo” ni “Titular de ejemplo”.
+- **Subir foto primero:** el diálogo de Configurar QR muestra **Subir foto** como acción
+  principal y **Tomar foto** como alternativa; el texto explica que subir es más confiable.
+- **Ajustes:** **Subir foto del QR** aparece antes y como botón principal.
+- APK 1.25 (26) firmado; AAB validado; solo permiso de cámara; sin internet.
+- **Limpieza final:** datos de prueba borrados; la app quedó con Administrador y sin datos de
+  negocio.
 
 ## Verificación 1.24 (22-10-2026)
 
@@ -754,18 +776,18 @@ Requisitos: Android SDK en `~/android-sdk` con **build-tools/35.0.0** y
 
 ```bash
 cd ~/proyectos/minegocio-tablet
-VERSION_CODE=25 VERSION_NAME=1.24 ./compilar.sh
+VERSION_CODE=26 VERSION_NAME=1.25 ./compilar.sh
 adb install -r minegocio.apk
 ```
 
 El script compila recursos, Java, DEX (incluye ZXing), alinea, firma con la llave de
 desarrollo y verifica. Para cambiar la versión:
-`VERSION_CODE=26 VERSION_NAME=1.25 ./compilar.sh`.
+`VERSION_CODE=27 VERSION_NAME=1.26 ./compilar.sh`.
 
 Para Play:
 
 ```bash
-VERSION_CODE=25 VERSION_NAME=1.24 ./empaquetar-aab.sh
+VERSION_CODE=26 VERSION_NAME=1.25 ./empaquetar-aab.sh
 ```
 
 Genera `minegocio.aab` y lo valida con `bundletool`.
