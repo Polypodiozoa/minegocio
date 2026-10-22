@@ -12,8 +12,8 @@ SALIDA="$PROY/build"
 CLAVE="${MINEGOCIO_KEYSTORE:-$HOME/.android/debug.keystore}"
 CLAVE_PASS="${MINEGOCIO_KEY_PASS:-android}"
 ALIAS="${MINEGOCIO_KEY_ALIAS:-androiddebugkey}"
-VERSION_CODE="${VERSION_CODE:-19}"
-VERSION_NAME="${VERSION_NAME:-1.18}"
+VERSION_CODE="${VERSION_CODE:-20}"
+VERSION_NAME="${VERSION_NAME:-1.19}"
 
 for f in "$BT/d8" "$BT/aapt2" "$BT/zipalign" "$BT/apksigner" "$JAR" "$ZXING"; do
     [ -e "$f" ] || { echo "FALTA: $f (SDK android-35, build-tools 35.0.0 y ZXing)"; exit 1; }

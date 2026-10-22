@@ -1,4 +1,4 @@
-# Auditoría de Mi Negocio — base 1.3, actualizaciones 1.10 a 1.18 (22/10/2026)
+# Auditoría de Mi Negocio — base 1.3, actualizaciones 1.10 a 1.19 (22/10/2026)
 
 
 
@@ -6,6 +6,12 @@
 
 
 
+
+
+## Actualización 1.19 — banco de ejemplo (22/10/2026)
+
+- Se eliminó el relleno **“Banco de ejemplo · aaaaaa”**; ahora el dato ficticio es
+  **“Banco de ejemplo”**. No era un dato real ni una validación: solo texto de ejemplo.
 
 ## Actualización 1.18 — QR identificado como Bre-B (22/10/2026)
 

@@ -31,7 +31,7 @@ public class MostradorActivity extends BaseActivity {
 
     private static final String LLAVE_EJEMPLO = "@EJEMPLO2567";
     private static final String CUENTA_EJEMPLO = "#4004EJEMPLO2145";
-    private static final String BANCO_EJEMPLO = "Banco de ejemplo · aaaaaa";
+    private static final String BANCO_EJEMPLO = "Banco de ejemplo";
     private static final String TITULAR_EJEMPLO = "Titular de ejemplo";
     private static final String METODOS_EJEMPLO = "Bre-B, Nequi, Daviplata, Transferencia bancaria";
 
