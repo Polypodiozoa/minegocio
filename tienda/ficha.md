@@ -72,9 +72,9 @@ Android 7.0 o superior. Funciona en celular y en tableta.
 - Sitio web: **(tú)** (puede ser el mismo de la política de privacidad)
 - Política de privacidad: **(tú)** — publicar `privacidad.md` en una URL
 
-## Qué hay de nuevo (versión 1.11)
+## Qué hay de nuevo (versión 1.13)
 
-> Versión 1.12: El mostrador con QR, llave Bre-B, cuenta, banco y métodos de pago;
+> Versión 1.13: El mostrador con QR, llave Bre-B, cuenta, banco y métodos de pago;
 > varias personas con perfil y menú propio; lector de códigos de barras y QR (local);
 > inventario, ventas, fiados con abonos y vencimientos, compras, clientes, proveedores,
 > gastos, informes con Excel y comprobante en PDF. Sin internet.

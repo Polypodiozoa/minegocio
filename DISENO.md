@@ -309,3 +309,4 @@ La app se va a publicar en Play después de los ciclos de prueba. Lo que falta p
 | 1.10 | 2026-10-21 | Lector de códigos de barras (predeterminado) y QR, integrado en producto, inventario y venta; permiso de cámara acotado al lector. |
 | 1.11 | 2026-10-21 | Personas y accesos con selector verde, perfil, autoría de ventas/compras/pagos/gastos, menú propio por cuenta, nombre del negocio bajo la fecha y bordes principales. |
 | 1.12 | 2026-10-21 | El mostrador con QR, llave Bre-B, cuenta, banco, titular, métodos configurables y datos de ejemplo. |
+| 1.13 | 2026-10-21 | Mensaje de la app: «Hecha para negocios Colombianos». |

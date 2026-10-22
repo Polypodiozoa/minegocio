@@ -114,7 +114,7 @@ public class AjustesActivity extends BaseActivity {
         try {
             String version = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
             ((TextView) findViewById(R.id.txtVersion)).setText("Versión " + version
-                    + " · Hecha para micronegocios colombianos");
+                    + " · Hecha para negocios Colombianos.");
         } catch (Exception ignored) {
         }
         cargarUltimaCopia();

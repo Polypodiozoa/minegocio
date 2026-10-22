@@ -6,7 +6,7 @@ fiados, informes, reportes en Excel y **varias personas en el mismo dispositivo*
 sin internet. Solo pide permiso de **cámara** cuando se abre el lector de códigos; no usa
 ubicación, contactos ni almacenamiento general.
 
-- **Versión:** 1.12 (versionCode 13) · **targetSdk 35**
+- **Versión:** 1.13 (versionCode 14) · **targetSdk 35**
 - **Paquete:** `com.polypodiozoa.minegocio`
 - **Android:** 7.0 (API 24) o superior. Probada en una tablet Amazon Fire HD 8 (API 28).
 - **Privacidad:** no recoge ni envía datos; no declara el permiso de internet.
@@ -18,8 +18,8 @@ ubicación, contactos ni almacenamiento general.
 | [`minegocio.apk`](minegocio.apk) · 564 KB | **Instalar a mano o compartir** con alguien (WhatsApp, Drive, USB). | Se abre en el dispositivo y se acepta el origen desconocido. |
 | [`minegocio.aab`](minegocio.aab) · 562 KB | **Subir a Google Play Console.** Es un *Android App Bundle*: un paquete de entrega, no un instalador. | Play lo convierte en el APK que corresponde a cada dispositivo. **No se puede instalar directamente.** |
 
-- APK SHA-256: `b3886033d4b9bab5112df55d2d0da70b9cda7a06311fd1ba2ce124211d40f2f4`
-- AAB SHA-256: `2fa1ae83965a3938ce9c09f728e69539bec45fc63c13d6dc4093b0805e21921b`
+- APK SHA-256: `a4931e5052d37f7c72fc25580ab5bd7df42c203d5c988ffd27c6e60dd6bdf06e`
+- AAB SHA-256: `1e2f7006204cb9589b7c2de8dfdbc444fd7b249f5e4d36750be1fae59db1c1d3`
 
 El APK del repositorio va firmado con la llave de **desarrollo** (sirve para probar y para
 compartir). La versión de Play la firma la llave de subida del dueño; si se instala encima de
@@ -88,8 +88,8 @@ Requiere el SDK de Android (**platforms;android-35** y **build-tools;35.0.0**) y
 Gradle. ZXing está en `herramientas/zxing-core-3.5.3.jar` y se incluye solo en el DEX.
 
 ```bash
-VERSION_CODE=13 VERSION_NAME=1.12 ./compilar.sh        # → minegocio.apk (firmado)
-VERSION_CODE=13 VERSION_NAME=1.12 ./empaquetar-aab.sh  # → minegocio.aab (para Play)
+VERSION_CODE=14 VERSION_NAME=1.13 ./compilar.sh        # → minegocio.apk (firmado)
+VERSION_CODE=14 VERSION_NAME=1.13 ./empaquetar-aab.sh  # → minegocio.aab (para Play)
 ```
 
 El AAB se arma con `aapt2` en formato proto y `herramientas/bundletool.jar`; se valida con

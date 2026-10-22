@@ -1,4 +1,4 @@
-# Mi Negocio 1.12 — inventario, ventas, fiados, personas, mostrador y reportes para micronegocios colombianos
+# Mi Negocio 1.13 — inventario, ventas, fiados, personas, mostrador y reportes para negocios colombianos
 
 Aplicación Android nativa para llevar el día a día de un negocio pequeño en Colombia:
 inventario con fotos, ventas, compras, clientes, proveedores, gastos, **cartera de fiados**,
@@ -6,16 +6,21 @@ impuestos opcionales, abonos, informes, **reportes en Excel** y **lector de cód
 o QR** y **varias personas en el mismo dispositivo**. Funciona sin internet. Solo pide permiso de cámara al abrir el lector; no usa ubicación, contactos ni almacenamiento general.
 
 - **APK instalado en el dispositivo de prueba:** `minegocio.apk` (564 KB)
-- **SHA-256 del APK:** `b3886033d4b9bab5112df55d2d0da70b9cda7a06311fd1ba2ce124211d40f2f4`
+- **SHA-256 del APK:** `a4931e5052d37f7c72fc25580ab5bd7df42c203d5c988ffd27c6e60dd6bdf06e`
 - **AAB de Play:** `minegocio.aab` (562 KB), SHA-256
-  `2fa1ae83965a3938ce9c09f728e69539bec45fc63c13d6dc4093b0805e21921b`
+  `1e2f7006204cb9589b7c2de8dfdbc444fd7b249f5e4d36750be1fae59db1c1d3`
 - **Paquete:** `com.polypodiozoa.minegocio`
-- **Versión:** 1.12 (versionCode 13)
+- **Versión:** 1.13 (versionCode 14)
 - **Tablet de prueba:** Amazon Fire HD 8 `KFONWI`, Fire OS 9 / Android 9 (API 28),
   800 × 1280 px, densidad 213 dpi.
 - **Requisito mínimo:** Android 7.0 (API 24) · **targetSdk:** 35 (Android 15).
 - **Estado:** instalada, probada y actualizada el 21 de octubre de 2026. Al final se borraron los datos
   de prueba; la app quedó limpia, con **Ajustes → Cargar datos de ejemplo** para recorrerla.
+
+## Novedades de la versión 1.13 — texto de la app
+
+- El mensaje de la versión cambia de «Hecha para micronegocios colombianos» a
+  **«Hecha para negocios Colombianos.»**. Es el único cambio de esta versión.
 
 ## Novedades de la versión 1.12 — El mostrador
 
@@ -503,18 +508,18 @@ Requisitos: Android SDK en `~/android-sdk` con **build-tools/35.0.0** y
 
 ```bash
 cd ~/proyectos/minegocio-tablet
-VERSION_CODE=13 VERSION_NAME=1.12 ./compilar.sh
+VERSION_CODE=14 VERSION_NAME=1.13 ./compilar.sh
 adb install -r minegocio.apk
 ```
 
 El script compila recursos, Java, DEX (incluye ZXing), alinea, firma con la llave de
 desarrollo y verifica. Para cambiar la versión:
-`VERSION_CODE=14 VERSION_NAME=1.13 ./compilar.sh`.
+`VERSION_CODE=15 VERSION_NAME=1.14 ./compilar.sh`.
 
 Para Play:
 
 ```bash
-VERSION_CODE=13 VERSION_NAME=1.12 ./empaquetar-aab.sh
+VERSION_CODE=14 VERSION_NAME=1.13 ./empaquetar-aab.sh
 ```
 
 Genera `minegocio.aab` y lo valida con `bundletool`.
