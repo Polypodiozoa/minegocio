@@ -3,6 +3,17 @@
 
 
 
+
+## Verificación de copias entre versiones (22/10/2026)
+
+- **1.10 (v2) → 1.15 (v3):** `backup-v2.zip` restaurado; 3 ventas, 1 compra, 1 pago y
+  1 gasto conservados; migración a v3; autoría asignada a Administrador.
+- **1.15 (v3) → 1.15 (v3):** copia `minegocio-20261022-0008.zip` restaurada; datos y cuenta
+  conservados; `user_version=3`.
+- **Límite:** una copia v3 no se puede abrir en 1.10; el esquema nuevo necesita una app
+  nueva. Una copia v1 de 1.0 no se probó.
+- **Adjuntos:** el ZIP incluye base, fotos/adjuntos y QR de pago; tratarlo como sensible.
+
 ## Actualización 1.15 — etiquetas por dato (22/10/2026)
 
 - **Claridad:** se quitó el aviso global de “datos de ejemplo” y cada valor ficticio lleva su

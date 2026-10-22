@@ -391,12 +391,19 @@ LibreOffice. El informe de prueba tenía 5 hojas y 7.510 bytes; la cartera, 2.76
 
 - **Ajustes → Crear copia de seguridad** → `minegocio-AAAAMMDD-HHMM.zip` (base + fotos + PDF).
 - **Ajustes → Restaurar una copia** → elegir el ZIP → confirmar → reinicia.
-- La copia de la versión 1.11 conserva la base con esquema 3 (`usuarios`,
-  `usuario_id` en ventas/compras/pagos/gastos, `clientes.cupo`, `ventas.fecha_limite`,
-  `pago_aplicaciones`).
-- Verificado: la copia v2 incluyó las tablas y datos nuevos; la restauración se probó con el
-  flujo completo de la app (en la versión anterior) y el mismo procedimiento copia el archivo
-  completo de la base v2.
+- La copia actual conserva la base con esquema 3 (`usuarios`, `usuario_id` en
+  ventas/compras/pagos/gastos, `clientes.cupo`, `ventas.fecha_limite`, `pago_aplicaciones`).
+- **Compatibilidad probada el 22/10/2026:**
+  - Copia real de **1.10 (esquema v2)** restaurada en **1.15**: aparecieron las 3 ventas,
+    1 compra, 1 pago y 1 gasto; la base se migró a v3 y todo quedó a nombre de
+    **Administrador**.
+  - Copia creada en **1.15 (v3)** y restaurada en **1.15**: los datos y la cuenta se
+    conservaron; el archivo se verificó con `PRAGMA user_version=3`.
+- **Copia nueva en app vieja:** no. Una copia v3 no se puede abrir en 1.10; hay que
+  actualizar la app primero. Una copia antigua sí se puede restaurar en una app nueva.
+- La copia incluye base, fotos, adjuntos y el QR de pago; trátala como información sensible.
+- Si la copia no se puede leer o el QR está incompleto, la app avisa y no reemplaza los datos
+  actuales sin confirmación.
 
 ## Accesibilidad
 
@@ -411,6 +418,17 @@ LibreOffice. El informe de prueba tenía 5 hojas y 7.510 bytes; la cartera, 2.76
 - **Sin gestos obligatorios**; funciona en vertical y horizontal.
 - **Nota honesta:** esta Fire OS no tiene TalkBack instalado; se validaron etiquetas con
   `uiautomator`, contraste calculado y prueba de texto grande, no con lector de pantalla real.
+
+## Verificación de copias (22-10-2026)
+
+- `backup-v2.zip` (1.10, base v2) → **1.15**: restauración correcta; 3 ventas, 1 compra,
+  1 pago y 1 gasto; migración a v3; ventas asignadas a Administrador.
+- `minegocio-20261022-0008.zip` (1.15, base v3) → **1.15**: restauración correcta; datos y
+  cuenta Administrador conservados; `PRAGMA user_version=3`.
+- La copia v3 incluye las tablas de usuarios y autoría; una copia v2 no trae cuentas creadas
+  después.
+- **No se probó** una copia v1 de la versión 1.0 ni una copia v3 abierta en una app 1.10
+  (esta última no es compatible por diseño).
 
 ## Verificación 1.15 (22-10-2026)
 

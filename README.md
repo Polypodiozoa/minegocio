@@ -116,4 +116,7 @@ El AAB se arma con `aapt2` en formato proto y `herramientas/bundletool.jar`; se 
 - **Copia de seguridad:** Ajustes → *Crear copia de seguridad* genera un `.zip` con la base,
   las fotos y un `LEEME.txt`, y se guarda donde el usuario elija.
 - **Restaurar:** Ajustes → *Restaurar una copia*.
+- **Entre versiones:** una copia de 1.10 (v2) se restauró en 1.15 y migró a v3; una copia de
+  1.15 se restauró en 1.15 sin perder datos. Una copia nueva no se puede abrir en una app
+  vieja: actualiza primero.
 - Desinstalar la app borra todo. La copia es la única forma de recuperarlo.
