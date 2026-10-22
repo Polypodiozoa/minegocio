@@ -1,10 +1,12 @@
 package com.polypodiozoa.minegocio.ui;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -34,11 +36,13 @@ public abstract class BaseActivity extends android.app.Activity {
 
     public static final String PREFS_UI = "ui";
     public static final String CLAVE_ESCALA = "escala_texto";
+    private static final int PERMISO_CAMARA_FOTO = 900;
 
     protected BD bd;
     protected File fotoPendiente;
     protected String nombreArchivoPendiente = "";
     protected String mimeArchivoPendiente = "";
+    private int fotoPendientePermiso = -1;
 
     /** Escala con la que se creó esta pantalla, para detectar cambios de tamaño. */
     private float escalaAplicada = 1f;
@@ -234,6 +238,31 @@ public abstract class BaseActivity extends android.app.Activity {
     // ------------------------------------------------------- fotos y archivos
 
     protected void tomarFoto(int codigo) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+                && checkSelfPermission(Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+            fotoPendientePermiso = codigo;
+            requestPermissions(new String[]{Manifest.permission.CAMERA}, PERMISO_CAMARA_FOTO);
+            return;
+        }
+        abrirCamara(codigo);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permisos, int[] resultados) {
+        super.onRequestPermissionsResult(requestCode, permisos, resultados);
+        if (requestCode != PERMISO_CAMARA_FOTO) return;
+        int codigo = fotoPendientePermiso;
+        fotoPendientePermiso = -1;
+        if (codigo > 0 && resultados.length > 0
+                && resultados[0] == PackageManager.PERMISSION_GRANTED) {
+            abrirCamara(codigo);
+        } else if (codigo > 0) {
+            aviso("Para tomar la foto necesitas permitir la cámara. También puedes elegir una imagen.");
+        }
+    }
+
+    private void abrirCamara(int codigo) {
         fotoPendiente = Archivos.nuevoArchivoTemporal(this, "foto", "jpg");
         nombreArchivoPendiente = "Foto " + Fechas.fechaHora(Fechas.ahora()) + ".jpg";
         mimeArchivoPendiente = "image/jpeg";

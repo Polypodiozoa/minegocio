@@ -25,7 +25,7 @@ public final class MenuPrincipal {
     }
 
     private static final String[] CLAVES = {
-            "nueva_venta", "nueva_compra", "ventas", "compras", "inventario",
+            "nueva_venta", "nueva_compra", "ventas", "compras", "caja", "inventario",
             "clientes", "deudas", "proveedores", "gastos", "informes", "perfil", "ajustes"
     };
 
@@ -36,6 +36,7 @@ public final class MenuPrincipal {
         OPCIONES.put("nueva_compra", new Opcion("nueva_compra", "Nueva compra", R.drawable.ic_carrito, true));
         OPCIONES.put("ventas", new Opcion("ventas", "Ventas", R.drawable.ic_recibo, false));
         OPCIONES.put("compras", new Opcion("compras", "Compras", R.drawable.ic_camion, false));
+        OPCIONES.put("caja", new Opcion("caja", "Caja", R.drawable.ic_dinero, false));
         OPCIONES.put("inventario", new Opcion("inventario", "Inventario", R.drawable.ic_caja, false));
         OPCIONES.put("clientes", new Opcion("clientes", "Clientes", R.drawable.ic_personas, false));
         OPCIONES.put("deudas", new Opcion("deudas", "Deudas", R.drawable.ic_calendario, false));

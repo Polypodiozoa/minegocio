@@ -163,6 +163,33 @@ public final class Modelo {
         public String notas = "";
     }
 
+
+    public static class Caja {
+        public long id;
+        public long usuarioId;
+        public String usuarioNombre = "";
+        public long apertura;
+        public long cierre;
+        public long montoInicial;
+        public long montoContado;
+        public long diferencia;
+        public String notas = "";
+        public String estado = "abierta";
+    }
+
+    public static class ResumenCaja {
+        public int ventasCantidad;
+        public long ventasTotal;
+        public long ventasEfectivo;
+        public long pagosTotal;
+        public long pagosEfectivo;
+        public long comprasTotal;
+        public long comprasEfectivo;
+        public long gastosTotal;
+        public long gastosEfectivo;
+        public long efectivoEsperado;
+    }
+
     public static class Resumen {
         public int ventas;
         public long ventasTotal;

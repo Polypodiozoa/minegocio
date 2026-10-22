@@ -90,6 +90,7 @@ public class PrincipalActivity extends BaseActivity {
             case "nueva_compra": abrir(CompraActivity.class); break;
             case "ventas": abrir(VentasActivity.class); break;
             case "compras": abrir(ComprasActivity.class); break;
+            case "caja": abrir(CajaActivity.class); break;
             case "inventario": abrir(InventarioActivity.class); break;
             case "clientes": abrir(ClientesActivity.class); break;
             case "deudas": abrir(DeudasActivity.class); break;

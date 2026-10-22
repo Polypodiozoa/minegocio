@@ -115,6 +115,7 @@
             android:configChanges="orientation|screenSize|keyboardHidden|screenLayout"
             android:windowSoftInputMode="adjustResize" />
         <activity android:name=".ui.MostradorConfigActivity" android:exported="false" />
+        <activity android:name=".ui.CajaActivity" android:exported="false" />
         <activity android:name=".ui.MostradorActivity" android:exported="false"
             android:configChanges="orientation|screenSize|keyboardHidden|screenLayout"
             android:windowSoftInputMode="adjustResize" />

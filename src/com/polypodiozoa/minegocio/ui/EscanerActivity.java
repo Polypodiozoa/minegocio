@@ -74,6 +74,10 @@ public class EscanerActivity extends BaseActivity implements SurfaceHolder.Callb
         modo = LectorCodigos.esModoQr(bd.ajuste("escaner_formato", LectorCodigos.MODO_BARRAS))
                 ? LectorCodigos.MODO_QR : LectorCodigos.MODO_BARRAS;
         vistaCamara.getHolder().addCallback(this);
+        vistaCamara.setOnTouchListener((v, evento) -> {
+            if (evento.getAction() == android.view.MotionEvent.ACTION_UP) enfocar();
+            return true;
+        });
         btnBarras.setOnClickListener(v -> cambiarModo(LectorCodigos.MODO_BARRAS));
         btnQr.setOnClickListener(v -> cambiarModo(LectorCodigos.MODO_QR));
         btnLinterna.setOnClickListener(v -> alternarLinterna());
@@ -299,7 +303,7 @@ public class EscanerActivity extends BaseActivity implements SurfaceHolder.Callb
             camara = Camera.open(id);
             Camera.CameraInfo info = new Camera.CameraInfo();
             Camera.getCameraInfo(id, info);
-            camara.setDisplayOrientation(info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT ? 270 : 90);
+            camara.setDisplayOrientation(orientacionPreview(info));
 
             Camera.Parameters parametros = camara.getParameters();
             Camera.Size tamano = elegirTamano(parametros.getSupportedPreviewSizes());
@@ -324,6 +328,7 @@ public class EscanerActivity extends BaseActivity implements SurfaceHolder.Callb
             camara.setPreviewDisplay(vistaCamara.getHolder());
             camara.setPreviewCallback(this::onPreviewFrame);
             camara.startPreview();
+            enfocar();
             linterna = false;
             btnLinterna.setText("Linterna");
             txtEstado.setText(LectorCodigos.esModoQr(modo)
@@ -333,6 +338,46 @@ public class EscanerActivity extends BaseActivity implements SurfaceHolder.Callb
             txtEstado.setText("No se pudo abrir la cámara. Escribe el código o elige una imagen.");
             txtAyuda.setText("La cámara no está disponible ahora. Puedes usar el código manual o una foto.");
             btnLinterna.setVisibility(View.GONE);
+        }
+    }
+
+    private int orientacionPreview(Camera.CameraInfo info) {
+        int rotacion = getWindowManager().getDefaultDisplay().getRotation();
+        int grados;
+        switch (rotacion) {
+            case android.view.Surface.ROTATION_90: grados = 90; break;
+            case android.view.Surface.ROTATION_180: grados = 180; break;
+            case android.view.Surface.ROTATION_270: grados = 270; break;
+            default: grados = 0; break;
+        }
+        if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+            return (360 - ((info.orientation + grados) % 360)) % 360;
+        }
+        return (info.orientation - grados + 360) % 360;
+    }
+
+    private void enfocar() {
+        if (camara == null) return;
+        try {
+            Camera.Parameters parametros = camara.getParameters();
+            List<String> modos = parametros.getSupportedFocusModes();
+            if (modos != null && modos.contains(Camera.Parameters.FOCUS_MODE_AUTO)) {
+                parametros.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
+                camara.setParameters(parametros);
+            }
+            camara.autoFocus((exito, camara1) -> {
+                if (camara1 == null) return;
+                try {
+                    Camera.Parameters p = camara1.getParameters();
+                    List<String> m = p.getSupportedFocusModes();
+                    if (m != null && m.contains(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE)) {
+                        p.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
+                        camara1.setParameters(p);
+                    }
+                } catch (Exception ignored) {
+                }
+            });
+        } catch (Exception ignored) {
         }
     }
 

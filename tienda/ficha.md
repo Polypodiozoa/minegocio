@@ -72,10 +72,10 @@ Android 7.0 o superior. Funciona en celular y en tableta.
 - Sitio web: **(tú)** (puede ser el mismo de la política de privacidad)
 - Política de privacidad: **(tú)** — publicar `privacidad.md` en una URL
 
-## Qué hay de nuevo (versión 1.28)
+## Qué hay de nuevo (versión 1.29)
 
-> Versión 1.28: Mostrador personalizable con tarjetas y botones grandes, QR desde foto o PDF,
-> ejemplos unificados de llave Bre-B y cuenta;
+> Versión 1.29: Caja con apertura, cierre y reporte general; cámara y escáner corregidos;
+> Mostrador personalizable con QR desde foto o PDF;
 > foto del QR que la app limpia y convierte a blanco y negro; botones Editar que desaparecen
 > al confirmar, con aviso y confirmación en dos pasos;
 > varias personas con perfil y menú propio; lector de códigos de barras y QR (local);

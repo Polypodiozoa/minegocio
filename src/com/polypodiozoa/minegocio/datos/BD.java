@@ -23,7 +23,7 @@ import java.util.List;
 public class BD extends SQLiteOpenHelper {
 
     public static final String ARCHIVO = "minegocio.db";
-    private static final int VERSION = 3;
+    private static final int VERSION = 4;
     private static BD instancia;
 
     public static synchronized BD get(Context contexto) {
@@ -113,6 +113,18 @@ public class BD extends SQLiteOpenHelper {
                 "menu TEXT," +
                 "activo INTEGER NOT NULL DEFAULT 1," +
                 "creado INTEGER NOT NULL)");
+        db.execSQL("CREATE TABLE cajas (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "usuario_id INTEGER NOT NULL DEFAULT 0," +
+                "apertura INTEGER NOT NULL," +
+                "cierre INTEGER NOT NULL DEFAULT 0," +
+                "monto_inicial INTEGER NOT NULL DEFAULT 0," +
+                "monto_contado INTEGER NOT NULL DEFAULT 0," +
+                "diferencia INTEGER NOT NULL DEFAULT 0," +
+                "notas TEXT," +
+                "estado TEXT NOT NULL DEFAULT 'abierta'," +
+                "creado INTEGER NOT NULL)");
+        db.execSQL("CREATE INDEX idx_cajas_estado ON cajas(estado, id)");
         db.execSQL("CREATE TABLE productos (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "nombre TEXT NOT NULL," +
@@ -293,6 +305,20 @@ public class BD extends SQLiteOpenHelper {
             actual.put("clave", "usuario_actual_id");
             actual.put("valor", String.valueOf(usuario));
             db.insertWithOnConflict("ajustes", null, actual, SQLiteDatabase.CONFLICT_IGNORE);
+        }
+        if (anterior < 4) {
+            db.execSQL("CREATE TABLE cajas (" +
+                    "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    "usuario_id INTEGER NOT NULL DEFAULT 0," +
+                    "apertura INTEGER NOT NULL," +
+                    "cierre INTEGER NOT NULL DEFAULT 0," +
+                    "monto_inicial INTEGER NOT NULL DEFAULT 0," +
+                    "monto_contado INTEGER NOT NULL DEFAULT 0," +
+                    "diferencia INTEGER NOT NULL DEFAULT 0," +
+                    "notas TEXT," +
+                    "estado TEXT NOT NULL DEFAULT 'abierta'," +
+                    "creado INTEGER NOT NULL)");
+            db.execSQL("CREATE INDEX idx_cajas_estado ON cajas(estado, id)");
         }
     }
 
@@ -1547,6 +1573,110 @@ public class BD extends SQLiteOpenHelper {
 
     public long contar(String sql, String... args) {
         return suma(sql, args);
+    }
+
+
+    // ---------------------------------------------------------------- caja
+
+    public Modelo.Caja cajaAbierta() {
+        try (Cursor c = getReadableDatabase().rawQuery(
+                "SELECT c.id, c.usuario_id, COALESCE(u.nombre,''), c.apertura, c.cierre, " +
+                        "c.monto_inicial, c.monto_contado, c.diferencia, COALESCE(c.notas,''), " +
+                        "c.estado FROM cajas c LEFT JOIN usuarios u ON u.id=c.usuario_id " +
+                        "WHERE c.estado='abierta' ORDER BY c.id DESC LIMIT 1", null)) {
+            if (c.moveToFirst()) return leerCaja(c);
+        }
+        return null;
+    }
+
+    public List<Modelo.Caja> cajasCerradas(int limite) {
+        List<Modelo.Caja> lista = new ArrayList<>();
+        try (Cursor c = getReadableDatabase().rawQuery(
+                "SELECT c.id, c.usuario_id, COALESCE(u.nombre,''), c.apertura, c.cierre, " +
+                        "c.monto_inicial, c.monto_contado, c.diferencia, COALESCE(c.notas,''), " +
+                        "c.estado FROM cajas c LEFT JOIN usuarios u ON u.id=c.usuario_id " +
+                        "WHERE c.estado='cerrada' ORDER BY c.cierre DESC, c.id DESC LIMIT ?",
+                new String[]{String.valueOf(Math.max(1, limite))})) {
+            while (c.moveToNext()) lista.add(leerCaja(c));
+        }
+        return lista;
+    }
+
+    public Modelo.Caja caja(long id) {
+        try (Cursor c = getReadableDatabase().rawQuery(
+                "SELECT c.id, c.usuario_id, COALESCE(u.nombre,''), c.apertura, c.cierre, " +
+                        "c.monto_inicial, c.monto_contado, c.diferencia, COALESCE(c.notas,''), " +
+                        "c.estado FROM cajas c LEFT JOIN usuarios u ON u.id=c.usuario_id " +
+                        "WHERE c.id=?", new String[]{String.valueOf(id)})) {
+            if (c.moveToFirst()) return leerCaja(c);
+        }
+        return null;
+    }
+
+    public boolean abrirCaja(long montoInicial, long usuarioId) {
+        if (cajaAbierta() != null) return false;
+        ContentValues v = new ContentValues();
+        v.put("usuario_id", usuarioId);
+        v.put("apertura", Fechas.ahora());
+        v.put("monto_inicial", Math.max(0, montoInicial));
+        v.put("estado", "abierta");
+        v.put("creado", Fechas.ahora());
+        return getWritableDatabase().insert("cajas", null, v) > 0;
+    }
+
+    public boolean cerrarCaja(long id, long montoContado, String notas) {
+        Modelo.Caja c = caja(id);
+        if (c == null || !"abierta".equals(c.estado)) return false;
+        long ahora = Fechas.ahora();
+        long esperado = resumenCaja(c.apertura, ahora, c.montoInicial).efectivoEsperado;
+        ContentValues v = new ContentValues();
+        v.put("cierre", ahora);
+        v.put("monto_contado", Math.max(0, montoContado));
+        v.put("diferencia", montoContado - esperado);
+        v.put("notas", notas == null ? "" : notas);
+        v.put("estado", "cerrada");
+        return getWritableDatabase().update("cajas", v, "id=?",
+                new String[]{String.valueOf(id)}) > 0;
+    }
+
+    public Modelo.ResumenCaja resumenCaja(long desde, long hasta, long montoInicial) {
+        Modelo.ResumenCaja r = new Modelo.ResumenCaja();
+        String d = String.valueOf(desde);
+        String h = String.valueOf(hasta);
+        r.ventasCantidad = (int) contar("SELECT COUNT(*) FROM ventas WHERE anulada=0 " +
+                "AND fecha>=? AND fecha<=?", d, h);
+        r.ventasTotal = suma("SELECT COALESCE(SUM(total),0) FROM ventas WHERE anulada=0 " +
+                "AND fecha>=? AND fecha<=?", d, h);
+        r.ventasEfectivo = suma("SELECT COALESCE(SUM(total),0) FROM ventas WHERE anulada=0 " +
+                "AND estado<>'credito' AND forma_pago='Efectivo' AND fecha>=? AND fecha<=?", d, h);
+        r.pagosTotal = suma("SELECT COALESCE(SUM(monto),0) FROM pagos WHERE fecha>=? AND fecha<=?", d, h);
+        r.pagosEfectivo = suma("SELECT COALESCE(SUM(monto),0) FROM pagos " +
+                "WHERE forma_pago='Efectivo' AND fecha>=? AND fecha<=?", d, h);
+        r.comprasTotal = suma("SELECT COALESCE(SUM(total),0) FROM compras WHERE anulada=0 " +
+                "AND fecha>=? AND fecha<=?", d, h);
+        r.comprasEfectivo = suma("SELECT COALESCE(SUM(total),0) FROM compras WHERE anulada=0 " +
+                "AND forma_pago='Efectivo' AND fecha>=? AND fecha<=?", d, h);
+        r.gastosTotal = suma("SELECT COALESCE(SUM(monto),0) FROM gastos WHERE fecha>=? AND fecha<=?", d, h);
+        r.gastosEfectivo = suma("SELECT COALESCE(SUM(monto),0) FROM gastos " +
+                "WHERE forma_pago='Efectivo' AND fecha>=? AND fecha<=?", d, h);
+        r.efectivoEsperado = Math.max(0, montoInicial) + r.ventasEfectivo + r.pagosEfectivo
+                - r.gastosEfectivo - r.comprasEfectivo;
+        return r;
+    }
+
+    private Modelo.Caja leerCaja(Cursor c) {
+        Modelo.Caja caja = new Modelo.Caja();
+        caja.id = c.getLong(0);
+        caja.usuarioId = c.getLong(1);
+        caja.usuarioNombre = n(c.getString(2));
+        caja.apertura = c.getLong(3);
+        caja.cierre = c.getLong(4);
+        caja.montoInicial = c.getLong(5);
+        caja.montoContado = c.getLong(6);
+        caja.diferencia = c.getLong(7);
+        caja.notas = n(c.getString(8));
+        caja.estado = n(c.getString(9));
+        return caja;
     }
 
     public Modelo.Resumen resumen(long desde, long hasta) {

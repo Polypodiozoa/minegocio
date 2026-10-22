@@ -1,4 +1,4 @@
-# Auditoría de Mi Negocio — base 1.3, actualizaciones 1.10 a 1.28 (22/10/2026)
+# Auditoría de Mi Negocio — base 1.3, actualizaciones 1.10 a 1.29 (22/10/2026)
 
 
 
@@ -16,6 +16,17 @@
 
 
 
+
+
+## Actualización 1.29 — caja y cámara (22/10/2026)
+
+- **Caja:** tabla `cajas` (esquema 4), una caja abierta a la vez, cierre con efectivo contado,
+  diferencia e historial. El efectivo esperado usa ventas/abonos/compras/gastos en efectivo.
+- **Cámara:** permiso solicitado en `BaseActivity.tomarFoto` para todas las pantallas; evita
+  el `SecurityException` al abrir la cámara del sistema.
+- **Escáner:** orientación calculada con sensor + rotación de pantalla; toque para enfocar.
+- **Prueba:** EAN-13 de imagen reconocido; PDF QR probado; caja abierta/cerrada.
+- **Límite:** la cámara física no se probó con un código impreso en todas las orientaciones.
 
 ## Actualización 1.28 — personalización clara (22/10/2026)
 

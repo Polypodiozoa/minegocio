@@ -6,7 +6,7 @@ fiados, informes, reportes en Excel y **varias personas en el mismo dispositivo*
 sin internet. Solo pide permiso de **cámara** cuando se abre el lector de códigos; no usa
 ubicación, contactos ni almacenamiento general.
 
-- **Versión:** 1.28 (versionCode 29) · **targetSdk 35**
+- **Versión:** 1.29 (versionCode 30) · **targetSdk 35**
 - **Paquete:** `com.polypodiozoa.minegocio`
 - **Android:** 7.0 (API 24) o superior. Probada en una tablet Amazon Fire HD 8 (API 28).
 - **Privacidad:** no recoge ni envía datos; no declara el permiso de internet.
@@ -16,10 +16,10 @@ ubicación, contactos ni almacenamiento general.
 | Archivo | Para qué | Cómo se usa |
 |---|---|---|
 | [`minegocio.apk`](minegocio.apk) · 568 KB | **Instalar a mano o compartir** con alguien (WhatsApp, Drive, USB). | Se abre en el dispositivo y se acepta el origen desconocido. |
-| [`minegocio.aab`](minegocio.aab) · 570 KB | **Subir a Google Play Console.** Es un *Android App Bundle*: un paquete de entrega, no un instalador. | Play lo convierte en el APK que corresponde a cada dispositivo. **No se puede instalar directamente.** |
+| [`minegocio.aab`](minegocio.aab) · 578 KB | **Subir a Google Play Console.** Es un *Android App Bundle*: un paquete de entrega, no un instalador. | Play lo convierte en el APK que corresponde a cada dispositivo. **No se puede instalar directamente.** |
 
-- APK SHA-256: `2f2ed1cad009c75f12be8e615723aaba204d6f354f43f3d52d01a6424684f95b`
-- AAB SHA-256: `0159b3454a60970eeadcbee4ec22b484bd233ea4c7b36855d1e6f1b55f73604b`
+- APK SHA-256: `2435ff0b39f8ff5d9eaf5b5335b1286606d659a636aaa6055e52fdd719dadef5`
+- AAB SHA-256: `87b1a0e188820db68653626655bf56093f464a40d009b375b46c691465052aa8`
 
 El APK del repositorio va firmado con la llave de **desarrollo** (sirve para probar y para
 compartir). La versión de Play la firma la llave de subida del dueño; si se instala encima de
@@ -44,6 +44,15 @@ la de desarrollo, Android pide desinstalar antes (y eso borra los datos): hacer 
   queda vacío, el inicio muestra «Mi Negocio».
 - **Historial:** las personas con ventas no se borran; se desactivan para conservar el
   historial. La autoría se ve en las listas, en los detalles y en el Excel.
+
+## Caja
+
+- **Caja** está en el menú. Se abre con el efectivo inicial y se cierra con el efectivo contado.
+- **Reporte general del turno:** ventas, ventas en efectivo, abonos, compras, gastos, efectivo esperado y diferencia.
+- **Cierre:** confirmación con el efectivo esperado y la diferencia (cuadra, sobrante o faltante).
+- **Historial:** últimos cierres, con opción de ver su reporte.
+- **Cálculo del efectivo esperado:** inicial + ventas en efectivo + abonos en efectivo − compras en efectivo − gastos en efectivo.
+- La caja y sus cierres son locales y entran en las copias de seguridad.
 
 ## El mostrador (botón Datos)
 
@@ -102,8 +111,8 @@ Requiere el SDK de Android (**platforms;android-35** y **build-tools;35.0.0**) y
 Gradle. ZXing está en `herramientas/zxing-core-3.5.3.jar` y se incluye solo en el DEX.
 
 ```bash
-VERSION_CODE=29 VERSION_NAME=1.28 ./compilar.sh        # → minegocio.apk (firmado)
-VERSION_CODE=29 VERSION_NAME=1.28 ./empaquetar-aab.sh  # → minegocio.aab (para Play)
+VERSION_CODE=30 VERSION_NAME=1.29 ./compilar.sh        # → minegocio.apk (firmado)
+VERSION_CODE=30 VERSION_NAME=1.29 ./empaquetar-aab.sh  # → minegocio.aab (para Play)
 ```
 
 El AAB se arma con `aapt2` en formato proto y `herramientas/bundletool.jar`; se valida con

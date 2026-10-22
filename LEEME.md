@@ -1,4 +1,4 @@
-# Mi Negocio 1.28 — inventario, ventas, fiados, personas, mostrador y reportes para negocios colombianos
+# Mi Negocio 1.29 — inventario, ventas, fiados, caja, mostrador y reportes para negocios colombianos
 
 Aplicación Android nativa para llevar el día a día de un negocio pequeño en Colombia:
 inventario con fotos, ventas, compras, clientes, proveedores, gastos, **cartera de fiados**,
@@ -6,16 +6,28 @@ impuestos opcionales, abonos, informes, **reportes en Excel** y **lector de cód
 o QR** y **varias personas en el mismo dispositivo**. Funciona sin internet. Solo pide permiso de cámara al abrir el lector; no usa ubicación, contactos ni almacenamiento general.
 
 - **APK instalado en el dispositivo de prueba:** `minegocio.apk` (564 KB)
-- **SHA-256 del APK:** `2f2ed1cad009c75f12be8e615723aaba204d6f354f43f3d52d01a6424684f95b`
-- **AAB de Play:** `minegocio.aab` (570 KB), SHA-256
-  `0159b3454a60970eeadcbee4ec22b484bd233ea4c7b36855d1e6f1b55f73604b`
+- **SHA-256 del APK:** `2435ff0b39f8ff5d9eaf5b5335b1286606d659a636aaa6055e52fdd719dadef5`
+- **AAB de Play:** `minegocio.aab` (578 KB), SHA-256
+  `87b1a0e188820db68653626655bf56093f464a40d009b375b46c691465052aa8`
 - **Paquete:** `com.polypodiozoa.minegocio`
-- **Versión:** 1.28 (versionCode 29)
+- **Versión:** 1.29 (versionCode 30)
 - **Tablet de prueba:** Amazon Fire HD 8 `KFONWI`, Fire OS 9 / Android 9 (API 28),
   800 × 1280 px, densidad 213 dpi.
 - **Requisito mínimo:** Android 7.0 (API 24) · **targetSdk:** 35 (Android 15).
 - **Estado:** instalada, probada y actualizada el 21 de octubre de 2026. Al final se borraron los datos
   de prueba; la app quedó limpia, con **Ajustes → Cargar datos de ejemplo** para recorrerla.
+
+## Novedades de la versión 1.29 — caja y cámara
+
+- **Caja:** abrir con efectivo inicial, ver el reporte general del turno, cerrar con efectivo
+  contado y diferencia, e historial de cierres.
+- **Cámara:** la foto de producto y demás fotos piden permiso de cámara antes de abrirla; antes
+  podían cerrar la app si el permiso estaba revocado.
+- **Escáner:** orientación corregida según el sensor y el giro de pantalla; tocar la vista
+  enfoca. La lectura de códigos de barras se probó con una imagen EAN-13.
+- **Esquema 4:** nueva tabla `cajas`; las copias v3 se migran al restaurar.
+- **Personalizar Mostrador:** tarjetas con interruptores y botones grandes; se retiró
+  “Pregunta si necesitas ayuda”.
 
 ## Novedades de la versión 1.28 — personalizar más claro
 
@@ -550,6 +562,19 @@ LibreOffice. El informe de prueba tenía 5 hojas y 7.510 bytes; la cartera, 2.76
 - **No se probó** una copia v1 de la versión 1.0 ni una copia v3 abierta en una app 1.10
   (esta última no es compatible por diseño).
 
+## Verificación 1.29 (22-10-2026)
+
+- **Caja:** se abrió con $100.000, el reporte mostró los totales y el efectivo esperado, y se
+  cerró con confirmación y diferencia. El cierre apareció en el historial y se pudo abrir su
+  reporte.
+- **Cámara de producto:** con el permiso revocado, el botón **Tomar foto** mostró el diálogo
+  de Android en vez de cerrar la app.
+- **Escáner:** se probó una imagen EAN-13 y devolvió `4006381333931`; la vista de cámara usa
+  la orientación calculada del sensor y admite toque para enfocar.
+- **Migración:** la base existente pasó a esquema 4 al instalar; la app conservó el QR.
+- **PDF:** se volvió a cargar `QR-Nu.pdf` en 1.29 y quedó configurado.
+- APK 1.29 (30) firmado; AAB validado; solo permiso de cámara; sin internet.
+
 ## Verificación 1.28 (22-10-2026)
 
 - **Personalizar Mostrador:** pantalla con tarjetas, interruptores y botones grandes; se
@@ -817,7 +842,7 @@ En el dispositivo por USB:
 | ![QR limpio en El mostrador](capturas/37-mostrador-qr-limpio.png) | ![Aviso al editar un dato](capturas/38-editar-dato.png) |
 | ![Confirmar el dato](capturas/39-confirmar-dato.png) | ![Configurar QR una vez](capturas/40-configurar-qr.png) |
 | ![Completar datos desde el botón central](capturas/41-completar-datos.png) | ![Personalizar Mostrador](capturas/42-personalizar-mostrador.png) |
-| ![Mostrador personalizado](capturas/43-mostrador-personalizado.png) | |
+| ![Mostrador personalizado](capturas/43-mostrador-personalizado.png) | ![Caja abierta con reporte](capturas/44-caja.png) |
 
 ## Compilar e instalar
 
@@ -827,18 +852,18 @@ Requisitos: Android SDK en `~/android-sdk` con **build-tools/35.0.0** y
 
 ```bash
 cd ~/proyectos/minegocio-tablet
-VERSION_CODE=29 VERSION_NAME=1.28 ./compilar.sh
+VERSION_CODE=30 VERSION_NAME=1.29 ./compilar.sh
 adb install -r minegocio.apk
 ```
 
 El script compila recursos, Java, DEX (incluye ZXing), alinea, firma con la llave de
 desarrollo y verifica. Para cambiar la versión:
-`VERSION_CODE=30 VERSION_NAME=1.29 ./compilar.sh`.
+`VERSION_CODE=31 VERSION_NAME=1.30 ./compilar.sh`.
 
 Para Play:
 
 ```bash
-VERSION_CODE=29 VERSION_NAME=1.28 ./empaquetar-aab.sh
+VERSION_CODE=30 VERSION_NAME=1.29 ./empaquetar-aab.sh
 ```
 
 Genera `minegocio.aab` y lo valida con `bundletool`.
