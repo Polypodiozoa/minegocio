@@ -10,8 +10,6 @@ ubicación, contactos ni almacenamiento general.
 - **Paquete:** `com.polypodiozoa.minegocio`
 - **Android:** 7.0 (API 24) o superior. Probada en una tablet Amazon Fire HD 8 (API 28).
 - **Privacidad:** no recoge ni envía datos; no declara el permiso de internet.
-- **Descarga pública del APK:** https://github.com/Polypodiozoa/minegocio-apk/releases/latest/download/minegocio.apk
-  (repositorio público solo con el APK; el código fuente sigue privado).
 
 ## Qué se comparte y qué se sube a Play
 
