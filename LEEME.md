@@ -5,15 +5,15 @@ inventario con fotos, ventas, compras, clientes, proveedores, gastos, **cartera 
 impuestos opcionales, abonos, informes, **reportes en Excel** y **lector de códigos de barras
 o QR** y **varias personas en el mismo dispositivo**. Funciona sin internet. Solo pide permiso de cámara al abrir el lector; no usa ubicación, contactos ni almacenamiento general.
 
-- **APK instalado en el dispositivo de prueba:** `minegocio.apk` (564 KB)
-- **SHA-256 del APK:** `1bea9191e7fb4af87d0b8754dc841a0a922a93012fe758493152db11721a5eda`
-- **AAB de Play:** `minegocio.aab` (578 KB), SHA-256
-  `16dfa41f25243530a14de67ff816376b4fe1c89203d21a6c8e0339e406e23fb4`
+- **APK instalado en el dispositivo de prueba:** `minegocio.apk` (584 KB)
+- **SHA-256 del APK:** `d3e893ca5cd06ab1b5ca4ee50984a6f9d1d057ac4a3311e80065e0f129b63d75`
+- **AAB de Play:** `minegocio.aab` (591 KB), SHA-256
+  `8d8e950b7a06c64a1c93a0bc153b1d08838d644fa01ee88337b884f722607bf7`
 - **Paquete:** `com.polypodiozoa.minegocio`
-- **Versión:** 1.30 (versionCode 31)
+- **Versión:** 1.32 (versionCode 33)
 - **Tablet de prueba:** Amazon Fire HD 8 `KFONWI`, Fire OS 9 / Android 9 (API 28),
   800 × 1280 px, densidad 213 dpi.
-- **Requisito mínimo:** Android 7.0 (API 24) · **targetSdk:** 35 (Android 15).
+- **Requisito mínimo:** Android 7.0 (API 24) · **targetSdk:** 36 (Android 16).
 - **Estado:** instalada, probada y actualizada el 21 de octubre de 2026. Al final se borraron los datos
   de prueba; la app quedó limpia, con **Ajustes → Cargar datos de ejemplo** para recorrerla.
 
@@ -864,24 +864,24 @@ En el dispositivo por USB:
 
 ## Compilar e instalar
 
-Requisitos: Android SDK en `~/android-sdk` con **build-tools/35.0.0** y
-**platforms/android-35**, OpenJDK 21 y ZXing en
+Requisitos: Android SDK en `~/android-sdk` con **build-tools/36.0.0** y
+**platforms/android-36**, JDK 17 (`~/.local/jdk17`) y ZXing en
 `herramientas/zxing-core-3.5.3.jar`. No hace falta Gradle ni Android Studio.
 
 ```bash
-cd ~/proyectos/minegocio-tablet
-VERSION_CODE=31 VERSION_NAME=1.30 ./compilar.sh
+cd ~/proyectos/minegocio
+./compilar.sh
 adb install -r minegocio.apk
 ```
 
 El script compila recursos, Java, DEX (incluye ZXing), alinea, firma con la llave de
-desarrollo y verifica. Para cambiar la versión:
-`VERSION_CODE=32 VERSION_NAME=1.31 ./compilar.sh`.
+release y verifica. Para cambiar la versión:
+`VERSION_CODE=34 VERSION_NAME=1.33 ./compilar.sh`.
 
 Para Play:
 
 ```bash
-VERSION_CODE=31 VERSION_NAME=1.30 ./empaquetar-aab.sh
+./empaquetar-aab.sh
 ```
 
 Genera `minegocio.aab` y lo valida con `bundletool`.

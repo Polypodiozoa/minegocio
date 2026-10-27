@@ -35,7 +35,6 @@ public class PrincipalActivity extends BaseActivity {
         prepararAcciones();
         findViewById(R.id.btnVerVentas).setOnClickListener(v -> abrir(VentasActivity.class));
         findViewById(R.id.btnCopia).setOnClickListener(v -> abrir(AjustesActivity.class));
-        findViewById(R.id.btnPrimerProducto).setOnClickListener(v -> abrir(ProductoActivity.class));
         findViewById(R.id.cardAlerta).setOnClickListener(v -> {
             Intent i = new Intent(this, InventarioActivity.class);
             i.putExtra("bajos", true);
@@ -143,8 +142,6 @@ public class PrincipalActivity extends BaseActivity {
         cargarAlertaDeudas();
         cargarRecientes();
         cargarRespaldo();
-        findViewById(R.id.cardBienvenida).setVisibility(
-                bd.totalProductos() == 0 ? View.VISIBLE : View.GONE);
     }
 
     private void ponerMetrica(int idCelda, int idValor, String etiqueta, long valor) {

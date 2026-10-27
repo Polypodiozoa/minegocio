@@ -311,9 +311,11 @@ android:id="@+id/scrollForm"
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/cardEjemplo"
                 style="@style/Tarjeta"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:visibility="gone">
 
                 <TextView
                     style="@style/TituloSeccion"
@@ -493,7 +495,7 @@ android:id="@+id/scrollForm"
                     style="@style/Ayuda"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Elimina productos, ventas, compras, clientes, proveedores, gastos y fotos de este dispositivo. No se puede deshacer. Crea una copia antes." />
+                    android:text="Elimina todo: productos, ventas, compras, gastos, clientes, proveedores, caja, personas, datos de pago, fotos y el nombre del negocio. No se puede deshacer. Crea una copia antes." />
 
                 <Button
                     android:id="@+id/btnBorrarTodo"

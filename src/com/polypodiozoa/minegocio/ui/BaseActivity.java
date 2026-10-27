@@ -14,6 +14,8 @@ import android.provider.MediaStore;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowInsets;
+import android.view.WindowInsetsController;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
@@ -79,19 +81,110 @@ public abstract class BaseActivity extends android.app.Activity {
         Window w = getWindow();
         w.setStatusBarColor(getColor(R.color.primario_oscuro));
         w.setNavigationBarColor(getColor(R.color.superficie));
-        if (Build.VERSION.SDK_INT >= 26) {
+        /* Android 11-14: los colores de barra del tema valen. Android 15+ los ignora
+           y los iconos se pintan desde aplicarAparienciaBarras (ver aplicarInsets). */
+        if (Build.VERSION.SDK_INT >= 26 && Build.VERSION.SDK_INT < 30) {
             View decor = w.getDecorView();
             decor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR);
+        }
+        if (Build.VERSION.SDK_INT >= 35) {
+            /* Con target 36 Android dibuja la app hasta debajo de las barras; esto
+               solo fija la intención para que los insets lleguen completos. */
+            w.setDecorFitsSystemWindows(false);
         }
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        /* Android 13+ con enableOnBackInvokedCallback: el sistema ya no llama a
+           onBackPressed() por sí solo (y con target 36 en Android 16 nunca), así que
+           reencaminamos el gesto del sistema a onBackPressed() para conservar los
+           diálogos de "cambios sin guardar" de cada pantalla. */
+        if (Build.VERSION.SDK_INT >= 33) {
+            callbackAtras = () -> onBackPressed();
+            getOnBackInvokedDispatcher().registerOnBackInvokedCallback(
+                    android.window.OnBackInvokedDispatcher.PRIORITY_DEFAULT, callbackAtras);
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        if (Build.VERSION.SDK_INT >= 33 && callbackAtras != null) {
+            getOnBackInvokedDispatcher().unregisterOnBackInvokedCallback(callbackAtras);
+            callbackAtras = null;
+        }
+        super.onStop();
+    }
+
+    private android.window.OnBackInvokedCallback callbackAtras;
+
+    @Override
     public void setContentView(int layoutResID) {
         super.setContentView(layoutResID);
+        aplicarInsets();
         final View desplazable = findViewById(R.id.scrollForm);
         if (desplazable != null) {
             desplazable.post(() -> desplazable.scrollTo(0, 0));
         }
+    }
+
+    /** Pega el contenido a las barras del sistema (edge-to-edge obligatorio en 15+). */
+    private void aplicarInsets() {
+        if (Build.VERSION.SDK_INT < 35) return; // Android 14 y anteriores ya separan las barras
+        View contenido = findViewById(android.R.id.content);
+        if (!(contenido instanceof android.view.ViewGroup)) return;
+        android.view.ViewGroup marco = (android.view.ViewGroup) contenido;
+        if (marco.getChildCount() == 0) return;
+        final View raiz = marco.getChildAt(0);
+
+        /* La barra superior es la que se extiende bajo la barra de estado: así el
+           color de encabezado sigue siendo el mismo de siempre. Sin barra propia
+           (pantalla principal, visor de foto) se rellena el fondo de la raíz. */
+        View btnAtras = findViewById(R.id.btnAtras);
+        final View barra = btnAtras != null && btnAtras.getParent() instanceof View
+                ? (View) btnAtras.getParent() : null;
+        final View arriba = barra != null ? barra : raiz;
+
+        final int baseArriba = arriba.getPaddingTop();
+        final int baseAbajo = raiz.getPaddingBottom();
+
+        raiz.setOnApplyWindowInsetsListener((v, insets) -> {
+            int sup = insets.getInsets(WindowInsets.Type.statusBars()
+                    | WindowInsets.Type.displayCutout()).top;
+            int inf = insets.getInsets(WindowInsets.Type.navigationBars()).bottom;
+            arriba.setPadding(arriba.getPaddingLeft(), baseArriba + sup,
+                    arriba.getPaddingRight(), arriba.getPaddingBottom());
+            v.setPadding(v.getPaddingLeft(), v.getPaddingTop(),
+                    v.getPaddingRight(), baseAbajo + inf);
+            aplicarAparienciaBarras(colorClaro(arriba.getBackground()),
+                    colorClaro(v.getBackground()));
+            return insets; // sin consumir: adjustResize del teclado sigue mandando
+        });
+        raiz.requestApplyInsets();
+    }
+
+    /** Iconos oscuros de barra sobre fondo claro, blancos sobre fondo oscuro. */
+    private void aplicarAparienciaBarras(boolean arribaClaro, boolean abajoClaro) {
+        if (Build.VERSION.SDK_INT < 30) return;
+        android.view.WindowInsetsController c = getWindow().getInsetsController();
+        if (c == null) return;
+        int a = c.getSystemBarsAppearance();
+        a = arribaClaro ? a | WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
+                : a & ~WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS;
+        a = abajoClaro ? a | WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS
+                : a & ~WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS;
+        c.setSystemBarsAppearance(a, WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
+                | WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS);
+    }
+
+    /** ¿El fondo plano es claro? Sin color plano se asume claro (el fondo de ventana lo es). */
+    private boolean colorClaro(android.graphics.drawable.Drawable fondo) {
+        if (!(fondo instanceof android.graphics.drawable.ColorDrawable)) return true;
+        int c = ((android.graphics.drawable.ColorDrawable) fondo).getColor();
+        double l = (0.299 * ((c >> 16) & 0xFF) + 0.587 * ((c >> 8) & 0xFF)
+                + 0.114 * (c & 0xFF)) / 255.0;
+        return l >= 0.5;
     }
 
     protected void configurarBarra(String titulo) {
@@ -205,6 +298,13 @@ public abstract class BaseActivity extends android.app.Activity {
 
     protected long numero(EditText campo) {
         return Formatos.parsePesos(campo.getText().toString());
+    }
+
+    /** Rechaza montos ilegibles (basura o demasiados dígitos) en vez de guardar 0. */
+    protected boolean montoValido(EditText campo) {
+        if (Formatos.pesosValidos(campo.getText().toString())) return true;
+        error(campo, "Escribe solo números, por ejemplo 12500.");
+        return false;
     }
 
     protected int entero(EditText campo) {

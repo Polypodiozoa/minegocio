@@ -1,6 +1,7 @@
 package com.polypodiozoa.minegocio.ui;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,8 +10,12 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.InputType;
+import android.text.TextWatcher;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.Switch;
@@ -81,7 +86,7 @@ public class AjustesActivity extends BaseActivity {
         });
 
         findViewById(R.id.btnGuardar).setOnClickListener(v -> guardar());
-        btnCrearCopia.setOnClickListener(v -> pedirDestinoCopia());
+        btnCrearCopia.setOnClickListener(v -> avisarAntesDeCopia());
         btnRestaurar.setOnClickListener(v -> pedirCopiaRestaurar());
         findViewById(R.id.btnEjemplo).setOnClickListener(v -> cargarEjemplo());
         findViewById(R.id.btnBorrarTodo).setOnClickListener(v -> borrarTodo());
@@ -110,6 +115,10 @@ public class AjustesActivity extends BaseActivity {
         } else {
             grupoEscaner.check(R.id.rbEscanerBarras);
         }
+        /* El ejemplo es una ayuda para quien empieza: con datos ya registrados
+           no se ofrece, para dejar la app limpia a quien ya la usa. */
+        findViewById(R.id.cardEjemplo).setVisibility(
+                bd.sinDatos() ? android.view.View.VISIBLE : android.view.View.GONE);
 
         SharedPreferences p = getSharedPreferences(PREFS_UI, MODE_PRIVATE);
         float escala = p.getFloat(CLAVE_ESCALA, 1f);
@@ -290,6 +299,14 @@ public class AjustesActivity extends BaseActivity {
         }
     }
 
+    private void avisarAntesDeCopia() {
+        confirmar("Copia de seguridad",
+                "La copia contiene TODOS los datos del negocio: teléfonos, deudas, datos de pago "
+                        + "y fotos. Se guarda sin contraseña.\n\n"
+                        + "Guárdala en un lugar seguro y no la compartas con desconocidos.",
+                "Elegir dónde guardar", this::pedirDestinoCopia);
+    }
+
     private void pedirDestinoCopia() {
         Intent i = new Intent(Intent.ACTION_CREATE_DOCUMENT);
         i.addCategory(Intent.CATEGORY_OPENABLE);
@@ -429,6 +446,10 @@ public class AjustesActivity extends BaseActivity {
     }
 
     private void cargarEjemplo() {
+        if (!bd.sinDatos()) {
+            aviso("Los datos de ejemplo solo están disponibles en una app sin usar.");
+            return;
+        }
         confirmar("Datos de ejemplo",
                 "Se agregarán 6 productos, 3 clientes con cupo de fiado, 2 proveedores, "
                         + "3 ventas (una fiada y vencida), 1 compra y 1 gasto de ejemplo. "
@@ -450,11 +471,53 @@ public class AjustesActivity extends BaseActivity {
 
     private void borrarTodo() {
         confirmar("Borrar todos los datos",
-                "Se eliminarán productos, ventas, compras, clientes, proveedores, gastos y fotos. "
-                        + "Esta acción no se puede deshacer.",
-                "Continuar", () -> confirmar("Confirmar borrado",
-                        "¿Seguro que quieres borrar todo? Te recomendamos crear una copia primero.",
-                        "Sí, borrar todo", this::ejecutarBorrado));
+                "Se borrará TODA la información del negocio:\n\n"
+                        + "• Productos, ventas, compras y gastos\n"
+                        + "• Clientes, proveedores, personas y caja\n"
+                        + "• Datos de pago, fotos y el nombre del negocio\n\n"
+                        + "NO SE PUEDE DESHACER DE NINGUNA FORMA.\n"
+                        + "Si quieres conservar algo, cancela y crea una copia primero.",
+                "Entiendo, continuar", this::pedirPalabraParaBorrar);
+    }
+
+    /** Segunda barrera: hay que escribir BORRAR para habilitar el botón rojo. */
+    private void pedirPalabraParaBorrar() {
+        EditText campo = new EditText(this);
+        campo.setSingleLine(true);
+        campo.setHint("BORRAR");
+        campo.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS);
+        int relleno = Math.round(24 * getResources().getDisplayMetrics().density);
+        FrameLayout caja = new FrameLayout(this);
+        caja.setPadding(relleno, 0, relleno, 0);
+        caja.addView(campo);
+
+        AlertDialog d = new AlertDialog.Builder(this)
+                .setTitle("Confirmar borrado")
+                .setMessage("Escribe la palabra BORRAR. Esta es la última confirmación: "
+                        + "después no hay vuelta atrás.")
+                .setView(caja)
+                .setPositiveButton("Borrar todo", null)
+                .setNegativeButton("Cancelar", null)
+                .create();
+        d.setOnShowListener(ignorado -> {
+            agrandarDialogo(d);
+            Button borrar = d.getButton(AlertDialog.BUTTON_POSITIVE);
+            borrar.setTextColor(getColor(R.color.error));
+            borrar.setEnabled(false);
+            campo.addTextChangedListener(new TextWatcher() {
+                @Override public void beforeTextChanged(CharSequence s, int a, int b, int c) { }
+                @Override public void onTextChanged(CharSequence s, int a, int b, int c) { }
+                @Override public void afterTextChanged(Editable s) {
+                    borrar.setEnabled("BORRAR".equals(texto(campo).toUpperCase(Formatos.COLOMBIA)));
+                }
+            });
+            borrar.setOnClickListener(v -> {
+                d.dismiss();
+                ejecutarBorrado();
+            });
+        });
+        d.show();
+        campo.requestFocus();
     }
 
     private void ejecutarBorrado() {
@@ -468,6 +531,7 @@ public class AjustesActivity extends BaseActivity {
         new File(getFilesDir(), "copia-antes-de-restaurar.db").delete();
         borrarCarpeta(new File(getFilesDir(), "adjuntos-antes-de-restaurar"));
         new File(getFilesDir(), "errores.log").delete();
+        new File(getFilesDir(), "errores.log.old").delete();
         File[] viejas = getFilesDir().listFiles();
         if (viejas != null) {
             for (File f : viejas) {

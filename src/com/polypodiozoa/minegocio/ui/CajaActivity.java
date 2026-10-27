@@ -90,6 +90,7 @@ public class CajaActivity extends BaseActivity {
     }
 
     private void abrir() {
+        if (!montoValido(etMontoInicial)) return;
         long inicial = numero(etMontoInicial);
         if (inicial < 0) {
             error(etMontoInicial, "Escribe un monto inicial válido.");
@@ -149,6 +150,7 @@ public class CajaActivity extends BaseActivity {
                     error(contado, "Escribe el efectivo contado.");
                     return;
                 }
+                if (!montoValido(contado)) return;
                 long valor = numero(contado);
                 if (valor < 0) {
                     error(contado, "Escribe el efectivo contado.");

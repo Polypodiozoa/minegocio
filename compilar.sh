@@ -4,19 +4,21 @@
 set -euo pipefail
 
 SDK="${ANDROID_SDK:-$HOME/android-sdk}"
-BT="$SDK/build-tools/35.0.0"
-JAR="$SDK/platforms/android-35/android.jar"
+BT="$SDK/build-tools/36.0.0"
+JAR="$SDK/platforms/android-36/android.jar"
 PROY="$(cd "$(dirname "$0")" && pwd)"
 ZXING="$PROY/herramientas/zxing-core-3.5.3.jar"
 SALIDA="$PROY/build"
-CLAVE="${MINEGOCIO_KEYSTORE:-$HOME/.android/debug.keystore}"
-CLAVE_PASS="${MINEGOCIO_KEY_PASS:-android}"
-ALIAS="${MINEGOCIO_KEY_ALIAS:-androiddebugkey}"
-VERSION_CODE="${VERSION_CODE:-31}"
-VERSION_NAME="${VERSION_NAME:-1.30}"
+# La llave y su contraseña viven fuera del repo, en ~/.minegocio (permisos 600).
+if [ -f "$HOME/.minegocio/signing.env" ]; then . "$HOME/.minegocio/signing.env"; fi
+CLAVE="${MINEGOCIO_KEYSTORE:-$HOME/.minegocio/minegocio-release.jks}"
+CLAVE_PASS="${MINEGOCIO_KEY_PASS:-}"
+ALIAS="${MINEGOCIO_KEY_ALIAS:-minegocio}"
+VERSION_CODE="${VERSION_CODE:-33}"
+VERSION_NAME="${VERSION_NAME:-1.32}"
 
 for f in "$BT/d8" "$BT/aapt2" "$BT/zipalign" "$BT/apksigner" "$JAR" "$ZXING"; do
-    [ -e "$f" ] || { echo "FALTA: $f (SDK android-35, build-tools 35.0.0 y ZXing)"; exit 1; }
+    [ -e "$f" ] || { echo "FALTA: $f (SDK android-36, build-tools 36.0.0 y ZXing)"; exit 1; }
 done
 
 rm -rf "$SALIDA"
@@ -29,7 +31,7 @@ echo "[2/7] aapt2 link (apk base + R.java)"
 "$BT/aapt2" link -o "$SALIDA/base.apk" -I "$JAR" \
     --manifest "$PROY/AndroidManifest.xml" \
     --java "$SALIDA/gen" \
-    --min-sdk-version 24 --target-sdk-version 35 \
+    --min-sdk-version 24 --target-sdk-version 36 \
     --version-code "$VERSION_CODE" --version-name "$VERSION_NAME" \
     "$SALIDA/res.zip"
 
@@ -50,8 +52,11 @@ echo "[5/7] empaquetando classes.dex"
 echo "[6/7] firmando"
 if [ ! -f "$CLAVE" ]; then
     echo "FALTA la llave de firma: $CLAVE"
-    echo "Genera una llave de desarrollo con:"
-    echo "  keytool -genkeypair -keystore ~/.android/debug.keystore -storepass android -keypass android -alias androiddebugkey -keyalg RSA -keysize 2048 -validity 10000 -dname 'CN=Android Debug,O=Android,C=US'"
+    echo "Restaura el respaldo cifrado del keystore o crea una llave nueva (docs/BUILD.md)."
+    exit 1
+fi
+if [ -z "$CLAVE_PASS" ]; then
+    echo "FALTA MINEGOCIO_KEY_PASS: revisa $HOME/.minegocio/signing.env"
     exit 1
 fi
 "$BT/apksigner" sign --ks "$CLAVE" --ks-key-alias "$ALIAS" --ks-pass "pass:$CLAVE_PASS" \

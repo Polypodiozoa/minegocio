@@ -287,6 +287,9 @@ public class CompraActivity extends BaseActivity {
                 @Override public void beforeTextChanged(CharSequence s, int a, int b, int c) {}
                 @Override public void onTextChanged(CharSequence s, int a, int b, int c) {
                     if (actualizando) return;
+                    /* Un costo ilegible deja el último valor válido: poner 0 en
+                       silencio inflaría la utilidad de todo lo vendido después. */
+                    if (!Formatos.pesosValidos(s.toString())) return;
                     item.costoUnitario = Formatos.parsePesos(s.toString());
                     item.precioUnitario = item.costoUnitario;
                     item.subtotal = item.costoUnitario * item.cantidad;

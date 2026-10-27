@@ -145,6 +145,7 @@ public class ClienteActivity extends BaseActivity {
             error(etNombre, "Escribe el nombre del cliente.");
             return;
         }
+        if (!montoValido(etCupo)) return;
         Modelo.Cliente c = cliente != null ? cliente : new Modelo.Cliente();
         c.nombre = nombre;
         c.telefono = texto(etTelefono);

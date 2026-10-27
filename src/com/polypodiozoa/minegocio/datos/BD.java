@@ -253,21 +253,21 @@ public class BD extends SQLiteOpenHelper {
         v.put("valor", String.valueOf(usuario));
         db.insert("ajustes", null, v);
 
-        v = new ContentValues();
-        v.put("clave", "impuesto_pct");
-        v.put("valor", "19");
-        db.insert("ajustes", null, v);
-        v = new ContentValues();
-        v.put("clave", "impuesto_activado");
-        v.put("valor", "1");
-        db.insert("ajustes", null, v);
-        v = new ContentValues();
-        v.put("clave", "permitir_stock_negativo");
-        v.put("valor", "0");
-        db.insert("ajustes", null, v);
-        v = new ContentValues();
-        v.put("clave", "ultima_copia");
-        v.put("valor", "0");
+        ajustesPorDefecto(db);
+    }
+
+    /** Ajustes con los que nace una base nueva. «Borrar todo» vuelve exactamente a estos. */
+    private static void ajustesPorDefecto(SQLiteDatabase db) {
+        ponerAjuste(db, "impuesto_pct", "19");
+        ponerAjuste(db, "impuesto_activado", "1");
+        ponerAjuste(db, "permitir_stock_negativo", "0");
+        ponerAjuste(db, "ultima_copia", "0");
+    }
+
+    private static void ponerAjuste(SQLiteDatabase db, String clave, String valor) {
+        ContentValues v = new ContentValues();
+        v.put("clave", clave);
+        v.put("valor", valor);
         db.insert("ajustes", null, v);
     }
 
@@ -738,6 +738,14 @@ public class BD extends SQLiteOpenHelper {
 
     public int totalClientes() {
         return (int) contar("SELECT COUNT(*) FROM clientes");
+    }
+
+    /** true mientras no haya nada registrado: es cuando la app ofrece los datos de ejemplo. */
+    public boolean sinDatos() {
+        return contar("SELECT (SELECT COUNT(*) FROM productos) + (SELECT COUNT(*) FROM ventas)"
+                + " + (SELECT COUNT(*) FROM compras) + (SELECT COUNT(*) FROM gastos)"
+                + " + (SELECT COUNT(*) FROM clientes) + (SELECT COUNT(*) FROM proveedores)"
+                + " + (SELECT COUNT(*) FROM pagos) + (SELECT COUNT(*) FROM cajas)") == 0;
     }
 
     // ------------------------------------------------------------- proveedores
@@ -1776,6 +1784,8 @@ public class BD extends SQLiteOpenHelper {
         SQLiteDatabase db = getWritableDatabase();
         db.beginTransaction();
         try {
+            /* Hijos antes que padres: pago_aplicaciones cae por CASCADE con pagos,
+               pero su FK a ventas no tiene CASCADE, así que ventas va después. */
             db.delete("adjuntos", null, null);
             db.delete("venta_items", null, null);
             db.delete("compra_items", null, null);
@@ -1786,6 +1796,13 @@ public class BD extends SQLiteOpenHelper {
             db.delete("productos", null, null);
             db.delete("clientes", null, null);
             db.delete("proveedores", null, null);
+            db.delete("cajas", null, null);
+            /* Personas, datos de pago y nombre del negocio: se van también, porque
+               la tablet puede venderse o cederse. usuarioActualId() vuelve a crear
+               la cuenta «Administrador» sola en el siguiente arranque. */
+            db.delete("usuarios", null, null);
+            db.delete("ajustes", null, null);
+            ajustesPorDefecto(db);
             db.setTransactionSuccessful();
         } finally {
             db.endTransaction();

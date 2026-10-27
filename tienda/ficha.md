@@ -72,8 +72,11 @@ Android 7.0 o superior. Funciona en celular y en tableta.
 - Sitio web: **(tú)** (puede ser el mismo de la política de privacidad)
 - Política de privacidad: **(tú)** — publicar `privacidad.md` en una URL
 
-## Qué hay de nuevo (versión 1.30)
+## Qué hay de nuevo (versión 1.32)
 
+> Versión 1.32: lista para Google Play con `targetSdk` 36 — contenido ajustado a las barras
+> del sistema (nada tapado en Android 15 y 16) y botón atrás del sistema que vuelve a pedir
+> confirmación al haber cambios sin guardar.
 > Versión 1.30: Caja con reporte claro por efectivo y otros métodos; cámara y escáner
 > corregidos; Mostrador personalizable con QR desde foto o PDF;
 > foto del QR que la app limpia y convierte a blanco y negro; botones Editar que desaparecen

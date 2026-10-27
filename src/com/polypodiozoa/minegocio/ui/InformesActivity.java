@@ -252,6 +252,13 @@ public class InformesActivity extends BaseActivity {
 
     private String csv(String texto) {
         if (texto == null) return "";
+        /* CWE-1236: Excel ejecuta como fórmula toda celda que empiece por = + - @
+           (o tabulación / retorno de carro). El apóstrofo la convierte en texto;
+           al importar el CSV el apóstrofo se ve en la celda, y es el precio de
+           neutralizar la fórmula (convención OWASP). */
+        if (!texto.isEmpty() && "=+-@\t\r".indexOf(texto.charAt(0)) >= 0) {
+            texto = "'" + texto;
+        }
         return "\"" + texto.replace("\"", "\"\"") + "\"";
     }
 

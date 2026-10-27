@@ -265,6 +265,9 @@ public final class Excel {
     }
 
     private static String numero(double valor) {
+        /* NaN o infinito no son números válidos en el XLSX: con uno solo, Excel
+           rechaza el archivo completo. Se escribe 0 en vez de romper el reporte. */
+        if (Double.isNaN(valor) || Double.isInfinite(valor)) return "0";
         if (valor == Math.rint(valor) && Math.abs(valor) < 1e15) {
             return String.valueOf((long) valor);
         }
@@ -283,6 +286,10 @@ public final class Excel {
     }
 
     private static String xml(String valor) {
+        /* XML 1.0 no admite los caracteres de control 0x00-0x08, 0x0B, 0x0C y
+           0x0E-0x1F: con uno solo, Excel rechaza el archivo entero. Tab, salto de
+           línea y retorno (0x09, 0x0A, 0x0D) sí son válidos y se conservan. */
+        valor = valor.replaceAll("[\\u0000-\\u0008\\u000B\\u000C\\u000E-\\u001F]", "");
         return valor.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
                 .replace("\"", "&quot;").replace("'", "&apos;");
     }

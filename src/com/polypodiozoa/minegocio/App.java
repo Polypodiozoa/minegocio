@@ -33,8 +33,15 @@ public class App extends Application {
         }
         final Thread.UncaughtExceptionHandler anterior = Thread.getDefaultUncaughtExceptionHandler();
         Thread.setDefaultUncaughtExceptionHandler((hilo, error) -> {
-            try (PrintWriter salida = new PrintWriter(new FileWriter(
-                    new File(getFilesDir(), "errores.log"), true))) {
+            File registro = new File(getFilesDir(), "errores.log");
+            /* Sin rotación el archivo crece indefinidamente. Se guarda una sola
+               generación anterior: alcanza para diagnosticar y no llena el disco. */
+            if (registro.length() > 1024 * 1024) {
+                File viejo = new File(getFilesDir(), "errores.log.old");
+                viejo.delete();
+                registro.renameTo(viejo);
+            }
+            try (PrintWriter salida = new PrintWriter(new FileWriter(registro, true))) {
                 salida.println("=== " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US)
                         .format(new Date()));
                 error.printStackTrace(salida);

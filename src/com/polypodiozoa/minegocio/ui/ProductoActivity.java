@@ -204,6 +204,7 @@ public class ProductoActivity extends BaseActivity {
             error(etStock, "Escribe una existencia válida.");
             return;
         }
+        if (!montoValido(etPrecio) || !montoValido(etCosto)) return;
         long precio = numero(etPrecio);
         long costo = numero(etCosto);
         if (precio <= 0) {

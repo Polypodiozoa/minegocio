@@ -348,36 +348,6 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/cardBienvenida"
-                style="@style/Tarjeta"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone">
-
-                <TextView
-                    style="@style/TituloSeccion"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Empieza en 3 pasos" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="1. Agrega tus productos y su existencia.\n2. Registra una venta y elige el cliente.\n3. Revisa tus informes cuando quieras."
-                    android:textColor="@color/texto"
-                    android:textSize="17sp"
-                    android:lineSpacingExtra="4dp" />
-
-                <Button
-                    android:id="@+id/btnPrimerProducto"
-                    style="@style/BotonPrimario"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="14dp"
-                    android:text="Agregar mi primer producto" />
-            </LinearLayout>
-
-            <LinearLayout
                 android:id="@+id/cardRespaldo"
                 style="@style/Tarjeta"
                 android:layout_width="match_parent"

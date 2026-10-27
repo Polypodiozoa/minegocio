@@ -488,6 +488,7 @@ public class VentaActivity extends BaseActivity {
         }
         long subtotal = 0;
         for (Modelo.Item i : items) subtotal += i.precioUnitario * i.cantidad;
+        if (!montoValido(etDescuento)) return;
         long descuento = numero(etDescuento);
         if (descuento > subtotal) {
             error(etDescuento, "El descuento no puede ser mayor que el subtotal ("

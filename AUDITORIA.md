@@ -1,23 +1,48 @@
-# Auditoría de Mi Negocio — base 1.3, actualizaciones 1.10 a 1.30 (22/10/2026)
+# Auditoría de Mi Negocio — base 1.3, actualizaciones 1.10 a 1.31 (25/10/2026)
 
+## Actualización 1.31 — seguridad y estabilidad (25/10/2026)
 
+Versión de mantenimiento centrada en los hallazgos de la auditoría del 25/10. **No cambia el
+esquema de la base** (las copias de 1.30 se restauran tal cual) y **no toca `Respaldo.java`**.
 
+- **«Borrar todos los datos» ahora borra todo (S1).** Antes dejaba la tabla `ajustes` (llave
+  Bre-B, cuenta, banco, titular, NIT, teléfono, dirección y nombre del negocio), los
+  movimientos de `cajas` y las `personas`/`usuarios`. Ahora vacía productos, ventas, compras,
+  gastos, clientes, proveedores, caja, personas, ajustes y datos de pago, y deja solo los
+  cuatro ajustes por defecto. La cuenta «Administrador» se vuelve a crear sola al arrancar.
+  El diálogo lista exactamente lo que se borra y la confirmación final exige **escribir
+  «BORRAR»** en un segundo diálogo con botón rojo.
+- **CSV sin fórmulas (S2, CWE-1236).** Un cliente o producto que empiece por `=`, `+`, `-`,
+  `@`, tabulador o retorno de carro se exporta con un apóstrofo delante: Excel lo abre como
+  texto en vez de ejecutarlo. El XLSX ya era seguro.
+- **AAB firmado (B1).** `empaquetar-aab.sh` firma el bundle con `jarsigner` y verifica que
+  lleve `META-INF/*.RSA`; Play rechazaba el AAB anterior por no estar firmado.
+- **Montos ilegibles ya no se guardan como 0 (B2).** `Formatos.pesosValidos()` rechaza texto
+  basura y más de 15 dígitos; los formularios de precio, costo, cupo, descuento, caja y el
+  costo de cada ítem de compra avisan en vez de guardar $0 en silencio.
+- **XLSX a prueba de caracteres de control (B3).** `Excel.xml()` los elimina antes de escapar
+  (un solo byte inválido hacía que Excel rechazara el archivo entero). Además, un `NaN` o
+  infinito se escribe como 0 en vez de romper el libro.
+- **`errores.log` rota a 1 MB (O-3):** se conserva una generación en `errores.log.old`, que
+  también se borra con «Borrar todos los datos».
+- **Aviso en las copias de seguridad (S3):** al crear una copia la app avisa de que el archivo
+  contiene teléfonos, deudas y datos de pago, que va sin contraseña y que no se comparta.
+- **App limpia para quien ya la usa:** se quitó la tarjeta «Empieza en 3 pasos» del menú
+  principal, y «Datos de ejemplo» solo aparece y funciona mientras no haya nada registrado
+  (`BD.sinDatos()`): con productos, ventas, clientes o cualquier dato, la sección desaparece
+  de Ajustes y el cargador de ejemplo se niega.
+- **Pruebas:** `pruebas/pruebas.sh` (50 comprobaciones de dinero, fechas y Excel) y
+  `pruebas/invariantes.sql` (invariantes financieras sobre una copia real). Se ejecutan antes
+  de cada commit.
+- **Firma nueva.** La llave de 1.30 se perdió al reinstalar el sistema; la 1.31 usa una llave
+  propia (huella en `docs/BUILD.md`). Instalarla encima de la 1.30 no es posible: hay que
+  **copia → desinstalar → instalar → restaurar**.
 
+### Decisión documentada (B4): costo al anular la única compra
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+Al anular la única compra vigente de un producto, el costo **se conserva** en el último valor
+conocido; no se pone en 0. Es deliberado: un costo en 0 inflaría la utilidad de todo lo que se
+venda después sin avisar. Para cambiarlo, se edita el costo en la ficha del producto.
 
 ## Actualización 1.30 — reporte de caja claro (22/10/2026)
 

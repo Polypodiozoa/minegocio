@@ -40,6 +40,17 @@ public final class Formatos {
         return f.format(valor);
     }
 
+    /** Responde si el texto se puede leer como pesos sin caer en 0 por basura
+     *  (CWE-20): solo dígitos, separadores y hasta 15 dígitos. Vacío es 0 válido. */
+    public static boolean pesosValidos(String texto) {
+        if (texto == null) return true;
+        String limpio = texto.replace("$", "").replace(" ", "").replace("\u00A0", "")
+                .replace(".", "").replace("-", "").replace("+", "").trim();
+        int coma = limpio.indexOf(',');
+        if (coma >= 0) limpio = limpio.substring(0, coma);
+        return limpio.matches("[0-9]{0,15}");
+    }
+
     /** Acepta "$ 12.500", "12500", "12.500,50" (en pesos se descartan los centavos). */
     public static long parsePesos(String texto) {
         if (texto == null) return 0;

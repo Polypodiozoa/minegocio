@@ -14,9 +14,9 @@
         <item name="android:textColorHint">@color/texto_secundario</item>
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:windowNoTitle">true</item>
-        <!-- Android 15 dibuja a pantalla completa por obligación; mientras la app
-             no maneje los insets, se mantiene el aspecto de siempre. -->
-        <item name="android:windowOptOutEdgeToEdgeEnforcement">true</item>
+        <!-- Android 15/16 obligan a dibujar a pantalla completa (edge-to-edge).
+             El opt-out `windowOptOutEdgeToEdgeEnforcement` está deshabilitado con
+             target 36, así que los insets ya los aplica BaseActivity. -->
     </style>
 
     <style name="TemaAdmin" parent="@style/Tema">
