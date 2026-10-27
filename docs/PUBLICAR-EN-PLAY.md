@@ -27,9 +27,9 @@
 
 ---
 
-## 2. Los dos candados que hay que abrir primero
+## 2. Los dos candados — el técnico ya quedó abierto
 
-### 2.1 · Target API 36 — **resuelto el 26/10/2026**
+### 2.1 · Target API 36 — **resuelto el 26/10/2026** ✅
 
 Según Google (developer.android.com/google/play/requirements/target-sdk), desde el **31/08/2026**
 «new apps and app updates must target Android 16 (API level 36) or higher». Una app nueva con
@@ -76,7 +76,7 @@ disponible de inmediato y sirve para validar la subida del AAB.
 | 1 | Cuenta de Google Play Console | 25 USD **una vez**, tarjeta |
 | 2 | Verificación de identidad | documento + dirección; tarda de horas a días |
 | 3 | Tipo de cuenta: personal u organización | decide el candado 2.2 — **decisión tuya** |
-| 4 | URL pública de la política de privacidad | Play la exige; `tienda/privacidad.md` tiene que estar publicado (GitHub Pages, Google Sites, Notion público…) |
+| 4 | URL pública de la política de privacidad | Play la exige. El repo ya es público, así que sirve `https://github.com/Polypodiozoa/minegocio/blob/main/tienda/privacidad.md` (texto plano legible) o, mejor, publicarlo con GitHub Pages desde `tienda/` |
 | 5 | Correo de soporte | uno que revises de verdad (`tienda/ficha.md` lo deja como «(tú)») |
 | 6 | 12 correos de testadores | cuentas Google reales para la prueba cerrada |
 
@@ -84,13 +84,24 @@ disponible de inmediato y sirve para validar la subida del AAB.
 
 ## 4. Orden de ejecución
 
+### Fase H — Repositorio público
+
+- [x] `https://github.com/Polypodiozoa/minegocio` → **público** (verificado sin sesión, HTTP 200).
+- [x] Commit `da2a188` + tag `v1.32` + release con APK y AAB:
+  `https://github.com/Polypodiozoa/minegocio/releases/tag/v1.32`
+- El historial se revisó antes de abrirlo: nunca hubo keystore, `.env`, tokens ni contraseñas
+  reales (la única literal del historial es el viejo valor por defecto `android`, que no es la
+  contraseña del keystore). Los otros dos repos siguen privados.
+
 ### Fase A — Cuenta (tú, hoy)
 Alta en play.google.com/console → pagar → verificar identidad → elegir tipo de cuenta.
+Con el repo público ya tienes enlace para la política de privacidad (§3, punto 4).
 
-### Fase B — API 36 (trabajo técnico, ~1 sesión)
-Pasos 1–6 de §2.1. Verificación antes de seguir: `bundletool dump manifest` debe decir
-`targetSdkVersion="36"`, la app abre sin contenido bajo las barras en Android 16, y los diálogos
-de «cambios sin guardar» siguen saliendo con el gesto atrás del sistema.
+### Fase B — API 36 — **hecha** ✅
+
+- [x] `bundletool dump manifest` → `targetSdkVersion="36"`, `versionCode="33"`.
+- [x] La app abre sin contenido bajo las barras en Android 16 (principal, inventario, formulario).
+- [x] Los diálogos de «cambios sin guardar» siguen saliendo con el gesto atrás del sistema.
 
 ### Fase C — Cierre de versión
 

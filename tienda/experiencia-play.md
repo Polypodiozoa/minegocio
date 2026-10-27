@@ -6,7 +6,7 @@ inglés; abajo va la traducción.
 
 **Antes de pegar:** rellena lo que está entre «» y borra los corchetes. Todo lo demás está
 respaldado por el proyecto real (`com.polypodiozoa.minegocio`, 52 archivos Java, ~12.300 líneas,
-AAB firmado versionCode 32).
+AAB firmado versionCode 33 / 1.32, `targetSdk` 36).
 
 ---
 
@@ -35,9 +35,8 @@ automated SQL invariant tests that check financial consistency (sale totals agai
 items, payments never exceeding a sale, cash reconciliation) — every one of them must return zero
 before a release.
 
-Relevant supporting material: GitHub profile https://github.com/Polypodiozoa (the repositories are
-private; I can grant read access on request), package name `com.polypodiozoa.minegocio`, and
-«si tienes ficha, web o correo público, ponlo aquí».
+Relevant supporting material: GitHub repository https://github.com/Polypodiozoa/minegocio (public, source and release builds), package name `com.polypodiozoa.minegocio`,
+and «si tienes ficha, web o correo público, ponlo aquí».
 
 I am «formación / ocupación: p. ej. “a self-taught developer”, “estudiante de ingeniería de
 sistemas”» and I have «N» years of «Java / Android» experience. «Si tienes otros proyectos
@@ -76,8 +75,8 @@ superan la venta, arqueo de caja); todas deben dar cero antes de cada versión.
    libera nunca). «Primera app» es una respuesta perfectamente válida y frecuente.
 2. **No pegues la lista entera de funciones** si el campo tiene límite de caracteres; quédate con
    el párrafo de construcción + el de pruebas y recorta el resto.
-3. **Enlaces:** tus tres repos son privados (`minegocio`, `mercadomundial`, `ProjectSifn`), así que
-   un revisor no verá nada. Si quieres que el enlace aporte algo, deja público un README del
-   proyecto o pon «puedo dar acceso bajo solicitud», que es lo que ya dice el borrador.
+3. **Enlaces:** el repo `minegocio` ya es **público** (https://github.com/Polypodiozoa/minegocio),
+   así que el enlace sí sirve: un revisor puede ver el código, el README y la release `v1.32`
+   con APK y AAB. Los otros dos repos (`mercadomundial`, `ProjectSifn`) siguen privados.
 4. **Coherencia con la ficha:** aquí dices «offline, sin internet, solo cámara»; la declaración de
    seguridad de datos y el manifiesto dicen lo mismo. Mantenlo así.
