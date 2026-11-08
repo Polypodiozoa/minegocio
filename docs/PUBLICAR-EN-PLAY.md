@@ -19,7 +19,7 @@
 | `exported` en todos los componentes | ✅ | obligatorio desde Android 12 |
 | Icono 512×512 | ✅ | `herramientas/icono-512.png` (512×512 RGBA) |
 | Gráfico destacado 1024×500 | ✅ | `tienda/grafico-destacado-1024x500.png` |
-| Capturas | ✅ 29 archivos 800×1280 (~0,625; dentro del rango 16:9–9:16 de Play) | `capturas/` |
+| Capturas | ✅ 44 archivos; 41 en 800×1280 y 3 sueltas (910×1287, 1280×800, 850×1100). Todas dentro del rango 16:9–9:16 de Play | `capturas/` |
 | Textos de ficha | ✅ | `tienda/ficha.md` |
 | Política de privacidad + seguridad de datos | ✅ redactadas | `tienda/privacidad.md`, `tienda/seguridad-datos.md` |
 | Llave de firma propia, RSA 4096, 30 años + respaldo cifrado | ✅ | `~/.minegocio/`, `docs/BUILD.md` |
@@ -121,7 +121,11 @@ Con el repo público ya tienes enlace para la política de privacidad (§3, punt
 ### Fase E — Ficha de tienda
 Copiar de `tienda/ficha.md`; subir `herramientas/icono-512.png`, el gráfico 1024×500 y elegir
 2–8 capturas de `capturas/` (empezar por `01-inicio`, `02-inventario`, `03-nueva-venta`,
-`04-detalle-venta`, `07-informes`, `15-deudas`).
+`04-detalle-venta`, `07-informes`, `15-deudas`). Antes de subirlas, dos cosas vistas al
+revisarlas: la barra de estado lleva un **triángulo de aviso** del sistema (parece un error de la
+app) y `05-clientes` muestra tres nombres con teléfono — están pensados como ejemplo, pero hay que
+confirmar que ningún cliente real quedó ahí. Fuera la de 1280×800: es la única horizontal y rompe
+la tira.
 
 ### Fase F — Formularios obligatorios
 | Formulario | Respuesta correcta en este caso |
