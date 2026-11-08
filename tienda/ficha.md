@@ -70,9 +70,12 @@ Android 7.0 o superior. Funciona en celular y en tableta.
 
 - Correo de soporte: **(tú)** — uno que revises
 - Sitio web: **(tú)** (puede ser el mismo de la política de privacidad)
-- Política de privacidad: **(tú)** — publicar `privacidad.md` en una URL
+- Política de privacidad: `https://polypodiozoa.github.io/minegocio/privacidad.html` (publicada; también enlazada dentro de la app, en Ajustes)
 
-## Qué hay de nuevo (versión 1.34)
+## Qué hay de nuevo (versión 1.35)
+
+> Versión 1.35: la política de privacidad está dentro de la app. En Ajustes hay un botón
+> «Política de privacidad» que abre la página con el navegador del teléfono.
 
 > Versión 1.34: cada casilla dice su nombre y trae su ejemplo a la vista, así que ya no hay que
 > adivinar qué va en cada una ni se borra la ayuda al empezar a escribir. Funciona mejor con el
