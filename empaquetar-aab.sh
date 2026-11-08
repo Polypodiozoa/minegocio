@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Empaqueta Mi Negocio como AAB (Android App Bundle) para Google Play.
 # Usa aapt2 en formato proto + bundletool, sin Gradle.
-# Uso:  VERSION_CODE=31 VERSION_NAME=1.30 ./empaquetar-aab.sh
+# Uso:  ./empaquetar-aab.sh      (la versión se lee de AndroidManifest.xml)
 set -euo pipefail
 
 SDK="${ANDROID_SDK:-$HOME/android-sdk}"
