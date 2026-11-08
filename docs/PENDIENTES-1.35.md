@@ -102,10 +102,12 @@ después.
 **`errores.log` se escribe y nadie lo lee.** `App.java` guarda el rastro de cada caída en un
 archivo privado de la app (con `.old` de respaldo), y lo único que hace la app con él es borrarlo
 desde Ajustes. No hay botón para verlo ni compartirlo, así que no ayuda a nadie y acumula datos
-del negocio dentro de trazas. Sin verificar: cuántas de esas trazas llegan a llevar nombres o
-montos. Decisión pendiente: o se quita el manejador y se deja el registro del sistema (menos
-código, nada que guardar), o se expone un botón para enviarlo; lo que no tiene sentido es lo que
-hay ahora.
+del negocio dentro de trazas. **Verificado después: ninguna traza lleva datos del negocio.** El SQL
+va entero con `?` (6 `LIKE` con parámetro, 0 concatenado) y los parseos de lo que escribe la gente
+están todos dentro de `try/catch` y devuelven 0, así que ni nombres ni montos llegan al archivo. Con
+eso, la decisión deja de ser por fuga de datos y pasa a ser por código muerto: o se quita el
+manejador (19 líneas, y el sistema y Android Vitals siguen registrando las caídas), o se expone un
+botón para enviarlo.
 
 **El APK y el AAB firmados están versionados en git.** `minegocio.aab` y `minegocio.apk` figuran
 en `git ls-files` mientras `build/` está ignorado, y el último commit habla de «repo público».
