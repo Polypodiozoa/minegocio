@@ -136,6 +136,18 @@ siguiente.
   `.gitignore`; los binarios firmados no, para que el release a mano caiga en el mismo sitio que
   el código que lo produjo.
 
+## G. Estado de la 1.35
+
+Play Console exige que la política de privacidad esté enlazada **en la ficha y dentro de la app**;
+la 1.34 no la tenía dentro, así que la 1.35 añade un botón **«Política de privacidad»** en Ajustes
+(debajo de «Enviar el registro de errores»), que abre
+`https://polypodiozoa.github.io/minegocio/privacidad.html` con el navegador del teléfono. Si el
+teléfono no tiene navegador, en vez de caerse muestra la dirección en un diálogo para copiarla.
+No pide permiso de `INTERNET`: el enlace lo abre el navegador, no la app.
+
+`versionCode` 36 / `versionName` 1.35. Verificado sobre el APK instalado en el teléfono: el botón
+aparece en Ajustes y abre la página publicada.
+
 ## Anexo: lo que sí se revisó y salió limpio
 
 Para no repetirlo: sin credenciales ni llaves en `src`, `res` ni el manifest; sin `Log.`,

@@ -42,6 +42,8 @@ public class AjustesActivity extends BaseActivity {
     private static final int PEDIR_QR = 303;
     private static final int PEDIR_QR_FOTO = 304;
     private static final int PERMISO_CAMARA_QR = 305;
+    private static final String URL_PRIVACIDAD =
+            "https://polypodiozoa.github.io/minegocio/privacidad.html";
 
     private EditText etNegocio, etNit, etTelefono, etDireccion, etImpuesto;
     private Switch swImpuesto, swStockNegativo, swSaldoFavor, swEntregaCompra, swEntregaVenta,
@@ -101,6 +103,7 @@ public class AjustesActivity extends BaseActivity {
         findViewById(R.id.btnEjemplo).setOnClickListener(v -> cargarEjemplo());
         findViewById(R.id.btnBorrarTodo).setOnClickListener(v -> borrarTodo());
         findViewById(R.id.btnEnviarErrores).setOnClickListener(v -> enviarErrores());
+        findViewById(R.id.btnPrivacidad).setOnClickListener(v -> abrirPrivacidad());
 
         cargar();
     }
@@ -528,6 +531,20 @@ public class AjustesActivity extends BaseActivity {
         });
         d.show();
         campo.requestFocus();
+    }
+
+    private void abrirPrivacidad() {
+        Intent ver = new Intent(Intent.ACTION_VIEW, Uri.parse(URL_PRIVACIDAD));
+        try {
+            startActivity(ver);
+        } catch (android.content.ActivityNotFoundException e) {
+            // Sin navegador instalado: se muestra la dirección para copiarla a mano.
+            new AlertDialog.Builder(this)
+                    .setTitle("Política de privacidad")
+                    .setMessage(URL_PRIVACIDAD)
+                    .setPositiveButton("Cerrar", null)
+                    .show();
+        }
     }
 
     private void enviarErrores() {
