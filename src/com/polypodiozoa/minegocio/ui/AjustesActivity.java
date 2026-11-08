@@ -32,6 +32,7 @@ import com.polypodiozoa.minegocio.util.QrPago;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.util.Locale;
 
 public class AjustesActivity extends BaseActivity {
@@ -99,6 +100,7 @@ public class AjustesActivity extends BaseActivity {
         btnRestaurar.setOnClickListener(v -> pedirCopiaRestaurar());
         findViewById(R.id.btnEjemplo).setOnClickListener(v -> cargarEjemplo());
         findViewById(R.id.btnBorrarTodo).setOnClickListener(v -> borrarTodo());
+        findViewById(R.id.btnEnviarErrores).setOnClickListener(v -> enviarErrores());
 
         cargar();
     }
@@ -526,6 +528,31 @@ public class AjustesActivity extends BaseActivity {
         });
         d.show();
         campo.requestFocus();
+    }
+
+    private void enviarErrores() {
+        File log = new File(getFilesDir(), "errores.log");
+        if (!log.exists() || log.length() == 0) {
+            aviso("No hay errores registrados.");
+            return;
+        }
+        Intent i = new Intent(Intent.ACTION_SEND);
+        i.setType("text/plain");
+        i.putExtra(Intent.EXTRA_SUBJECT, "Registro de errores de Mi Negocio");
+        i.putExtra(Intent.EXTRA_TEXT, leerLog(log));
+        startActivity(Intent.createChooser(i, "Enviar el registro"));
+    }
+
+    /* Sólo los últimos 64 KB: alcanza para ver la caída y no revienta el intent. */
+    private String leerLog(File log) {
+        try (RandomAccessFile f = new RandomAccessFile(log, "r")) {
+            f.seek(Math.max(0, f.length() - 65536));
+            byte[] bytes = new byte[(int) (f.length() - f.getFilePointer())];
+            f.readFully(bytes);
+            return new String(bytes, "UTF-8");
+        } catch (IOException e) {
+            return "No se pudo leer el registro.";
+        }
     }
 
     private void ejecutarBorrado() {

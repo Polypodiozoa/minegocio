@@ -4,6 +4,10 @@
 **Estado:** los materiales están listos y el **candado técnico del target 36 ya está resuelto**
 (ver §2.1); queda lo que solo depende de la cuenta de Play (§3).
 
+> Nota (08/11/2026): el procedimiento de este documento sigue siendo válido, pero el
+> artefacto a subir es hoy **v1.34 / versionCode 35**, no el 33 con el que se escribió.
+> Los valores vigentes están en el `README.md` y en la release `v1.34`.
+
 ---
 
 ## 1. Lo que ya está resuelto (verificado en esta máquina)

@@ -5,12 +5,12 @@ inventario con fotos, ventas, compras, clientes, proveedores, gastos, **cartera 
 impuestos opcionales, abonos, informes, **reportes en Excel** y **lector de códigos de barras
 o QR** y **varias personas en el mismo dispositivo**. Funciona sin internet. Solo pide permiso de cámara al abrir el lector; no usa ubicación, contactos ni almacenamiento general.
 
-- **APK instalado en el dispositivo de prueba:** `minegocio.apk` (584 KB)
-- **SHA-256 del APK:** `d3e893ca5cd06ab1b5ca4ee50984a6f9d1d057ac4a3311e80065e0f129b63d75`
-- **AAB de Play:** `minegocio.aab` (591 KB), SHA-256
-  `8d8e950b7a06c64a1c93a0bc153b1d08838d644fa01ee88337b884f722607bf7`
+- **APK instalado en el dispositivo de prueba:** `minegocio.apk` (657 KB)
+- **SHA-256 del APK:** `96e8d700d70b80a41a31f4c56f583411ac139c4d44b398ec91e42fce4f103089`
+- **AAB de Play:** `minegocio.aab` (658 KB), SHA-256
+  `1b7609029a7329bbece8664fc9a1ba1bbe5e15944fdeea44ca83c992bcb364ad`
 - **Paquete:** `com.polypodiozoa.minegocio`
-- **Versión:** 1.32 (versionCode 33)
+- **Versión:** 1.34 (versionCode 35)
 - **Tablet de prueba:** Amazon Fire HD 8 `KFONWI`, Fire OS 9 / Android 9 (API 28),
   800 × 1280 px, densidad 213 dpi.
 - **Requisito mínimo:** Android 7.0 (API 24) · **targetSdk:** 36 (Android 16).

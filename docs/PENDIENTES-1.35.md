@@ -99,21 +99,20 @@ después.
 
 ## E. Encontrado en la revisión de la 1.34, para decidir después
 
-**`errores.log` se escribe y nadie lo lee.** `App.java` guarda el rastro de cada caída en un
-archivo privado de la app (con `.old` de respaldo), y lo único que hace la app con él es borrarlo
-desde Ajustes. No hay botón para verlo ni compartirlo, así que no ayuda a nadie y acumula datos
-del negocio dentro de trazas. **Verificado después: ninguna traza lleva datos del negocio.** El SQL
-va entero con `?` (6 `LIKE` con parámetro, 0 concatenado) y los parseos de lo que escribe la gente
-están todos dentro de `try/catch` y devuelven 0, así que ni nombres ni montos llegan al archivo. Con
-eso, la decisión deja de ser por fuga de datos y pasa a ser por código muerto: o se quita el
-manejador (19 líneas, y el sistema y Android Vitals siguen registrando las caídas), o se expone un
-botón para enviarlo.
+**`errores.log` — resuelto: se queda y ahora se puede enviar.** `App.java` guarda el rastro de cada
+caída en un archivo privado de la app (con `.old` de respaldo). Antes solo se podía borrar; ahora
+Ajustes tiene el botón **«Enviar el registro de errores»** (junto a la versión), que abre el
+selector de Android con los últimos 64 KB del archivo como texto —lo suficiente para ver la caída y
+sin pasarse del límite de un intent— y avisa «No hay errores registrados.» cuando el archivo no
+existe. Nada sale del teléfono si no se pulsa el botón y se elige a quién enviarlo. No lleva datos
+del negocio: el SQL va entero con `?` (6 `LIKE` con parámetro, 0 concatenado) y los parseos de lo
+que escribe la gente están todos dentro de `try/catch` y devuelven 0.
 
-**El APK y el AAB firmados están versionados en git.** `minegocio.aab` y `minegocio.apk` figuran
-en `git ls-files` mientras `build/` está ignorado, y el último commit habla de «repo público».
-No hay llave dentro del paquete, así que no es una filtración, pero sí publica el instalable
-antes de tiempo y engorda el repositorio en cada compilación. Decisión pendiente: `git rm
---cached` y añadirlos a `.gitignore`.
+**El APK y el AAB firmados se quedan versionados en git** (decidido el 2026-11-08). El coste es
+tamaño: cada recompilación añade ~1,5 MB al historial. Se acepta porque el release se arma a mano
+y sin CI el binario publicado tiene que quedar en el mismo sitio que el código que lo produjo. Si
+algún día molesta, se sacan con `git rm --cached minegocio.aab minegocio.apk` + `.gitignore`, sin
+reescribir la historia.
 
 **`ventas` no tiene índice por `cliente_id`.** Lo medido en esta revisión: 19 tablas y 16 índices,
 47 sumas resueltas en SQL y no en Java, ninguna consulta sin filtro. O sea que el recorrido completo
@@ -129,11 +128,13 @@ siguiente.
 - `docs/BUILD.md` actualizado: la versión vive sólo en `AndroidManifest.xml` y los scripts
   abortan si el entorno no coincide.
 - `versionCode` 35 / `versionName` 1.34 en el manifest y en el AAB firmado.
-- La 1.33 y la 1.34 quedaron confirmadas en git (commit «1.34: etiquetas accesibles en los
-  campos y versión desde el manifest»), así que se revierten con `git revert` en vez de a mano.
-  Fuera del commit a propósito: `minegocio.aab`, `minegocio.apk` y `bin/` (salida de
-  compilación, no se revisa leyéndola). Si algún día se quitan del repo, hay que borrarlos del
-  índice con `git rm --cached` y añadirlos a `.gitignore`.
+- La 1.33 y la 1.34 quedaron confirmadas en git (commits «1.34: etiquetas accesibles en los
+  campos y versión desde el manifest» y «Ajustes: botón para enviar el registro de errores»), así
+  que se revierten con `git revert` en vez de a mano.
+- `minegocio.aab` y `minegocio.apk` van **dentro** del commit, como se decidió en el punto E.
+  `bin/` (salida de compilación) se sacó del índice con `git rm -r --cached bin` y quedó en
+  `.gitignore`; los binarios firmados no, para que el release a mano caiga en el mismo sitio que
+  el código que lo produjo.
 
 ## Anexo: lo que sí se revisó y salió limpio
 

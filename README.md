@@ -6,7 +6,7 @@ fiados, informes, reportes en Excel y **varias personas en el mismo dispositivo*
 sin internet. Solo pide permiso de **cámara** cuando se abre el lector de códigos; no usa
 ubicación, contactos ni almacenamiento general.
 
-- **Versión:** 1.32 (versionCode 33) · **targetSdk 36**
+- **Versión:** 1.34 (versionCode 35) · **targetSdk 36**
 - **Paquete:** `com.polypodiozoa.minegocio`
 - **Android:** 7.0 (API 24) o superior. Probada en una tablet Amazon Fire HD 8 (API 28).
 - **Privacidad:** no recoge ni envía datos; no declara el permiso de internet.
@@ -15,11 +15,14 @@ ubicación, contactos ni almacenamiento general.
 
 | Archivo | Para qué | Cómo se usa |
 |---|---|---|
-| [`minegocio.apk`](minegocio.apk) · 584 KB | **Instalar a mano o compartir** con alguien (WhatsApp, Drive, USB). | Se abre en el dispositivo y se acepta el origen desconocido. |
-| [`minegocio.aab`](minegocio.aab) · 591 KB | **Subir a Google Play Console.** Es un *Android App Bundle*: un paquete de entrega, no un instalador. | Play lo convierte en el APK que corresponde a cada dispositivo. **No se puede instalar directamente.** |
+| [`minegocio.apk`](minegocio.apk) · 657 KB | **Instalar a mano o compartir** con alguien (WhatsApp, Drive, USB). | Se abre en el dispositivo y se acepta el origen desconocido. |
+| [`minegocio.aab`](minegocio.aab) · 658 KB | **Subir a Google Play Console.** Es un *Android App Bundle*: un paquete de entrega, no un instalador. | Play lo convierte en el APK que corresponde a cada dispositivo. **No se puede instalar directamente.** |
 
-- APK SHA-256: `d3e893ca5cd06ab1b5ca4ee50984a6f9d1d057ac4a3311e80065e0f129b63d75`
-- AAB SHA-256: `8d8e950b7a06c64a1c93a0bc153b1d08838d644fa01ee88337b884f722607bf7`
+Los dos van también adjuntos en la [release v1.34](https://github.com/Polypodiozoa/minegocio/releases/tag/v1.34),
+con el mismo SHA-256 que los archivos del repositorio.
+
+- APK SHA-256: `96e8d700d70b80a41a31f4c56f583411ac139c4d44b398ec91e42fce4f103089`
+- AAB SHA-256: `1b7609029a7329bbece8664fc9a1ba1bbe5e15944fdeea44ca83c992bcb364ad`
 
 El APK y el AAB del repositorio van firmados con la **misma llave de release** (huella
 `bb3bb566…88cbdc`, ver `docs/BUILD.md`). Por eso instalar una versión nueva encima de otra
@@ -112,9 +115,12 @@ Requiere el SDK de Android (**platforms;android-36** y **build-tools;36.0.0**) y
 Gradle. ZXing está en `herramientas/zxing-core-3.5.3.jar` y se incluye solo en el DEX.
 
 ```bash
-./compilar.sh                                 # → minegocio.apk (1.32 / 33 por defecto)
-./empaquetar-aab.sh                           # → minegocio.aab (para Play)
+JAVA_HOME=~/.local/jdk17 ./compilar.sh         # → minegocio.apk (versión leída de AndroidManifest.xml)
+JAVA_HOME=~/.local/jdk17 ./empaquetar-aab.sh   # → minegocio.aab (para Play)
 ```
+
+`javac` no está en `PATH` en este equipo: sin `JAVA_HOME` los scripts se detienen. La versión sale
+del manifest (hoy 1.34 / versionCode 35) y los scripts abortan si el entorno no coincide.
 
 El AAB se arma con `aapt2` en formato proto y `herramientas/bundletool.jar`; se valida con
 `bundletool validate`.
