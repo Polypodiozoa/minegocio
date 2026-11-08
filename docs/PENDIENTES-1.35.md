@@ -113,6 +113,14 @@ No hay llave dentro del paquete, así que no es una filtración, pero sí public
 antes de tiempo y engorda el repositorio en cada compilación. Decisión pendiente: `git rm
 --cached` y añadirlos a `.gitignore`.
 
+**`ventas` no tiene índice por `cliente_id`.** Lo medido en esta revisión: 19 tablas y 16 índices,
+47 sumas resueltas en SQL y no en Java, ninguna consulta sin filtro. O sea que el recorrido completo
+de una tabla a escala de negocio es cosa de milisegundos. El único hueco son 14 consultas que
+filtran por `cliente_id` (deudas, abonos, historial de cliente) sin índice que las cubra. No se
+añade ahora: exige subir la versión de esquema, y una migración no es lo que hay que estrenar justo
+antes de publicar. Cuando la app pase de ~10.000 ventas, un `CREATE INDEX` en la migración
+siguiente.
+
 ## F. Estado antes de subir la 1.34
 
 - `tienda/ficha.md` ya tiene la entrada de la 1.34 (308 caracteres, dentro del límite de 500).
