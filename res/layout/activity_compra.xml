@@ -121,14 +121,13 @@ android:id="@+id/scrollForm"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:labelFor="@+id/etImpuesto"
-                    android:text="Porcentaje de impuesto" />
+                    android:text="Porcentaje de impuesto (19)" />
 
                 <EditText
                     android:id="@+id/etImpuesto"
                     style="@style/Campo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="19"
                     android:inputType="numberDecimal"
                     android:maxLength="5" />
             </LinearLayout>
@@ -153,6 +152,21 @@ android:id="@+id/scrollForm"
                     android:paddingLeft="14dp"
                     android:paddingRight="14dp"
                     android:minHeight="56dp" />
+
+                <Switch
+                    android:id="@+id/swRecibida"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:minHeight="48dp"
+                    android:text="Mercancía recibida" />
+
+                <TextView
+                    android:id="@+id/txtAyudaRecibida"
+                    style="@style/Ayuda"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Si la dejas pendiente, las existencias suben cuando marques la compra como recibida." />
             </LinearLayout>
 
             <LinearLayout
@@ -165,14 +179,13 @@ android:id="@+id/scrollForm"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:labelFor="@+id/etNotas"
-                    android:text="Notas de la compra" />
+                    android:text="Notas de la compra · ej. factura 1234, entrega pendiente, observaciones…" />
 
                 <EditText
                     android:id="@+id/etNotas"
                     style="@style/CampoMultilinea"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Ej.: factura 1234, entrega pendiente, observaciones…"
                     android:inputType="textCapSentences|textMultiLine" />
             </LinearLayout>
 

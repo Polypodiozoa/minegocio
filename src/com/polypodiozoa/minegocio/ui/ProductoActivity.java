@@ -6,13 +6,20 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.polypodiozoa.minegocio.R;
 import com.polypodiozoa.minegocio.modelo.Modelo;
 import com.polypodiozoa.minegocio.util.Archivos;
+import com.polypodiozoa.minegocio.util.Fechas;
 import com.polypodiozoa.minegocio.util.Formatos;
+import com.polypodiozoa.minegocio.util.Grafica;
 import com.polypodiozoa.minegocio.util.Imagen;
+import com.polypodiozoa.minegocio.util.Ui;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ProductoActivity extends BaseActivity {
 
@@ -21,7 +28,8 @@ public class ProductoActivity extends BaseActivity {
     private static final int PEDIR_ESCANEO = 403;
 
     private EditText etNombre, etCategoria, etCodigo, etUnidad, etPrecio, etCosto,
-            etStock, etStockMinimo;
+            etStock, etStockMinimo, etImpuesto, etDiasAviso;
+    private android.widget.Switch swVence;
     private ImageView imgProducto;
     private Button btnQuitarFoto;
     private TextView txtGananciaUnidad;
@@ -47,6 +55,9 @@ public class ProductoActivity extends BaseActivity {
         etCosto = findViewById(R.id.etCosto);
         etStock = findViewById(R.id.etStock);
         etStockMinimo = findViewById(R.id.etStockMinimo);
+        etImpuesto = findViewById(R.id.etImpuestoProducto);
+        etDiasAviso = findViewById(R.id.etDiasAviso);
+        swVence = findViewById(R.id.swVence);
         imgProducto = findViewById(R.id.imgProducto);
         btnQuitarFoto = findViewById(R.id.btnQuitarFoto);
         txtGananciaUnidad = findViewById(R.id.txtGananciaUnidad);
@@ -84,20 +95,96 @@ public class ProductoActivity extends BaseActivity {
             etCosto.setText(String.valueOf(producto.costo));
             etStock.setText(String.valueOf(producto.stock));
             etStockMinimo.setText(String.valueOf(producto.stockMinimo));
+            if (producto.impuestoPct >= 0) {
+                etImpuesto.setText(Formatos.decimal(producto.impuestoPct));
+            }
+            swVence.setChecked(producto.vence);
+            etDiasAviso.setText(producto.diasAviso >= 0 ? String.valueOf(producto.diasAviso) : "");
             rutaFoto = producto.foto;
             fotoOriginal = producto.foto;
+            cargarLotesYHistorial();
         } else if (getIntent().hasExtra("codigo")) {
             etCodigo.setText(getIntent().getStringExtra("codigo"));
         }
         actualizarFoto();
         actualizarRentabilidad();
         marcarInicial(etNombre, etCategoria, etCodigo, etUnidad, etPrecio, etCosto,
-                etStock, etStockMinimo);
+                etStock, etStockMinimo, etImpuesto, etDiasAviso);
     }
 
     @Override
     public void onBackPressed() {
         salirSiCambios();
+    }
+
+    private void cargarLotesYHistorial() {
+        LinearLayout contLotes = findViewById(R.id.containerLotes);
+        View cardLotes = findViewById(R.id.cardLotes);
+        contLotes.removeAllViews();
+        List<Modelo.Lote> lotes = bd.lotes(id);
+        if (lotes.isEmpty()) {
+            cardLotes.setVisibility(View.GONE);
+        } else {
+            cardLotes.setVisibility(View.VISIBLE);
+            long promedio = bd.costoPromedio(id);
+            if (promedio > 0) {
+                TextView resumen = Ui.texto(this, "Costo promedio de lo que queda: "
+                                + Formatos.pesos(promedio), 16, getColor(R.color.texto_secundario), false);
+                resumen.setPadding(0, Ui.dp(this, 6), 0, Ui.dp(this, 6));
+                contLotes.addView(resumen);
+            }
+            for (int i = 0; i < lotes.size(); i++) {
+                Modelo.Lote l = lotes.get(i);
+                String vence = l.vencimiento > 0
+                        ? "vence " + Fechas.fechaCorta(l.vencimiento)
+                        : (producto != null && producto.vence ? "sin fecha de vencimiento" : "no vence");
+                String izquierda = l.restante + (l.restante == 1 ? " unidad · " : " unidades · ") + vence;
+                if (i > 0) contLotes.addView(Ui.separador(this));
+                contLotes.addView(Ui.filaResumen(this, izquierda, Formatos.pesos(l.costoUnitario) + " c/u"));
+            }
+        }
+
+        View cardHistorial = findViewById(R.id.cardHistorialPrecio);
+        LinearLayout contGrafica = findViewById(R.id.containerPrecioGrafica);
+        LinearLayout contPrecios = findViewById(R.id.containerPrecios);
+        contGrafica.removeAllViews();
+        contPrecios.removeAllViews();
+        List<Modelo.PrecioCompra> historial = bd.historialPrecios(id, 12);
+        if (historial.isEmpty()) {
+            cardHistorial.setVisibility(View.GONE);
+            return;
+        }
+        cardHistorial.setVisibility(View.VISIBLE);
+        List<Modelo.PuntoSerie> serie = new ArrayList<>();
+        for (int i = historial.size() - 1; i >= 0; i--) {
+            Modelo.PrecioCompra pc = historial.get(i);
+            Modelo.PuntoSerie punto = new Modelo.PuntoSerie();
+            punto.etiqueta = Fechas.formato("dd/MM", pc.fecha);
+            punto.valor = pc.costoUnitario;
+            serie.add(punto);
+        }
+        if (serie.size() > 1) {
+            Grafica g = new Grafica(this);
+            StringBuilder desc = new StringBuilder("Precio de compra: ");
+            for (Modelo.PrecioCompra pc : historial) {
+                desc.append(Fechas.fechaCorta(pc.fecha)).append(", ")
+                        .append(Formatos.pesos(pc.costoUnitario)).append(". ");
+            }
+            g.mostrar(serie, false, desc.toString());
+            contGrafica.addView(g);
+        }
+        for (int i = 0; i < historial.size(); i++) {
+            Modelo.PrecioCompra pc = historial.get(i);
+            String variacion;
+            if (pc.variacion > 0) variacion = " +" + pc.variacion + "%";
+            else if (pc.variacion < 0) variacion = " " + pc.variacion + "%";
+            else variacion = " =";
+            String proveedor = pc.proveedor.isEmpty() ? "sin proveedor" : pc.proveedor;
+            String detalle = Fechas.fechaCorta(pc.fecha) + " · " + pc.cantidad
+                    + " u. · " + proveedor + variacion;
+            if (i > 0) contPrecios.addView(Ui.separador(this));
+            contPrecios.addView(Ui.filaResumen(this, detalle, Formatos.pesos(pc.costoUnitario)));
+        }
     }
 
     private void actualizarRentabilidad() {
@@ -227,6 +314,20 @@ public class ProductoActivity extends BaseActivity {
         p.costo = costo;
         p.stock = stock;
         p.stockMinimo = minimo;
+        String tasa = etImpuesto.getText().toString().trim();
+        if (tasa.isEmpty()) {
+            p.impuestoPct = -1;
+        } else {
+            double valor = Formatos.parseDecimal(tasa);
+            if (valor < 0 || valor > 100) {
+                error(etImpuesto, "Escribe un IVA entre 0 y 100, o déjalo vacío.");
+                return;
+            }
+            p.impuestoPct = valor;
+        }
+        p.vence = swVence.isChecked();
+        String dias = etDiasAviso.getText().toString().trim();
+        p.diasAviso = dias.isEmpty() ? -1 : (int) Formatos.parsePesos(dias);
         if (!rutaTemporal.isEmpty()) {
             p.foto = Archivos.moverAPermanente(this, rutaTemporal);
             rutaTemporal = "";

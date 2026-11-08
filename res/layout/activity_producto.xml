@@ -101,14 +101,13 @@ android:id="@+id/scrollForm"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:labelFor="@+id/etNombre"
-                    android:text="Nombre del producto *" />
+                    android:text="Nombre del producto * · ej. Caja de lápices x12" />
 
                 <EditText
                     android:id="@+id/etNombre"
                     style="@style/Campo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Ej.: Caja de lápices x12"
                     android:inputType="textCapSentences" />
 
                 <TextView
@@ -116,14 +115,13 @@ android:id="@+id/scrollForm"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:labelFor="@+id/etCategoria"
-                    android:text="Categoría" />
+                    android:text="Categoría · ej. Papelería, Joyería, Alimentos" />
 
                 <EditText
                     android:id="@+id/etCategoria"
                     style="@style/Campo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Ej.: Papelería, Joyería, Alimentos"
                     android:inputType="textCapSentences" />
 
                 <TextView
@@ -131,14 +129,13 @@ android:id="@+id/scrollForm"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:labelFor="@+id/etCodigo"
-                    android:text="Código o referencia" />
+                    android:text="Código o referencia · ej. LAP-012" />
 
                 <EditText
                     android:id="@+id/etCodigo"
                     style="@style/Campo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Ej.: LAP-012"
                     android:inputType="text" />
 
                 <Button
@@ -154,14 +151,13 @@ android:id="@+id/scrollForm"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:labelFor="@+id/etUnidad"
-                    android:text="Unidad de venta" />
+                    android:text="Unidad de venta (unidad, caja, docena…)" />
 
                 <EditText
                     android:id="@+id/etUnidad"
                     style="@style/Campo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="unidad, caja, docena…"
                     android:inputType="text" />
             </LinearLayout>
 
@@ -187,14 +183,13 @@ android:id="@+id/scrollForm"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:labelFor="@+id/etPrecio"
-                    android:text="Precio de venta (COP) *" />
+                    android:text="Precio de venta (COP) * · ej. 12500" />
 
                 <EditText
                     android:id="@+id/etPrecio"
                     style="@style/Campo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Ej.: 12500"
                     android:inputType="number" />
 
                 <TextView
@@ -202,14 +197,13 @@ android:id="@+id/scrollForm"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:labelFor="@+id/etCosto"
-                    android:text="Costo de compra (COP)" />
+                    android:text="Costo de compra (COP) · ej. 7000" />
 
                 <EditText
                     android:id="@+id/etCosto"
                     style="@style/Campo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Ej.: 7000"
                     android:inputType="number" />
 
                 <TextView
@@ -232,14 +226,13 @@ android:id="@+id/scrollForm"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:labelFor="@+id/etStock"
-                    android:text="Existencias actuales" />
+                    android:text="Existencias actuales · ej. 10" />
 
                 <EditText
                     android:id="@+id/etStock"
                     style="@style/Campo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Ej.: 10"
                     android:inputType="numberSigned" />
 
                 <TextView
@@ -247,15 +240,117 @@ android:id="@+id/scrollForm"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:labelFor="@+id/etStockMinimo"
-                    android:text="Avisar cuando queden menos de" />
+                    android:text="Avisar cuando queden menos de · ej. 3" />
 
                 <EditText
                     android:id="@+id/etStockMinimo"
                     style="@style/Campo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Ej.: 3"
                     android:inputType="number" />
+
+                <TextView
+                    style="@style/Etiqueta"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:labelFor="@+id/etImpuestoProducto"
+                    android:text="IVA propio de este producto (Vacío = usa el IVA general)" />
+
+                <EditText
+                    android:id="@+id/etImpuestoProducto"
+                    style="@style/Campo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="numberDecimal" />
+
+                <TextView
+                    style="@style/Ayuda"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Déjalo vacío para cobrar el IVA general de Ajustes. Escríbelo (19, 5, 0…) solo si este producto tiene una tarifa distinta." />
+
+                <Switch
+                    android:id="@+id/swVence"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:minHeight="48dp"
+                    android:text="Controlar vencimiento" />
+
+                <TextView
+                    style="@style/Etiqueta"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:labelFor="@+id/etDiasAviso"
+                    android:text="Avisar cuántos días antes (30)" />
+
+                <EditText
+                    android:id="@+id/etDiasAviso"
+                    style="@style/Campo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/cardLotes"
+                style="@style/Tarjeta"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone">
+
+                <TextView
+                    style="@style/TituloSeccion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Lotes en existencia" />
+
+                <TextView
+                    style="@style/Ayuda"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Cada compra entra con su propio costo. Aquí ves cuánto queda de cada precio." />
+
+                <LinearLayout
+                    android:id="@+id/containerLotes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/cardHistorialPrecio"
+                style="@style/Tarjeta"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone">
+
+                <TextView
+                    style="@style/TituloSeccion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Movimiento del precio de compra" />
+
+                <TextView
+                    style="@style/Ayuda"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Lo que has pagado por este producto en cada pedido, con la variación frente a la compra anterior." />
+
+                <LinearLayout
+                    android:id="@+id/containerPrecioGrafica"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:orientation="vertical" />
+
+                <LinearLayout
+                    android:id="@+id/containerPrecios"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:orientation="vertical" />
             </LinearLayout>
 
             <Button

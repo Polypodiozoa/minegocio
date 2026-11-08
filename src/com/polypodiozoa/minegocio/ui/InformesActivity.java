@@ -23,6 +23,7 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Locale;
 
 public class InformesActivity extends BaseActivity {
 
@@ -145,7 +146,7 @@ public class InformesActivity extends BaseActivity {
         Intent i = new Intent(Intent.ACTION_CREATE_DOCUMENT);
         i.addCategory(Intent.CATEGORY_OPENABLE);
         i.setType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-        String nombre = "reporte-" + Fechas.nombrePeriodo(periodo()).toLowerCase()
+        String nombre = "reporte-" + Fechas.nombrePeriodo(periodo()).toLowerCase(Locale.ROOT)
                 .replace(" ", "-").replace("ó", "o") + "-"
                 + Fechas.formato("yyyyMMdd", Fechas.ahora()) + ".xlsx";
         i.putExtra(Intent.EXTRA_TITLE, nombre);
@@ -160,7 +161,7 @@ public class InformesActivity extends BaseActivity {
         Intent i = new Intent(Intent.ACTION_CREATE_DOCUMENT);
         i.addCategory(Intent.CATEGORY_OPENABLE);
         i.setType("text/csv");
-        String nombre = "ventas-" + Fechas.nombrePeriodo(periodo()).toLowerCase()
+        String nombre = "ventas-" + Fechas.nombrePeriodo(periodo()).toLowerCase(Locale.ROOT)
                 .replace(" ", "-").replace("ó", "o") + "-"
                 + Fechas.formato("yyyyMMdd", Fechas.ahora()) + ".csv";
         i.putExtra(Intent.EXTRA_TITLE, nombre);

@@ -58,6 +58,41 @@ android:id="@+id/scrollForm"
                     style="@style/TituloSeccion"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:text="Fecha y entrega" />
+
+                <Button
+                    android:id="@+id/btnFechaVenta"
+                    style="@style/BotonSecundario"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Hoy" />
+
+                <Switch
+                    android:id="@+id/swEntregada"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:minHeight="48dp"
+                    android:checked="true"
+                    android:text="Entregada al cliente" />
+
+                <TextView
+                    android:id="@+id/txtAyudaEntrega"
+                    style="@style/Ayuda"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Si la dejas por entregar, queda en la lista de pendientes." />
+            </LinearLayout>
+
+            <LinearLayout
+                style="@style/Tarjeta"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    style="@style/TituloSeccion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:text="Productos y servicios" />
 
                 <TextView
@@ -130,14 +165,13 @@ android:id="@+id/scrollForm"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:labelFor="@+id/etImpuesto"
-                    android:text="Porcentaje de impuesto" />
+                    android:text="Porcentaje de impuesto (19)" />
 
                 <EditText
                     android:id="@+id/etImpuesto"
                     style="@style/Campo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="19"
                     android:inputType="numberDecimal"
                     android:maxLength="5" />
 
@@ -146,14 +180,13 @@ android:id="@+id/scrollForm"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:labelFor="@+id/etDescuento"
-                    android:text="Descuento (COP)" />
+                    android:text="Descuento (COP) (0)" />
 
                 <EditText
                     android:id="@+id/etDescuento"
                     style="@style/Campo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="0"
                     android:inputType="number" />
             </LinearLayout>
 
@@ -223,14 +256,13 @@ android:id="@+id/scrollForm"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:labelFor="@+id/etNotas"
-                    android:text="Notas y detalles extra" />
+                    android:text="Notas y detalles extra · ej. entrega a domicilio, color, talla, observaciones…" />
 
                 <EditText
                     android:id="@+id/etNotas"
                     style="@style/CampoMultilinea"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Ej.: entrega a domicilio, color, talla, observaciones…"
                     android:inputType="textCapSentences|textMultiLine" />
             </LinearLayout>
 

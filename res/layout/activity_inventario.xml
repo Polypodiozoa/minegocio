@@ -27,8 +27,7 @@
             android:imeOptions="actionSearch"
             android:drawableStart="@drawable/ic_buscar"
             android:drawablePadding="8dp"
-            android:drawableTint="@color/texto_secundario"
-            android:contentDescription="Buscar producto por nombre, categoría o código" />
+            android:drawableTint="@color/texto_secundario" />
 
         <Button
             android:id="@+id/btnEscanear"

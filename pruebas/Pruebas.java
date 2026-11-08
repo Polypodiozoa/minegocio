@@ -1,12 +1,16 @@
+import com.polypodiozoa.minegocio.modelo.Modelo;
 import com.polypodiozoa.minegocio.util.Excel;
 import com.polypodiozoa.minegocio.util.Fechas;
 import com.polypodiozoa.minegocio.util.Formatos;
+import com.polypodiozoa.minegocio.util.Impuestos;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -25,6 +29,7 @@ public final class Pruebas {
     public static void main(String[] args) throws Exception {
         dinero();
         fechas();
+        impuestos();
         excel();
         System.out.println();
         if (fallos > 0) {
@@ -96,6 +101,77 @@ public final class Pruebas {
         igual("sin fecha límite", 0, Fechas.diasHasta(0));
         igual("texto de vencida", "Vencida hace 1 día",
                 Fechas.vencimientoTexto(Fechas.inicioDia(ahora) - 86400000L));
+    }
+
+    // ------------------------------------------------------------ impuestos
+
+    private static void impuestos() {
+        System.out.println("Impuestos (IVA por producto y descuento)");
+
+        /* Una sola tarifa: el total debe ser exactamente el de antes de la 1.33. */
+        List<Modelo.Item> uno = new ArrayList<>();
+        uno.add(item("Café", 2, 50000, -1));
+        Impuestos.Totales t = Impuestos.calcular(uno, 0, 19);
+        igual("19 % sobre $100.000", 19000L, t.impuesto);
+        igual("total con IVA", 119000L, t.total);
+
+        /* Descuento: la base y el IVA bajan con él. */
+        t = Impuestos.calcular(uno, 10000, 19);
+        igual("base con descuento", 90000L, t.base);
+        igual("19 % sobre la base descontada", 17100L, t.impuesto);
+        igual("total con descuento e IVA", 107100L, t.total);
+
+        /* Dos tarifas en la misma venta: 19 % y 5 %. */
+        List<Modelo.Item> dos = new ArrayList<>();
+        dos.add(item("Licor", 1, 100000, 19));
+        dos.add(item("Panela", 1, 50000, 5));
+        t = Impuestos.calcular(dos, 0, 0);
+        igual("19 % + 5 % suma en la cabecera", 21500L, t.impuesto);
+        igual("la suma de líneas cuadra con la cabecera", t.impuesto, sumaImpuestos(dos));
+        igual("tarifas distintas detectadas", 2, Impuestos.tarifas(dos, 0).size());
+
+        /* Descuento repartido proporcionalmente entre dos tarifas. */
+        t = Impuestos.calcular(dos, 30000, 0);
+        igual("descuento deja base 120.000", 120000L, t.base);
+        igual("19 % y 5 % sobre la base descontada", 17200L, t.impuesto);
+        igual("con descuento, la suma de líneas cuadra", t.impuesto, sumaImpuestos(dos));
+
+        /* Un producto exento (0 %) mezclado con uno gravado. */
+        List<Modelo.Item> tres = new ArrayList<>();
+        tres.add(item("Medicamento", 1, 20000, 0));
+        tres.add(item("Perfume", 1, 80000, 19));
+        t = Impuestos.calcular(tres, 0, 19);
+        igual("el exento no paga IVA", 15200L, t.impuesto);
+        igual("el exento queda en 0 en su línea", 0L, tres.get(0).impuesto);
+
+        /* Reparto con una sola tarifa: la suma de líneas siempre cuadra al peso. */
+        List<Modelo.Item> tresIguales = new ArrayList<>();
+        tresIguales.add(item("A", 1, 3333, -1));
+        tresIguales.add(item("B", 1, 3333, -1));
+        tresIguales.add(item("C", 1, 3333, -1));
+        t = Impuestos.calcular(tresIguales, 0, 19);
+        igual("3 × 3.333 al 19 %: cabecera", 1900L, t.impuesto);
+        igual("3 × 3.333 al 19 %: líneas cuadran", t.impuesto, sumaImpuestos(tresIguales));
+
+        /* Venta vacía: nada que cobrar. */
+        t = Impuestos.calcular(new ArrayList<>(), 0, 19);
+        igual("venta sin líneas no inventa IVA", 0L, t.impuesto);
+        igual("venta sin líneas no inventa total", 0L, t.total);
+    }
+
+    private static Modelo.Item item(String descripcion, int cantidad, long precio, double pct) {
+        Modelo.Item i = new Modelo.Item();
+        i.descripcion = descripcion;
+        i.cantidad = cantidad;
+        i.precioUnitario = precio;
+        i.impuestoPct = pct;
+        return i;
+    }
+
+    private static long sumaImpuestos(List<Modelo.Item> items) {
+        long total = 0;
+        for (Modelo.Item i : items) total += i.impuesto;
+        return total;
     }
 
     // ---------------------------------------------------------------- excel

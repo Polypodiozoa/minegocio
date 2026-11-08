@@ -108,4 +108,17 @@
             android:tint="@color/error"
             android:contentDescription="Quitar de la compra" />
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/btnVenceItem"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:minHeight="44dp"
+        android:gravity="center_vertical"
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp"
+        android:textColor="@color/primario"
+        android:textSize="15sp"
+        android:text="Vence: sin fecha" />
 </LinearLayout>

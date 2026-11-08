@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Android 12 o superior (API 31).
+    La app guarda las ventas, el inventario y los accesos de los usuarios en el
+    propio teléfono. Estas reglas dicen explícitamente que nada de eso se sube a
+    la nube ni se copia a otro equipo al cambiar de teléfono, igual que ya hace
+    allowBackup="false" en versiones anteriores. La copia de seguridad se hace
+    desde Ajustes, con el archivo que el dueño guarda donde él decida.
+-->
+<data-extraction-rules>
+    <cloud-backup>
+        <exclude domain="root" />
+        <exclude domain="file" />
+        <exclude domain="database" />
+        <exclude domain="sharedpref" />
+        <exclude domain="external" />
+    </cloud-backup>
+    <device-transfer>
+        <exclude domain="root" />
+        <exclude domain="file" />
+        <exclude domain="database" />
+        <exclude domain="sharedpref" />
+        <exclude domain="external" />
+    </device-transfer>
+</data-extraction-rules>

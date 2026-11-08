@@ -27,7 +27,7 @@ public class App extends Application {
             if (BD.archivo(this).exists() && !BD.get(this).sana()) {
                 BD.apartarDanada(this);
                 getSharedPreferences("ui", MODE_PRIVATE).edit()
-                        .putBoolean("base_apartada", true).commit();
+                        .putBoolean("base_apartada", true).apply();
             }
         } catch (Throwable ignored) {
         }

@@ -21,10 +21,15 @@ export PATH="$JAVA_HOME/bin:$HOME/.local/platform-tools:$PATH"
 ## Compilar
 
 ```bash
-./compilar.sh                                   # APK (1.32 / 33 por defecto)
-VERSION_CODE=34 VERSION_NAME=1.33 ./compilar.sh  # APK de una versión nueva
-VERSION_CODE=34 VERSION_NAME=1.33 ./empaquetar-aab.sh  # AAB firmado para Play
+./compilar.sh         # APK firmado, con la versión que dice AndroidManifest.xml
+./empaquetar-aab.sh   # AAB firmado para Play, con esa misma versión
 ```
+
+**La versión se cambia en un solo sitio: `AndroidManifest.xml`** (`versionCode` y `versionName`).
+`aapt2` ignora la versión que se le pase por entorno, así que antes el AAB podía salir
+silenciosamente con un código ya subido y Google Play lo rechazaba por duplicado. Ahora los dos
+scripts leen el manifest y, si `VERSION_CODE`/`VERSION_NAME` en el entorno no coinciden con él,
+**abortan** con un mensaje en vez de empaquetar.
 
 **Google Play exige `targetSdkVersion` 36** para apps nuevas desde el 31/08/2026, así que los
 scripts apuntan a `platforms;android-36` y `--target-sdk-version 36`. Con ese target cambian
@@ -98,3 +103,9 @@ Si cambia la firma (1.30 → 1.31), Android rechaza la instalación con
 4. Abrir la app → `Ajustes → Restaurar una copia` → elegir el ZIP del paso 1.
 
 `Respaldo.java` no se toca en ninguna versión: restaura bases de 1.30 sin cambios de esquema.
+
+## Deuda para la siguiente versión
+
+Lo que se decidió no tocar para no mover layouts antes de publicar —`imeOptions` en 37 campos,
+`selectAllOnFocus` en 13 numéricos, `importantForAutofill` y los textos hardcodeados— está
+detallado en [`PENDIENTES-1.35.md`](PENDIENTES-1.35.md).

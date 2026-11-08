@@ -14,6 +14,7 @@ import com.polypodiozoa.minegocio.util.Archivos;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Locale;
 
 /**
  * Proveedor propio de archivos: permite que la app de cámara escriba la foto y
@@ -72,7 +73,7 @@ public class ProveedorArchivos extends android.content.ContentProvider {
             String nombre = f.getName();
             int punto = nombre.lastIndexOf('.');
             if (punto >= 0) {
-                String ext = nombre.substring(punto + 1).toLowerCase();
+                String ext = nombre.substring(punto + 1).toLowerCase(Locale.ROOT);
                 String mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext);
                 if (mime != null) return mime;
             }

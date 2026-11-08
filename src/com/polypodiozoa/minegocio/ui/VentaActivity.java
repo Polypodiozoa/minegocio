@@ -52,6 +52,9 @@ public class VentaActivity extends BaseActivity {
     private EditText etImpuesto, etDescuento, etNotas;
     private Spinner spForma;
     private ListaAdjuntos adjuntos;
+    private long fechaVenta = Fechas.ahora();
+    private Switch swEntregada;
+    private TextView btnFechaVenta;
     private long fechaLimite = Fechas.vencimientoPorDefecto();
 
     @Override
@@ -77,6 +80,16 @@ public class VentaActivity extends BaseActivity {
         etDescuento = findViewById(R.id.etDescuento);
         etNotas = findViewById(R.id.etNotas);
         spForma = findViewById(R.id.spForma);
+        swEntregada = findViewById(R.id.swEntregada);
+        btnFechaVenta = findViewById(R.id.btnFechaVenta);
+        btnFechaVenta.setOnClickListener(v -> elegirFechaVenta());
+        actualizarFechaVenta();
+        TextView ayudaEntrega = findViewById(R.id.txtAyudaEntrega);
+        if (ayudaEntrega != null) {
+            ayudaEntrega.setText(bd.ventaDescuentaStock()
+                    ? "Si la dejas por entregar, queda en la lista de pendientes y la existencia se descuenta ahora."
+                    : "Si la dejas por entregar, queda en la lista de pendientes y la existencia se descuenta al entregarla.");
+        }
 
         String[] formas = {"Efectivo", "Transferencia", "Tarjeta", "Crédito"};
         ArrayAdapter<String> adaptador = new ArrayAdapter<>(this, R.layout.item_spinner, formas);
@@ -142,6 +155,41 @@ public class VentaActivity extends BaseActivity {
                 + " · " + Fechas.vencimientoTexto(fechaLimite));
         boton.setContentDescription("Fecha límite de pago: " + Fechas.fecha(fechaLimite)
                 + ". Toca para cambiarla.");
+    }
+
+    private void actualizarFechaVenta() {
+        if (btnFechaVenta == null) return;
+        boolean hoy = Fechas.inicioDia(fechaVenta) == Fechas.inicioDia(Fechas.ahora());
+        btnFechaVenta.setText(hoy ? "Fecha: hoy" : "Fecha: " + Fechas.fechaLarga(fechaVenta)
+                + " · retroactiva");
+        btnFechaVenta.setContentDescription("Fecha de la venta: "
+                + Fechas.fechaLarga(fechaVenta) + ". Toca para cambiarla.");
+    }
+
+    /** Cuántos días atrás se permite registrar una venta, según Ajustes y el rol. */
+    private int diasAtrasPermitidos() {
+        int configurado = (int) bd.ajusteNumero("retro_dias", 1);
+        if (configurado <= 0) return 0;
+        if (configurado >= 2) {
+            Modelo.Usuario u = bd.usuarioActual();
+            return u != null && u.esAdministrador() ? 30 : 1;
+        }
+        return 1;
+    }
+
+    private void elegirFechaVenta() {
+        Calendar c = Fechas.calendario(fechaVenta);
+        DatePickerDialog dialogo = new DatePickerDialog(this,
+                (view, anio, mes, dia) -> {
+                    fechaVenta = Fechas.mediodia(anio, mes, dia);
+                    actualizarFechaVenta();
+                },
+                c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
+        dialogo.getDatePicker().setMinDate(Fechas.inicioDia(Fechas.ahora())
+                - diasAtrasPermitidos() * 24L * 60L * 60L * 1000L);
+        dialogo.getDatePicker().setMaxDate(Fechas.inicioDiaSiguiente(Fechas.ahora()) - 1);
+        dialogo.setTitle("Fecha de la venta");
+        dialogo.show();
     }
 
     private void elegirVencimiento() {
@@ -284,6 +332,7 @@ public class VentaActivity extends BaseActivity {
             i.cantidad = 1;
             i.precioUnitario = p.precio;
             i.costoUnitario = p.costo;
+            i.impuestoPct = p.impuestoPct;
             i.subtotal = p.precio;
             items.add(i);
         }
@@ -399,6 +448,15 @@ public class VentaActivity extends BaseActivity {
             menos.setContentDescription("Quitar una unidad de " + item.descripcion);
             mas.setContentDescription("Agregar una unidad de " + item.descripcion);
             quitar.setContentDescription("Quitar " + item.descripcion + " de la venta");
+            cantidad.setContentDescription("Cantidad " + item.cantidad
+                    + ". Toca para escribir otra cantidad.");
+            cantidad.setOnClickListener(v -> pedirCantidad(item.descripcion, item.cantidad, n -> {
+                item.cantidad = n;
+                item.subtotal = item.precioUnitario * item.cantidad;
+                renderItems();
+                actualizarTotales(true);
+                Ui.anunciar(containerItems, item.descripcion + ", cantidad " + item.cantidad);
+            }));
             menos.setOnClickListener(v -> {
                 if (item.cantidad > 1) {
                     item.cantidad--;
@@ -522,11 +580,13 @@ public class VentaActivity extends BaseActivity {
 
     private void continuarAprobacion() {
         Modelo.Venta v = new Modelo.Venta();
-        v.fecha = Fechas.ahora();
+        v.fecha = fechaVenta;
         v.clienteId = clienteId;
         v.formaPago = String.valueOf(spForma.getSelectedItem());
         v.estado = "Crédito".equals(v.formaPago) ? "credito" : "pagada";
         v.notas = texto(etNotas);
+        v.entregada = swEntregada == null || swEntregada.isChecked();
+        v.retroactiva = Fechas.inicioDia(fechaVenta) != Fechas.inicioDia(Fechas.ahora());
         v.impuestoPct = swImpuesto.isChecked() ? decimal(etImpuesto) : 0;
         v.descuento = numero(etDescuento);
         v.fechaLimite = "credito".equals(v.estado) ? fechaLimite : 0;
@@ -554,6 +614,8 @@ public class VentaActivity extends BaseActivity {
                 + "\nTotal: " + Formatos.pesos(v.total)
                 + (v.impuesto > 0 ? "\nImpuesto: " + Formatos.pesos(v.impuesto) : "")
                 + (v.fechaLimite > 0 ? "\nVence: " + Fechas.fecha(v.fechaLimite) : "")
+                + (v.retroactiva ? "\nFecha: " + Fechas.fechaLarga(v.fecha) + " (retroactiva)" : "")
+                + (v.entregada ? "" : "\nQueda por entregar")
                 + "\nGanancia estimada: " + Formatos.pesos(v.total - v.impuesto - v.costo)
                 + "\n\n¿Registrar esta venta?";
         confirmar("Aprobar venta", detalle, "Aprobar y registrar", () -> guardar(v));

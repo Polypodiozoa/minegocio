@@ -45,6 +45,7 @@ public class CompraActivity extends BaseActivity {
     private Switch swImpuesto;
     private EditText etImpuesto, etNotas;
     private Spinner spForma;
+    private Switch swRecibida;
     private ListaAdjuntos adjuntos;
 
     @Override
@@ -63,6 +64,14 @@ public class CompraActivity extends BaseActivity {
         etImpuesto = findViewById(R.id.etImpuesto);
         etNotas = findViewById(R.id.etNotas);
         spForma = findViewById(R.id.spForma);
+        swRecibida = findViewById(R.id.swRecibida);
+        swRecibida.setChecked(true);
+        final TextView ayudaRecibida = findViewById(R.id.txtAyudaRecibida);
+        if (ayudaRecibida != null) {
+            ayudaRecibida.setText(bd.compraSumaStockInmediato()
+                    ? "Si la dejas pendiente, las existencias suben igual, como pediste en Ajustes."
+                    : "Si la dejas pendiente, las existencias suben cuando marques la compra como recibida.");
+        }
 
         String[] formas = {"Efectivo", "Transferencia", "Tarjeta"};
         ArrayAdapter<String> adaptador = new ArrayAdapter<>(this, R.layout.item_spinner, formas);
@@ -170,7 +179,7 @@ public class CompraActivity extends BaseActivity {
             return;
         }
         for (Modelo.Item i : items) {
-            if (i.productoId == id) {
+            if (i.productoId == id && i.costoUnitario == p.costo && i.vencimiento == 0) {
                 i.cantidad++;
                 i.subtotal = i.costoUnitario * i.cantidad;
                 renderItems();
@@ -272,6 +281,7 @@ public class CompraActivity extends BaseActivity {
             TextView subtotal = fila.findViewById(R.id.txtSubtotalItem);
             TextView cantidad = fila.findViewById(R.id.txtCantidadItem);
             EditText costo = fila.findViewById(R.id.etCostoUnitario);
+            TextView vence = fila.findViewById(R.id.btnVenceItem);
             ImageButton menos = fila.findViewById(R.id.btnMenosItem);
             ImageButton mas = fila.findViewById(R.id.btnMasItem);
             ImageButton quitar = fila.findViewById(R.id.btnQuitarItem);
@@ -303,6 +313,26 @@ public class CompraActivity extends BaseActivity {
             menos.setContentDescription("Quitar una unidad de " + item.descripcion);
             mas.setContentDescription("Agregar una unidad de " + item.descripcion);
             quitar.setContentDescription("Quitar " + item.descripcion + " de la compra");
+            cantidad.setContentDescription("Cantidad " + item.cantidad
+                    + ". Toca para escribir otra cantidad.");
+            cantidad.setOnClickListener(v -> pedirCantidad(item.descripcion, item.cantidad, n -> {
+                item.cantidad = n;
+                item.subtotal = item.costoUnitario * item.cantidad;
+                renderItems();
+                actualizarTotales(true);
+                Ui.anunciar(containerItems, item.descripcion + ", cantidad " + item.cantidad);
+            }));
+            vence.setText(item.vencimiento > 0
+                    ? "Vence: " + Fechas.fechaCorta(item.vencimiento)
+                    : "Vence: sin fecha (toca para ponerla)");
+            vence.setContentDescription(item.vencimiento > 0
+                    ? "Vence el " + Fechas.fechaCorta(item.vencimiento)
+                    : "Sin fecha de vencimiento. Toca para ponerla.");
+            vence.setOnClickListener(v -> elegirFecha("Vence el " + item.descripcion,
+                    item.vencimiento, true, fecha -> {
+                        item.vencimiento = fecha;
+                        renderItems();
+                    }));
             menos.setOnClickListener(v -> {
                 if (item.cantidad > 1) {
                     item.cantidad--;
@@ -369,6 +399,7 @@ public class CompraActivity extends BaseActivity {
         v.proveedorId = proveedorId;
         v.formaPago = String.valueOf(spForma.getSelectedItem());
         v.notas = texto(etNotas);
+        v.recibida = swRecibida == null || swRecibida.isChecked();
         v.impuestoPct = swImpuesto.isChecked() ? decimal(etImpuesto) : 0;
         BD.calcularCompra(v, items);
         if (v.total == 0) {
@@ -385,7 +416,9 @@ public class CompraActivity extends BaseActivity {
                 + "\nForma de pago: " + v.formaPago
                 + "\nTotal: " + Formatos.pesos(v.total)
                 + (v.impuesto > 0 ? "\nImpuesto: " + Formatos.pesos(v.impuesto) : "")
-                + "\n\n¿Registrar esta compra? Las existencias se sumarán al inventario.";
+                + "\n\n" + (v.recibida
+                ? "¿Registrar esta compra? Las existencias se sumarán al inventario."
+                : "¿Registrar esta compra como pendiente? Las existencias se suman cuando la marques recibida.");
         confirmar("Aprobar compra", detalle, "Aprobar y registrar", () -> guardar(v));
     }
 

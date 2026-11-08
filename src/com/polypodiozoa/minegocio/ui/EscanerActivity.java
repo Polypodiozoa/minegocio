@@ -1,6 +1,7 @@
 package com.polypodiozoa.minegocio.ui;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -55,6 +56,8 @@ public class EscanerActivity extends BaseActivity implements SurfaceHolder.Callb
     private final AtomicBoolean terminado = new AtomicBoolean(false);
     private ExecutorService ejecutor;
 
+    // SurfaceView no es nuestra y no puede sobrescribir performClick; el toque delega en el clic.
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,8 +77,13 @@ public class EscanerActivity extends BaseActivity implements SurfaceHolder.Callb
         modo = LectorCodigos.esModoQr(bd.ajuste("escaner_formato", LectorCodigos.MODO_BARRAS))
                 ? LectorCodigos.MODO_QR : LectorCodigos.MODO_BARRAS;
         vistaCamara.getHolder().addCallback(this);
+        vistaCamara.setContentDescription("Vista de la cámara. Toca la pantalla para enfocar el código.");
+        // El clic es la acción accesible: TalkBack la activa con doble toque.
+        vistaCamara.setOnClickListener(v -> enfocar());
         vistaCamara.setOnTouchListener((v, evento) -> {
-            if (evento.getAction() == android.view.MotionEvent.ACTION_UP) enfocar();
+            if (evento.getAction() == android.view.MotionEvent.ACTION_UP) {
+                v.performClick();
+            }
             return true;
         });
         btnBarras.setOnClickListener(v -> cambiarModo(LectorCodigos.MODO_BARRAS));
@@ -96,8 +104,7 @@ public class EscanerActivity extends BaseActivity implements SurfaceHolder.Callb
             txtEstado.setText("Esta tablet no tiene cámara disponible. Escribe el código o elige una imagen.");
             btnLinterna.setVisibility(View.GONE);
             txtAyuda.setText("Sin cámara puedes usar el código escrito o una foto del código.");
-        } else if (Build.VERSION.SDK_INT >= 23
-                && checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+        } else if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             txtEstado.setText("Se necesita la cámara solo para leer el código.");
             solicitarPermiso();
         }
@@ -114,9 +121,7 @@ public class EscanerActivity extends BaseActivity implements SurfaceHolder.Callb
     private void solicitarPermiso() {
         if (permisoPedido) return;
         permisoPedido = true;
-        if (Build.VERSION.SDK_INT >= 23) {
-            requestPermissions(new String[]{Manifest.permission.CAMERA}, PERMISO_CAMARA);
-        }
+        requestPermissions(new String[]{Manifest.permission.CAMERA}, PERMISO_CAMARA);
     }
 
     @Override
@@ -293,8 +298,7 @@ public class EscanerActivity extends BaseActivity implements SurfaceHolder.Callb
     private void abrirCamaraSiPuede() {
         if (terminado.get() || camara != null || !superficieLista) return;
         if (!tieneCamara()) return;
-        if (Build.VERSION.SDK_INT >= 23
-                && checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+        if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             solicitarPermiso();
             return;
         }

@@ -72,6 +72,22 @@ Android 7.0 o superior. Funciona en celular y en tableta.
 - Sitio web: **(tú)** (puede ser el mismo de la política de privacidad)
 - Política de privacidad: **(tú)** — publicar `privacidad.md` en una URL
 
+## Qué hay de nuevo (versión 1.34)
+
+> Versión 1.34: cada casilla dice su nombre y trae su ejemplo a la vista, así que ya no hay que
+> adivinar qué va en cada una ni se borra la ayuda al empezar a escribir. Funciona mejor con el
+> lector de pantalla: al tocar un campo lo nombra en voz alta. Revisión completa del texto para
+> que todo quede en español.
+
+(Versión anterior, para referencia)
+
+## Qué hay de nuevo (versión 1.33)
+
+> Versión 1.33: IVA por producto, calculado y visible en el comprobante de venta. Control de
+> vencimientos: la app avisa qué productos están por vencer y los descuenta al vender.
+> Gráfica del historial de precios de compra en cada producto. Fecha de entrega en la venta.
+> El administrador decide si el empleado ve margen, utilidad y cartera. Comprobante rediseñado.
+
 ## Qué hay de nuevo (versión 1.32)
 
 > Versión 1.32: lista para Google Play con `targetSdk` 36 — contenido ajustado a las barras

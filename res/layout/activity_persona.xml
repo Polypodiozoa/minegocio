@@ -102,14 +102,13 @@ android:id="@+id/scrollForm"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:labelFor="@+id/etNombre"
-                    android:text="Nombre completo *" />
+                    android:text="Nombre completo * · ej. María Fernanda Gómez" />
 
                 <EditText
                     android:id="@+id/etNombre"
                     style="@style/Campo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Ej.: María Fernanda Gómez"
                     android:inputType="textCapWords" />
 
                 <TextView
@@ -118,7 +117,7 @@ android:id="@+id/scrollForm"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:labelFor="@+id/etContacto"
-                    android:text="Persona de contacto"
+                    android:text="Persona de contacto · ej. Jorge Ruiz"
                     android:visibility="gone" />
 
                 <EditText
@@ -126,7 +125,6 @@ android:id="@+id/scrollForm"
                     style="@style/Campo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Ej.: Jorge Ruiz"
                     android:inputType="textCapWords"
                     android:visibility="gone" />
 
@@ -135,14 +133,13 @@ android:id="@+id/scrollForm"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:labelFor="@+id/etTelefono"
-                    android:text="Teléfono o WhatsApp" />
+                    android:text="Teléfono o WhatsApp · ej. 310 555 2211" />
 
                 <EditText
                     android:id="@+id/etTelefono"
                     style="@style/Campo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Ej.: 310 555 2211"
                     android:inputType="phone" />
 
                 <TextView
@@ -150,14 +147,13 @@ android:id="@+id/scrollForm"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:labelFor="@+id/etCorreo"
-                    android:text="Correo electrónico (opcional)" />
+                    android:text="Correo electrónico (opcional) · ej. nombre@correo.com" />
 
                 <EditText
                     android:id="@+id/etCorreo"
                     style="@style/Campo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Ej.: nombre@correo.com"
                     android:inputType="textEmailAddress" />
 
                 <TextView
@@ -165,14 +161,13 @@ android:id="@+id/scrollForm"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:labelFor="@+id/etDireccion"
-                    android:text="Dirección (opcional)" />
+                    android:text="Dirección (opcional) · ej. Calle 45 #12-30, Bogotá" />
 
                 <EditText
                     android:id="@+id/etDireccion"
                     style="@style/Campo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Ej.: Calle 45 #12-30, Bogotá"
                     android:inputType="textPostalAddress" />
 
                 <TextView
@@ -181,14 +176,13 @@ android:id="@+id/scrollForm"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:labelFor="@+id/etCupo"
-                    android:text="Cupo de fiado (COP)" />
+                    android:text="Cupo de fiado (COP) · 0 = sin límite" />
 
                 <EditText
                     android:id="@+id/etCupo"
                     style="@style/Campo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="0 = sin límite"
                     android:inputType="number" />
 
                 <TextView
@@ -203,14 +197,13 @@ android:id="@+id/scrollForm"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:labelFor="@+id/etNotas"
-                    android:text="Notas (opcional)" />
+                    android:text="Notas (opcional) · ej. Preferencias y acuerdos de pago" />
 
                 <EditText
                     android:id="@+id/etNotas"
                     style="@style/CampoMultilinea"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Preferencias, acuerdos de pago, observaciones…"
                     android:inputType="textCapSentences|textMultiLine" />
             </LinearLayout>
 

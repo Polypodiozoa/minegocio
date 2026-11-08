@@ -373,3 +373,14 @@ una base con el mismo esquema.
 - TalkBack real en el dispositivo (recorrido completo de una venta y un fiado).
 - Rotación y letra del sistema al máximo en las pantallas con más campos.
 - Restauración real de una copia y borrado posterior (requiere datos de ejemplo).
+
+## Cierre para Play Store (revisión del 2026-11-08)
+
+| # | Hallazgo | Dónde | Corrección |
+|---|---|---|---|
+| AC4 | **El toque para enfocar no llega a TalkBack**: el escáner usaba `setOnTouchListener` sin acción de clic, así que el lector de pantalla no podía disparar el enfoque. | `EscanerActivity.java` (`vistaCamara`) | Se añade `setOnClickListener(v -> enfocar())` y el toque pasa a delegar en `performClick()`. Se silencia `ClickableViewAccessibility` porque `SurfaceView` no permite sobrescribir `performClick`. |
+| AC5 | **41 avisos `LabelFor`** por tener `labelFor` y `hint` a la vez. | layouts con `EditText` | Se conserva la pareja a propósito: el rótulo es el nombre accesible del campo y el `hint` aporta el ejemplo o el formato («0 = solo hoy, 1 = hoy y ayer, 2 = hasta 30 días», «Vacío = usa el IVA general»). Sin el `hint` el campo quedaría sin explicación. Aviso aceptado, no es un defecto. |
+
+Estado verificado: `./compilar.sh` sin errores; lint **0 errores**; `minegocio.aab` firmado y validado con bundletool (`minSdk 24`, `targetSdk 36`, único permiso `CAMERA`, `allowBackup="false"` con reglas de extracción, `supportsRtl="true"`, `usesCleartextTraffic="false"`). Idioma: 340 textos visibles y 73 cadenas de `strings.xml`, todos en español; sin prompts, instrucciones internas ni secretos en `src`, `res` ni scripts.
+
+Pendiente antes de publicar: correo de soporte, sitio web y URL pública de la privacidad en `tienda/ficha.md` (Play rechaza el envío sin URL de privacidad); decidir si «Accesos» lleva PIN (hoy la separación admin/empleado es de menú y color, sin clave, y la base SQLite no va cifrada); migrar `HardcodedText`/`SetTextI18n` a `strings.xml` (deuda, no bloquea).

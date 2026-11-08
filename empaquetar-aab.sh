@@ -16,8 +16,16 @@ if [ -f "$HOME/.minegocio/signing.env" ]; then . "$HOME/.minegocio/signing.env";
 CLAVE="${MINEGOCIO_KEYSTORE:-$HOME/.minegocio/minegocio-release.jks}"
 CLAVE_PASS="${MINEGOCIO_KEY_PASS:-}"
 ALIAS="${MINEGOCIO_KEY_ALIAS:-minegocio}"
-VERSION_CODE="${VERSION_CODE:-33}"
-VERSION_NAME="${VERSION_NAME:-1.32}"
+VER_MAN=$(sed -n 's/.*android:versionCode="\([0-9]*\)".*/\1/p' "$PROY/AndroidManifest.xml")
+NOM_MAN=$(sed -n 's/.*android:versionName="\([^"]*\)".*/\1/p' "$PROY/AndroidManifest.xml")
+VERSION_CODE="${VERSION_CODE:-$VER_MAN}"
+VERSION_NAME="${VERSION_NAME:-$NOM_MAN}"
+if [ "$VERSION_CODE" != "$VER_MAN" ] || [ "$VERSION_NAME" != "$NOM_MAN" ]; then
+    echo "Aviso: VERSION_CODE/NAME no coinciden con AndroidManifest.xml ($VER_MAN / $NOM_MAN)."
+    echo "aapt2 respeta el manifest, así que el AAB saldría con la versión del manifest."
+    echo "Actualiza AndroidManifest.xml antes de empaquetar; abortando."
+    exit 1
+fi
 AAB="$PROY/minegocio.aab"
 
 for f in "$BT/aapt2" "$BT/d8" "$JAR" "$ZXING" "$BUNDLETOOL"; do

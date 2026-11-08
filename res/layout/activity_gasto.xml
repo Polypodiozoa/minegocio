@@ -39,14 +39,13 @@ android:id="@+id/scrollForm"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:labelFor="@+id/etDescripcion"
-                    android:text="Descripción *" />
+                    android:text="Descripción * · ej. arriendo del local, luz, transporte" />
 
                 <EditText
                     android:id="@+id/etDescripcion"
                     style="@style/Campo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Ej.: arriendo del local, luz, transporte"
                     android:inputType="textCapSentences" />
 
                 <TextView
@@ -54,14 +53,13 @@ android:id="@+id/scrollForm"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:labelFor="@+id/etCategoria"
-                    android:text="Categoría" />
+                    android:text="Categoría · ej. Arriendo, Servicios, Transporte" />
 
                 <EditText
                     android:id="@+id/etCategoria"
                     style="@style/Campo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Ej.: Arriendo, Servicios, Transporte"
                     android:inputType="textCapWords" />
 
                 <TextView
@@ -69,14 +67,13 @@ android:id="@+id/scrollForm"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:labelFor="@+id/etMonto"
-                    android:text="Monto (COP) *" />
+                    android:text="Monto (COP) * · ej. 350000" />
 
                 <EditText
                     android:id="@+id/etMonto"
                     style="@style/Campo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Ej.: 350000"
                     android:inputType="number" />
 
                 <TextView
@@ -100,14 +97,13 @@ android:id="@+id/scrollForm"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:labelFor="@+id/etNotas"
-                    android:text="Notas (opcional)" />
+                    android:text="Notas (opcional) · ej. Observaciones del gasto" />
 
                 <EditText
                     android:id="@+id/etNotas"
                     style="@style/CampoMultilinea"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Observaciones del gasto…"
                     android:inputType="textCapSentences|textMultiLine" />
             </LinearLayout>
 

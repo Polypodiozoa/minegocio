@@ -14,11 +14,13 @@ import android.provider.MediaStore;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowInsets;
 import android.view.WindowInsetsController;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -323,6 +325,71 @@ public abstract class BaseActivity extends android.app.Activity {
         campo.requestFocus();
     }
 
+    /** Pide una cantidad escribiéndola: tocar el número y teclear es más rápido que 20 veces «+». */
+    protected void pedirCantidad(String descripcion, int actual,
+                                 java.util.function.IntConsumer alConfirmar) {
+        LinearLayout caja = new LinearLayout(this);
+        caja.setOrientation(LinearLayout.VERTICAL);
+        int p = Math.round(20 * getResources().getDisplayMetrics().density);
+        caja.setPadding(p, p, p, p);
+        TextView ayuda = new TextView(this);
+        ayuda.setText(descripcion);
+        ayuda.setTextSize(16);
+        ayuda.setTextColor(getColor(R.color.texto_secundario));
+        caja.addView(ayuda);
+        EditText campo = new EditText(this);
+        campo.setInputType(android.text.InputType.TYPE_CLASS_NUMBER);
+        campo.setText(String.valueOf(Math.max(1, actual)));
+        campo.setTextSize(20);
+        campo.setSelectAllOnFocus(true);
+        campo.setContentDescription("Cantidad");
+        campo.setBackgroundResource(R.drawable.fondo_campo);
+        campo.setPadding(p, p / 2, p, p / 2);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        lp.topMargin = p / 2;
+        campo.setLayoutParams(lp);
+        caja.addView(campo);
+
+        AlertDialog d = new AlertDialog.Builder(this)
+                .setTitle("Cantidad")
+                .setView(caja)
+                .setPositiveButton("Usar", null)
+                .setNegativeButton("Cancelar", null)
+                .create();
+        d.setOnShowListener(x -> {
+            agrandarDialogo(d);
+            d.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
+                int n = Formatos.parseInt(campo.getText().toString());
+                if (n < 1) {
+                    campo.setError("Escribe una cantidad mayor que cero.");
+                    campo.requestFocus();
+                    return;
+                }
+                d.dismiss();
+                alConfirmar.accept(n);
+            });
+        });
+        d.show();
+        campo.requestFocus();
+    }
+
+    /** Selector de fecha con opción de quitarla. */
+    protected void elegirFecha(String titulo, long actual, boolean permitirQuitar,
+                               java.util.function.LongConsumer alElegir) {
+        java.util.Calendar c = Fechas.calendario(actual > 0 ? actual : Fechas.ahora());
+        android.app.DatePickerDialog d = new android.app.DatePickerDialog(this,
+                (vista, anio, mes, dia) -> alElegir.accept(Fechas.mediodia(anio, mes, dia)),
+                c.get(java.util.Calendar.YEAR), c.get(java.util.Calendar.MONTH),
+                c.get(java.util.Calendar.DAY_OF_MONTH));
+        d.setTitle(titulo);
+        if (permitirQuitar) {
+            d.setButton(android.content.DialogInterface.BUTTON_NEUTRAL, "Sin fecha",
+                    (dlg, w) -> alElegir.accept(0));
+        }
+        d.show();
+    }
+
     protected void volverConResultado(int codigo, long id) {
         Intent data = new Intent();
         data.putExtra("id", id);
@@ -338,8 +405,7 @@ public abstract class BaseActivity extends android.app.Activity {
     // ------------------------------------------------------- fotos y archivos
 
     protected void tomarFoto(int codigo) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-                && checkSelfPermission(Manifest.permission.CAMERA)
+        if (checkSelfPermission(Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED) {
             fotoPendientePermiso = codigo;
             requestPermissions(new String[]{Manifest.permission.CAMERA}, PERMISO_CAMARA_FOTO);

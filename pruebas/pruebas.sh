@@ -18,6 +18,8 @@ mkdir -p "$SALIDA"
     "$PROY/src/com/polypodiozoa/minegocio/util/Formatos.java" \
     "$PROY/src/com/polypodiozoa/minegocio/util/Fechas.java" \
     "$PROY/src/com/polypodiozoa/minegocio/util/Excel.java" \
+    "$PROY/src/com/polypodiozoa/minegocio/util/Impuestos.java" \
+    "$PROY/src/com/polypodiozoa/minegocio/modelo/Modelo.java" \
     "$PROY/pruebas/Pruebas.java"
 "$JDK/bin/java" -cp "$SALIDA" Pruebas
 

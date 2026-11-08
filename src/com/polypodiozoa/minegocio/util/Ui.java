@@ -52,9 +52,7 @@ public final class Ui {
         fila.setFocusable(true);
         fila.setContentDescription(etiqueta);
         fila.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_YES);
-        if (android.os.Build.VERSION.SDK_INT >= 23) {
-            fila.setForeground(ctx.getDrawable(R.drawable.selector_foreground));
-        }
+        fila.setForeground(ctx.getDrawable(R.drawable.selector_foreground));
 
         ImageView imagen = new ImageView(ctx);
         int tam = dp(ctx, 34);

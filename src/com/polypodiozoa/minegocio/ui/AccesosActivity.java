@@ -75,9 +75,7 @@ public class AccesosActivity extends BaseActivity {
                 ? R.drawable.fondo_tarjeta_admin_seleccionada : R.drawable.fondo_tarjeta_admin);
         caja.setClickable(true);
         caja.setFocusable(true);
-        if (android.os.Build.VERSION.SDK_INT >= 23) {
-            caja.setForeground(getDrawable(R.drawable.selector_foreground));
-        }
+        caja.setForeground(getDrawable(R.drawable.selector_foreground));
 
         TextView inicial = new TextView(this);
         inicial.setText(inicial(u.nombre));

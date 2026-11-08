@@ -32,6 +32,7 @@ import com.polypodiozoa.minegocio.util.QrPago;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Locale;
 
 public class AjustesActivity extends BaseActivity {
 
@@ -42,7 +43,9 @@ public class AjustesActivity extends BaseActivity {
     private static final int PERMISO_CAMARA_QR = 305;
 
     private EditText etNegocio, etNit, etTelefono, etDireccion, etImpuesto;
-    private Switch swImpuesto, swStockNegativo;
+    private Switch swImpuesto, swStockNegativo, swSaldoFavor, swEntregaCompra, swEntregaVenta,
+            swKpiEmpleados;
+    private EditText etRetroDias, etAvisoVence;
     private RadioGroup grupoTexto;
     private RadioGroup grupoEscaner;
     private TextView txtUltimaCopia;
@@ -65,6 +68,12 @@ public class AjustesActivity extends BaseActivity {
         etImpuesto = findViewById(R.id.etImpuesto);
         swImpuesto = findViewById(R.id.swImpuesto);
         swStockNegativo = findViewById(R.id.swStockNegativo);
+        swSaldoFavor = findViewById(R.id.swSaldoFavor);
+        swEntregaCompra = findViewById(R.id.swEntregaCompra);
+        swEntregaVenta = findViewById(R.id.swEntregaVenta);
+        swKpiEmpleados = findViewById(R.id.swKpiEmpleados);
+        etRetroDias = findViewById(R.id.etRetroDias);
+        etAvisoVence = findViewById(R.id.etAvisoVence);
         grupoTexto = findViewById(R.id.grupoTexto);
         grupoEscaner = findViewById(R.id.grupoEscaner);
         txtUltimaCopia = findViewById(R.id.txtUltimaCopia);
@@ -197,7 +206,7 @@ public class AjustesActivity extends BaseActivity {
 
     private boolean esPdf(String ruta) {
         return (mimeArchivoPendiente != null && "application/pdf".equals(mimeArchivoPendiente))
-                || (ruta != null && ruta.toLowerCase().endsWith(".pdf"));
+                || (ruta != null && ruta.toLowerCase(Locale.ROOT).endsWith(".pdf"));
     }
 
     private void procesarQr(String origen) {
@@ -244,8 +253,7 @@ public class AjustesActivity extends BaseActivity {
     }
 
     private void tomarQrConPermiso() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-                && checkSelfPermission(Manifest.permission.CAMERA)
+        if (checkSelfPermission(Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.CAMERA}, PERMISO_CAMARA_QR);
             return;

@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Locale;
 
 /** Datos para pagar en el mostrador, con módulos y orden configurables. */
 public class MostradorActivity extends BaseActivity {
@@ -229,8 +230,7 @@ public class MostradorActivity extends BaseActivity {
     }
 
     private void tomarQrConPermiso() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-                && checkSelfPermission(Manifest.permission.CAMERA)
+        if (checkSelfPermission(Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.CAMERA}, PERMISO_CAMARA_QR);
             return;
@@ -288,7 +288,7 @@ public class MostradorActivity extends BaseActivity {
 
     private boolean esPdf(String ruta) {
         return (mimeArchivoPendiente != null && "application/pdf".equals(mimeArchivoPendiente))
-                || (ruta != null && ruta.toLowerCase().endsWith(".pdf"));
+                || (ruta != null && ruta.toLowerCase(Locale.ROOT).endsWith(".pdf"));
     }
 
     private void procesarQrOnboarding(String origen) {

@@ -7,8 +7,12 @@
         <item name="android:colorAccent">@color/primario</item>
         <item name="android:windowBackground">@color/fondo</item>
         <item name="android:statusBarColor">@color/primario_oscuro</item>
-        <item name="android:navigationBarColor">@color/superficie</item>
-        <item name="android:windowLightNavigationBar">true</item>
+        <!-- Barra de navegación oscura en todas las versiones (API 24+): así los
+             íconos del sistema siempre se ven. `windowLightNavigationBar` solo
+             existe desde API 27 y en 24-26 dejaba íconos blancos sobre fondo
+             claro (barra invisible). Se usa un color oscuro en un solo lugar en
+             vez de duplicar el estilo en values-v27. -->
+        <item name="android:navigationBarColor">@color/primario_oscuro</item>
         <item name="android:textColorPrimary">@color/texto</item>
         <item name="android:textColorSecondary">@color/texto_secundario</item>
         <item name="android:textColorHint">@color/texto_secundario</item>
@@ -25,6 +29,7 @@
         <item name="android:colorAccent">@color/admin_verde</item>
         <item name="android:windowBackground">@color/admin_verde_fondo</item>
         <item name="android:statusBarColor">@color/admin_verde_oscuro</item>
+        <item name="android:navigationBarColor">@color/admin_verde_oscuro</item>
         <item name="android:windowLightStatusBar">false</item>
     </style>
 

@@ -111,7 +111,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:labelFor="@+id/etManual"
-                android:text="Escribir código manualmente" />
+                android:text="Escribir código manualmente · ej. 4006381333931" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -124,7 +124,6 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="Ej.: 4006381333931"
                     android:inputType="text"
                     android:imeOptions="actionDone" />
 

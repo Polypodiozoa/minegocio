@@ -39,14 +39,13 @@ android:id="@+id/scrollForm"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:labelFor="@+id/etNegocio"
-                    android:text="Nombre del negocio" />
+                    android:text="Nombre del negocio · ej. Papelería Somor" />
 
                 <EditText
                     android:id="@+id/etNegocio"
                     style="@style/Campo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Ej.: Papelería Somor"
                     android:inputType="textCapWords" />
 
                 <TextView
@@ -60,14 +59,13 @@ android:id="@+id/scrollForm"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:labelFor="@+id/etNit"
-                    android:text="NIT o documento (opcional)" />
+                    android:text="NIT o documento (opcional) · ej. 900.123.456-7" />
 
                 <EditText
                     android:id="@+id/etNit"
                     style="@style/Campo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Ej.: 900.123.456-7"
                     android:inputType="text" />
 
                 <TextView
@@ -75,14 +73,13 @@ android:id="@+id/scrollForm"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:labelFor="@+id/etTelefono"
-                    android:text="Teléfono o WhatsApp (opcional)" />
+                    android:text="Teléfono o WhatsApp (opcional) · ej. 310 555 2211" />
 
                 <EditText
                     android:id="@+id/etTelefono"
                     style="@style/Campo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Ej.: 310 555 2211"
                     android:inputType="phone" />
 
                 <TextView
@@ -90,14 +87,13 @@ android:id="@+id/scrollForm"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:labelFor="@+id/etDireccion"
-                    android:text="Dirección (opcional)" />
+                    android:text="Dirección (opcional) · ej. Calle 45 #12-30, Bogotá" />
 
                 <EditText
                     android:id="@+id/etDireccion"
                     style="@style/Campo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Ej.: Calle 45 #12-30, Bogotá"
                     android:inputType="textPostalAddress" />
             </LinearLayout>
 
@@ -132,14 +128,13 @@ android:id="@+id/scrollForm"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:labelFor="@+id/etImpuesto"
-                    android:text="Porcentaje de impuesto por defecto" />
+                    android:text="Porcentaje de impuesto por defecto (19)" />
 
                 <EditText
                     android:id="@+id/etImpuesto"
                     style="@style/Campo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="19"
                     android:inputType="numberDecimal"
                     android:maxLength="5" />
 
@@ -164,6 +159,123 @@ android:id="@+id/scrollForm"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Si está desactivado, la app avisa cuando un producto no tiene existencias suficientes." />
+            </LinearLayout>
+
+            <LinearLayout
+                style="@style/Tarjeta"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    style="@style/TituloSeccion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Cómo trabaja tu negocio" />
+
+                <TextView
+                    style="@style/Ayuda"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Cada negocio es distinto. Aquí eliges cómo se comportan las entregas, el fiado y los informes." />
+
+                <Switch
+                    android:id="@+id/swSaldoFavor"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:minHeight="56dp"
+                    android:text="Mostrar saldo a favor aunque no haya"
+                    android:textColor="@color/texto"
+                    android:textSize="18sp" />
+
+                <TextView
+                    style="@style/Ayuda"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Si está desactivado, el saldo a favor solo aparece cuando el cliente tiene plata a favor." />
+
+                <Switch
+                    android:id="@+id/swEntregaCompra"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:minHeight="56dp"
+                    android:text="Las compras pendientes suman existencia"
+                    android:textColor="@color/texto"
+                    android:textSize="18sp" />
+
+                <TextView
+                    style="@style/Ayuda"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Desactivado (recomendado): la mercancía entra al inventario cuando marcas la compra como recibida." />
+
+                <Switch
+                    android:id="@+id/swEntregaVenta"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:minHeight="56dp"
+                    android:text="Las ventas por entregar descuentan existencia"
+                    android:textColor="@color/texto"
+                    android:textSize="18sp" />
+
+                <TextView
+                    style="@style/Ayuda"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Activado (recomendado): la mercancía sale del inventario al venderla, aunque se entregue después." />
+
+                <Switch
+                    android:id="@+id/swKpiEmpleados"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:minHeight="56dp"
+                    android:text="Los empleados ven margen y cartera"
+                    android:textColor="@color/texto"
+                    android:textSize="18sp" />
+
+                <TextView
+                    style="@style/Ayuda"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Desactivado: el margen, la utilidad y la cartera quedan solo para el administrador." />
+
+                <TextView
+                    style="@style/Etiqueta"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:labelFor="@+id/etRetroDias"
+                    android:text="Registrar ventas de días anteriores · 0 = solo hoy, 1 = hoy y ayer, 2 = hasta 30 días" />
+
+                <EditText
+                    android:id="@+id/etRetroDias"
+                    style="@style/Campo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number" />
+
+                <TextView
+                    style="@style/Ayuda"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="0 bloquea las fechas anteriores; 1 permite ayer; 2 permite hasta 30 días solo al administrador." />
+
+                <TextView
+                    style="@style/Etiqueta"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:labelFor="@+id/etAvisoVence"
+                    android:text="Avisar vencimientos con cuántos días (30)" />
+
+                <EditText
+                    android:id="@+id/etAvisoVence"
+                    style="@style/Campo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number" />
             </LinearLayout>
 
             <LinearLayout
@@ -410,14 +522,13 @@ android:id="@+id/scrollForm"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:labelFor="@+id/etBreB"
-                    android:text="Llave Bre-B" />
+                    android:text="Llave Bre-B · ej. @EJEMPLO2567" />
 
                 <EditText
                     android:id="@+id/etBreB"
                     style="@style/Campo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Ej.: @EJEMPLO2567"
                     android:inputType="text" />
 
                 <TextView
@@ -425,14 +536,13 @@ android:id="@+id/scrollForm"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:labelFor="@+id/etCuenta"
-                    android:text="Número de cuenta" />
+                    android:text="Número de cuenta · ej. #4004EJEMPLO2145" />
 
                 <EditText
                     android:id="@+id/etCuenta"
                     style="@style/Campo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Ej.: #4004EJEMPLO2145"
                     android:inputType="text" />
 
                 <TextView
@@ -440,14 +550,13 @@ android:id="@+id/scrollForm"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:labelFor="@+id/etBanco"
-                    android:text="Banco o identificador" />
+                    android:text="Banco o identificador · ej. Bancolombia · 0001" />
 
                 <EditText
                     android:id="@+id/etBanco"
                     style="@style/Campo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Ej.: Bancolombia · 0001"
                     android:inputType="text" />
 
                 <TextView
@@ -455,14 +564,13 @@ android:id="@+id/scrollForm"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:labelFor="@+id/etTitular"
-                    android:text="Titular (opcional)" />
+                    android:text="Titular (opcional) · ej. Papelería Somor" />
 
                 <EditText
                     android:id="@+id/etTitular"
                     style="@style/Campo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Ej.: Papelería Somor"
                     android:inputType="textCapWords" />
 
                 <Button

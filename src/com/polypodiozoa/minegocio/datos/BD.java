@@ -11,10 +11,13 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.polypodiozoa.minegocio.modelo.Modelo;
 import com.polypodiozoa.minegocio.util.Fechas;
 import com.polypodiozoa.minegocio.util.Formatos;
+import com.polypodiozoa.minegocio.util.Impuestos;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Base de datos local SQLite. Todo queda en el dispositivo: la app no pide
@@ -23,7 +26,7 @@ import java.util.List;
 public class BD extends SQLiteOpenHelper {
 
     public static final String ARCHIVO = "minegocio.db";
-    private static final int VERSION = 4;
+    private static final int VERSION = 5;
     private static BD instancia;
 
     public static synchronized BD get(Context contexto) {
@@ -111,6 +114,7 @@ public class BD extends SQLiteOpenHelper {
                 "nombre TEXT NOT NULL," +
                 "rol TEXT NOT NULL DEFAULT 'empleado'," +
                 "menu TEXT," +
+                "permisos TEXT NOT NULL DEFAULT ''," +
                 "activo INTEGER NOT NULL DEFAULT 1," +
                 "creado INTEGER NOT NULL)");
         db.execSQL("CREATE TABLE cajas (" +
@@ -135,6 +139,9 @@ public class BD extends SQLiteOpenHelper {
                 "costo INTEGER NOT NULL DEFAULT 0," +
                 "stock INTEGER NOT NULL DEFAULT 0," +
                 "stock_minimo INTEGER NOT NULL DEFAULT 0," +
+                "impuesto_pct REAL NOT NULL DEFAULT -1," +
+                "vence INTEGER NOT NULL DEFAULT 0," +
+                "dias_aviso INTEGER NOT NULL DEFAULT -1," +
                 "foto TEXT," +
                 "activo INTEGER NOT NULL DEFAULT 1," +
                 "creado INTEGER NOT NULL)");
@@ -173,6 +180,8 @@ public class BD extends SQLiteOpenHelper {
                 "estado TEXT NOT NULL DEFAULT 'pagada'," +
                 "notas TEXT," +
                 "usuario_id INTEGER NOT NULL DEFAULT 0," +
+                "entrega INTEGER NOT NULL DEFAULT 1," +
+                "retroactiva INTEGER NOT NULL DEFAULT 0," +
                 "anulada INTEGER NOT NULL DEFAULT 0," +
                 "creado INTEGER NOT NULL)");
         db.execSQL("CREATE TABLE venta_items (" +
@@ -183,6 +192,9 @@ public class BD extends SQLiteOpenHelper {
                 "cantidad INTEGER NOT NULL DEFAULT 1," +
                 "precio_unitario INTEGER NOT NULL DEFAULT 0," +
                 "costo_unitario INTEGER NOT NULL DEFAULT 0," +
+                "costo_total INTEGER NOT NULL DEFAULT 0," +
+                "impuesto_pct REAL NOT NULL DEFAULT -1," +
+                "impuesto INTEGER NOT NULL DEFAULT 0," +
                 "subtotal INTEGER NOT NULL DEFAULT 0)");
         db.execSQL("CREATE TABLE compras (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -195,6 +207,8 @@ public class BD extends SQLiteOpenHelper {
                 "forma_pago TEXT," +
                 "notas TEXT," +
                 "usuario_id INTEGER NOT NULL DEFAULT 0," +
+                "entrega INTEGER NOT NULL DEFAULT 1," +
+                "fecha_entrega INTEGER NOT NULL DEFAULT 0," +
                 "anulada INTEGER NOT NULL DEFAULT 0," +
                 "creado INTEGER NOT NULL)");
         db.execSQL("CREATE TABLE compra_items (" +
@@ -204,6 +218,7 @@ public class BD extends SQLiteOpenHelper {
                 "descripcion TEXT NOT NULL," +
                 "cantidad INTEGER NOT NULL DEFAULT 1," +
                 "costo_unitario INTEGER NOT NULL DEFAULT 0," +
+                "vencimiento INTEGER NOT NULL DEFAULT 0," +
                 "subtotal INTEGER NOT NULL DEFAULT 0)");
         db.execSQL("CREATE TABLE pagos (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -247,6 +262,8 @@ public class BD extends SQLiteOpenHelper {
         db.execSQL("CREATE INDEX idx_aplicaciones_pago ON pago_aplicaciones(pago_id)");
         db.execSQL("CREATE INDEX idx_aplicaciones_venta ON pago_aplicaciones(venta_id)");
 
+        crearTablasNuevas(db);
+
         long usuario = db.insert("usuarios", null, valoresUsuario("Administrador", "admin", ""));
         ContentValues v = new ContentValues();
         v.put("clave", "usuario_actual_id");
@@ -262,6 +279,131 @@ public class BD extends SQLiteOpenHelper {
         ponerAjuste(db, "impuesto_activado", "1");
         ponerAjuste(db, "permitir_stock_negativo", "0");
         ponerAjuste(db, "ultima_copia", "0");
+        /* Comportamiento de entrega (decide el negocio en Ajustes):
+           una compra pendiente NO suma stock; una venta por entregar SÍ lo descuenta. */
+        ponerAjuste(db, "entrega_compra_suma_stock", "0");
+        ponerAjuste(db, "entrega_venta_descuenta_stock", "1");
+        ponerAjuste(db, "mostrar_saldo_favor", "0");
+        ponerAjuste(db, "kpi_empleados", "0");
+        ponerAjuste(db, "retro_dias", "1");
+        ponerAjuste(db, "aviso_vencimiento_dias", "30");
+        ponerAjuste(db, "categorias_vencen", "Alimentos,Bebidas,Droguería");
+    }
+
+    /** Tablas y índices que llegaron con el esquema 5. También las usa onUpgrade. */
+    private static void crearTablasNuevas(SQLiteDatabase db) {
+        db.execSQL("CREATE TABLE producto_lotes (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "producto_id INTEGER NOT NULL REFERENCES productos(id) ON DELETE CASCADE," +
+                "compra_id INTEGER REFERENCES compras(id)," +
+                "costo_unitario INTEGER NOT NULL DEFAULT 0," +
+                "cantidad_inicial INTEGER NOT NULL DEFAULT 0," +
+                "cantidad_restante INTEGER NOT NULL DEFAULT 0," +
+                "vencimiento INTEGER NOT NULL DEFAULT 0," +
+                "recibido INTEGER NOT NULL DEFAULT 1," +
+                "creado INTEGER NOT NULL)");
+        db.execSQL("CREATE INDEX idx_lotes_producto ON producto_lotes(producto_id, vencimiento, id)");
+        db.execSQL("CREATE INDEX idx_lotes_compra ON producto_lotes(compra_id)");
+        db.execSQL("CREATE TABLE venta_item_lotes (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "item_id INTEGER NOT NULL REFERENCES venta_items(id) ON DELETE CASCADE," +
+                "lote_id INTEGER NOT NULL REFERENCES producto_lotes(id)," +
+                "cantidad INTEGER NOT NULL DEFAULT 0," +
+                "costo_unitario INTEGER NOT NULL DEFAULT 0)");
+        db.execSQL("CREATE INDEX idx_item_lotes_item ON venta_item_lotes(item_id)");
+        db.execSQL("CREATE TABLE cotizaciones (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "numero TEXT NOT NULL," +
+                "fecha INTEGER NOT NULL," +
+                "cliente_id INTEGER REFERENCES clientes(id)," +
+                "cliente_nombre TEXT," +
+                "subtotal INTEGER NOT NULL DEFAULT 0," +
+                "descuento INTEGER NOT NULL DEFAULT 0," +
+                "impuesto_pct REAL NOT NULL DEFAULT 0," +
+                "impuesto INTEGER NOT NULL DEFAULT 0," +
+                "total INTEGER NOT NULL DEFAULT 0," +
+                "valida_hasta INTEGER NOT NULL DEFAULT 0," +
+                "notas TEXT," +
+                "estado TEXT NOT NULL DEFAULT 'abierta'," +
+                "venta_id INTEGER NOT NULL DEFAULT 0," +
+                "usuario_id INTEGER NOT NULL DEFAULT 0," +
+                "creado INTEGER NOT NULL)");
+        db.execSQL("CREATE TABLE cotizacion_items (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "cotizacion_id INTEGER NOT NULL REFERENCES cotizaciones(id) ON DELETE CASCADE," +
+                "producto_id INTEGER REFERENCES productos(id)," +
+                "descripcion TEXT NOT NULL," +
+                "cantidad INTEGER NOT NULL DEFAULT 1," +
+                "precio_unitario INTEGER NOT NULL DEFAULT 0," +
+                "impuesto_pct REAL NOT NULL DEFAULT -1," +
+                "impuesto INTEGER NOT NULL DEFAULT 0," +
+                "subtotal INTEGER NOT NULL DEFAULT 0)");
+        db.execSQL("CREATE INDEX idx_items_cotizacion ON cotizacion_items(cotizacion_id)");
+        db.execSQL("CREATE TABLE agenda (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "tipo TEXT NOT NULL," +
+                "entidad_id INTEGER NOT NULL," +
+                "fecha INTEGER NOT NULL," +
+                "titulo TEXT," +
+                "notas TEXT," +
+                "aviso_dias INTEGER NOT NULL DEFAULT 0," +
+                "recurrente TEXT NOT NULL DEFAULT ''," +
+                "hecho INTEGER NOT NULL DEFAULT 0," +
+                "creado INTEGER NOT NULL)");
+        db.execSQL("CREATE INDEX idx_agenda_fecha ON agenda(fecha)");
+        db.execSQL("CREATE INDEX idx_agenda_entidad ON agenda(tipo, entidad_id)");
+    }
+
+    /** Rellena lo que necesita el esquema 5 sobre datos que ya existen. */
+    private static void migrarEsquema5(SQLiteDatabase db) {
+        for (String sql : new String[]{
+                "ALTER TABLE usuarios ADD COLUMN permisos TEXT NOT NULL DEFAULT ''",
+                "ALTER TABLE productos ADD COLUMN impuesto_pct REAL NOT NULL DEFAULT -1",
+                "ALTER TABLE productos ADD COLUMN vence INTEGER NOT NULL DEFAULT 0",
+                "ALTER TABLE productos ADD COLUMN dias_aviso INTEGER NOT NULL DEFAULT -1",
+                "ALTER TABLE ventas ADD COLUMN entrega INTEGER NOT NULL DEFAULT 1",
+                "ALTER TABLE ventas ADD COLUMN retroactiva INTEGER NOT NULL DEFAULT 0",
+                "ALTER TABLE compras ADD COLUMN entrega INTEGER NOT NULL DEFAULT 1",
+                "ALTER TABLE compras ADD COLUMN fecha_entrega INTEGER NOT NULL DEFAULT 0",
+                "ALTER TABLE venta_items ADD COLUMN costo_total INTEGER NOT NULL DEFAULT 0",
+                "ALTER TABLE venta_items ADD COLUMN impuesto_pct REAL NOT NULL DEFAULT -1",
+                "ALTER TABLE venta_items ADD COLUMN impuesto INTEGER NOT NULL DEFAULT 0",
+                "ALTER TABLE compra_items ADD COLUMN vencimiento INTEGER NOT NULL DEFAULT 0"
+        }) {
+            db.execSQL(sql);
+        }
+        crearTablasNuevas(db);
+        /* El costo real de las ventas anteriores se conserva tal como estaba. */
+        db.execSQL("UPDATE venta_items SET costo_total = costo_unitario * cantidad " +
+                "WHERE costo_total = 0");
+        /* Cada producto con existencia arranca con un lote «Inicial» a su costo actual.
+           Así el stock sigue cuadrando y el historial de precios empieza desde hoy. */
+        db.execSQL("INSERT INTO producto_lotes " +
+                "(producto_id, compra_id, costo_unitario, cantidad_inicial, cantidad_restante, " +
+                " vencimiento, recibido, creado) " +
+                "SELECT id, NULL, costo, stock, stock, 0, 1, creado FROM productos WHERE stock > 0");
+        /* Un producto que se agotó no necesita lote, pero deja su costo como estaba. */
+        for (String clave : new String[]{"entrega_compra_suma_stock", "entrega_venta_descuenta_stock",
+                "mostrar_saldo_favor", "kpi_empleados", "retro_dias", "aviso_vencimiento_dias",
+                "categorias_vencen"}) {
+            ContentValues v = new ContentValues();
+            v.put("clave", clave);
+            v.put("valor", ajustePorDefecto(clave));
+            db.insertWithOnConflict("ajustes", null, v, SQLiteDatabase.CONFLICT_IGNORE);
+        }
+    }
+
+    private static String ajustePorDefecto(String clave) {
+        switch (clave) {
+            case "entrega_compra_suma_stock": return "0";
+            case "entrega_venta_descuenta_stock": return "1";
+            case "mostrar_saldo_favor": return "0";
+            case "kpi_empleados": return "0";
+            case "retro_dias": return "1";
+            case "aviso_vencimiento_dias": return "30";
+            case "categorias_vencen": return "Alimentos,Bebidas,Droguería";
+            default: return "";
+        }
     }
 
     private static void ponerAjuste(SQLiteDatabase db, String clave, String valor) {
@@ -319,6 +461,12 @@ public class BD extends SQLiteOpenHelper {
                     "estado TEXT NOT NULL DEFAULT 'abierta'," +
                     "creado INTEGER NOT NULL)");
             db.execSQL("CREATE INDEX idx_cajas_estado ON cajas(estado, id)");
+        }
+        if (anterior < 5) {
+            /* Lotes, entrega, impuesto por producto, cotizaciones, agenda y permisos.
+               Los datos que ya existen no se tocan: se les añade lo nuevo con valores
+               que reproducen exactamente el comportamiento anterior. */
+            migrarEsquema5(db);
         }
     }
 
@@ -443,6 +591,7 @@ public class BD extends SQLiteOpenHelper {
 
     public long guardarUsuario(Modelo.Usuario u) {
         ContentValues v = valoresUsuario(u.nombre, u.rol, u.menu);
+        v.put("permisos", u.permisos == null ? "" : u.permisos.trim());
         SQLiteDatabase db = getWritableDatabase();
         if (u.id > 0) {
             db.update("usuarios", v, "id=?", new String[]{String.valueOf(u.id)});
@@ -507,6 +656,8 @@ public class BD extends SQLiteOpenHelper {
         u.rol = n(c.getString(c.getColumnIndexOrThrow("rol")));
         int idxMenu = c.getColumnIndex("menu");
         u.menu = idxMenu >= 0 ? n(c.getString(idxMenu)) : "";
+        int idxPermisos = c.getColumnIndex("permisos");
+        u.permisos = idxPermisos >= 0 ? n(c.getString(idxPermisos)) : "";
         u.activo = c.getInt(c.getColumnIndexOrThrow("activo")) != 0;
         u.creado = c.getLong(c.getColumnIndexOrThrow("creado"));
         return u;
@@ -529,6 +680,12 @@ public class BD extends SQLiteOpenHelper {
         p.costo = c.getLong(c.getColumnIndexOrThrow("costo"));
         p.stock = c.getInt(c.getColumnIndexOrThrow("stock"));
         p.stockMinimo = c.getInt(c.getColumnIndexOrThrow("stock_minimo"));
+        int idxImp = c.getColumnIndex("impuesto_pct");
+        p.impuestoPct = idxImp >= 0 ? c.getDouble(idxImp) : -1;
+        int idxVence = c.getColumnIndex("vence");
+        p.vence = idxVence >= 0 && c.getInt(idxVence) != 0;
+        int idxAviso = c.getColumnIndex("dias_aviso");
+        p.diasAviso = idxAviso >= 0 ? c.getInt(idxAviso) : -1;
         p.foto = n(c.getString(c.getColumnIndexOrThrow("foto")));
         p.activo = c.getInt(c.getColumnIndexOrThrow("activo")) != 0;
         p.creado = c.getLong(c.getColumnIndexOrThrow("creado"));
@@ -583,17 +740,78 @@ public class BD extends SQLiteOpenHelper {
         v.put("costo", Math.max(0, p.costo));
         v.put("stock", p.stock);
         v.put("stock_minimo", Math.max(0, p.stockMinimo));
+        v.put("impuesto_pct", p.impuestoPct < 0 ? -1 : p.impuestoPct);
+        v.put("vence", p.vence ? 1 : 0);
+        v.put("dias_aviso", p.diasAviso);
         v.put("foto", p.foto == null ? "" : p.foto);
         v.put("activo", p.activo ? 1 : 0);
         if (p.creado == 0) p.creado = Fechas.ahora();
         v.put("creado", p.creado);
         SQLiteDatabase db = getWritableDatabase();
         if (p.id > 0) {
+            long anterior = 0;
+            try (Cursor c = db.rawQuery("SELECT stock FROM productos WHERE id=?",
+                    new String[]{String.valueOf(p.id)})) {
+                if (c.moveToFirst()) anterior = c.getLong(0);
+            }
             db.update("productos", v, "id=?", new String[]{String.valueOf(p.id)});
+            /* Si la ficha cambió la existencia a mano, los lotes se ajustan para
+               que el stock siga siendo exactamente la suma de lo que hay. */
+            if (p.stock != anterior) {
+                ajustarStockConLotes(db, p.id, p.stock, p.costo);
+            }
             return p.id;
         }
         p.id = db.insert("productos", null, v);
+        if (p.stock > 0) {
+            insertarLote(db, p.id, 0, p.costo, p.stock, 0, true, p.creado);
+        }
         return p.id;
+    }
+
+    /** Crea un lote. Es la única puerta por la que entra mercancía al stock. */
+    private void insertarLote(SQLiteDatabase db, long productoId, long compraId, long costo,
+                              int cantidad, long vencimiento, boolean recibido, long creado) {
+        ContentValues lote = new ContentValues();
+        lote.put("producto_id", productoId);
+        if (compraId > 0) lote.put("compra_id", compraId);
+        lote.put("costo_unitario", Math.max(0, costo));
+        lote.put("cantidad_inicial", cantidad);
+        lote.put("cantidad_restante", recibido ? cantidad : 0);
+        lote.put("vencimiento", vencimiento);
+        lote.put("recibido", recibido ? 1 : 0);
+        lote.put("creado", creado == 0 ? Fechas.ahora() : creado);
+        db.insert("producto_lotes", null, lote);
+    }
+
+    /** Lleva el stock a una cifra exacta creando o consumiendo un lote de ajuste. */
+    private void ajustarStockConLotes(SQLiteDatabase db, long productoId, int nuevoStock, long costo) {
+        long sum = 0;
+        try (Cursor c = db.rawQuery(
+                "SELECT COALESCE(SUM(cantidad_restante),0) FROM producto_lotes " +
+                        "WHERE producto_id=? AND recibido=1", new String[]{String.valueOf(productoId)})) {
+            if (c.moveToFirst()) sum = c.getLong(0);
+        }
+        long delta = nuevoStock - sum;
+        if (delta > 0) {
+            insertarLote(db, productoId, 0, costo, (int) delta, 0, true, Fechas.ahora());
+        } else if (delta < 0) {
+            long porQuitar = -delta;
+            try (Cursor c = db.rawQuery(
+                    "SELECT id, cantidad_restante FROM producto_lotes " +
+                            "WHERE producto_id=? AND cantidad_restante>0 AND recibido=1 " +
+                            "ORDER BY CASE WHEN vencimiento=0 THEN 1 ELSE 0 END, vencimiento DESC, id DESC",
+                    new String[]{String.valueOf(productoId)})) {
+                while (c.moveToNext() && porQuitar > 0) {
+                    int quitar = (int) Math.min(porQuitar, c.getInt(1));
+                    db.execSQL("UPDATE producto_lotes SET cantidad_restante=cantidad_restante-? WHERE id=?",
+                            new Object[]{quitar, c.getLong(0)});
+                    porQuitar -= quitar;
+                }
+            }
+        }
+        db.execSQL("UPDATE productos SET stock=? WHERE id=?",
+                new Object[]{nuevoStock, productoId});
     }
 
     public int referenciasProducto(long id) {
@@ -606,14 +824,15 @@ public class BD extends SQLiteOpenHelper {
         if (referenciasProducto(id) > 0) return false;
         SQLiteDatabase db = getWritableDatabase();
         db.delete("adjuntos", "entidad=? AND entidad_id=?", new String[]{"producto", String.valueOf(id)});
+        db.delete("producto_lotes", "producto_id=?", new String[]{String.valueOf(id)});
         db.delete("productos", "id=?", new String[]{String.valueOf(id)});
         return true;
     }
 
     public void ajustarStock(long id, int nuevoStock) {
-        ContentValues v = new ContentValues();
-        v.put("stock", nuevoStock);
-        getWritableDatabase().update("productos", v, "id=?", new String[]{String.valueOf(id)});
+        SQLiteDatabase db = getWritableDatabase();
+        Modelo.Producto p = producto(id);
+        ajustarStockConLotes(db, id, nuevoStock, p == null ? 0 : p.costo);
     }
 
     public List<Modelo.Producto> productosStockBajo(int limite) {
@@ -849,6 +1068,10 @@ public class BD extends SQLiteOpenHelper {
         v.saldo = "credito".equals(v.estado) ? Math.max(0, v.total - v.abonado) : 0;
         v.notas = n(c.getString(c.getColumnIndexOrThrow("notas")));
         v.anulada = c.getInt(c.getColumnIndexOrThrow("anulada")) != 0;
+        int idxEntrega = c.getColumnIndex("entrega");
+        v.entregada = idxEntrega < 0 || c.getInt(idxEntrega) != 0;
+        int idxRetro = c.getColumnIndex("retroactiva");
+        v.retroactiva = idxRetro >= 0 && c.getInt(idxRetro) != 0;
         int idxUsuario = c.getColumnIndex("usuario_id");
         v.usuarioId = idxUsuario >= 0 ? c.getLong(idxUsuario) : 0;
         int idx = c.getColumnIndex("cliente_nombre");
@@ -929,6 +1152,13 @@ public class BD extends SQLiteOpenHelper {
                 i.cantidad = c.getInt(c.getColumnIndexOrThrow("cantidad"));
                 i.precioUnitario = c.getLong(c.getColumnIndexOrThrow("precio_unitario"));
                 i.costoUnitario = c.getLong(c.getColumnIndexOrThrow("costo_unitario"));
+                int idxCostoTotal = c.getColumnIndex("costo_total");
+                i.costoTotal = idxCostoTotal >= 0
+                        ? c.getLong(idxCostoTotal) : i.costoUnitario * i.cantidad;
+                int idxPct = c.getColumnIndex("impuesto_pct");
+                i.impuestoPct = idxPct >= 0 ? c.getDouble(idxPct) : -1;
+                int idxImp = c.getColumnIndex("impuesto");
+                i.impuesto = idxImp >= 0 ? c.getLong(idxImp) : 0;
                 i.subtotal = c.getLong(c.getColumnIndexOrThrow("subtotal"));
                 lista.add(i);
             }
@@ -941,6 +1171,7 @@ public class BD extends SQLiteOpenHelper {
         db.beginTransaction();
         try {
             if (v.fecha == 0) v.fecha = Fechas.ahora();
+            boolean descuenta = v.entregada || ventaDescuentaStock();
             ContentValues cv = new ContentValues();
             cv.put("fecha", v.fecha);
             if (v.clienteId > 0) cv.put("cliente_id", v.clienteId);
@@ -956,6 +1187,8 @@ public class BD extends SQLiteOpenHelper {
             cv.put("estado", v.estado);
             cv.put("notas", v.notas);
             cv.put("usuario_id", v.usuarioId > 0 ? v.usuarioId : usuarioActualId());
+            cv.put("entrega", v.entregada ? 1 : 0);
+            cv.put("retroactiva", v.retroactiva ? 1 : 0);
             cv.put("anulada", 0);
             cv.put("creado", Fechas.ahora());
             v.id = db.insert("ventas", null, cv);
@@ -967,12 +1200,36 @@ public class BD extends SQLiteOpenHelper {
                 ci.put("descripcion", i.descripcion);
                 ci.put("cantidad", i.cantidad);
                 ci.put("precio_unitario", i.precioUnitario);
-                ci.put("costo_unitario", i.costoUnitario);
+                ci.put("impuesto_pct", i.impuestoPct);
+                ci.put("impuesto", i.impuesto);
                 ci.put("subtotal", i.subtotal);
-                db.insert("venta_items", null, ci);
+                ci.put("costo_total", 0);
+                ci.put("costo_unitario", i.costoUnitario);
+                i.id = db.insert("venta_items", null, ci);
+                /* El costo de la línea sale de los lotes que se consumen, no del
+                   costo actual del producto: así la utilidad de hoy no cambia
+                   cuando el proveedor sube el precio mañana. La traza se anota
+                   sobre la línea ya insertada. */
+                long costoLinea = i.costoTotal;
                 if (i.productoId > 0) {
-                    db.execSQL("UPDATE productos SET stock=stock-? WHERE id=?",
-                            new Object[]{i.cantidad, i.productoId});
+                    costoLinea = descuenta
+                            ? consumirLotes(db, i, true)
+                            : costoLotesDisponibles(db, i.productoId, i.cantidad);
+                }
+                i.costoTotal = costoLinea;
+                ContentValues costo = new ContentValues();
+                costo.put("costo_total", costoLinea);
+                costo.put("costo_unitario", i.cantidad > 0
+                        ? Math.round((double) costoLinea / i.cantidad) : i.costoUnitario);
+                db.update("venta_items", costo, "id=?", new String[]{String.valueOf(i.id)});
+                if (i.productoId > 0 && descuenta) {
+                    recalcularStock(db, i.productoId);
+                    /* Venta por encima de la existencia: el stock queda negativo,
+                       como el negocio lo permitió en Ajustes. */
+                    if (i.faltante > 0) {
+                        db.execSQL("UPDATE productos SET stock=stock-? WHERE id=?",
+                                new Object[]{i.faltante, i.productoId});
+                    }
                 }
             }
             insertarAdjuntos(db, "venta", v.id, adjuntos);
@@ -998,9 +1255,17 @@ public class BD extends SQLiteOpenHelper {
                 return;
             }
             for (Modelo.Item i : itemsVenta(id)) {
-                if (i.productoId > 0) {
-                    db.execSQL("UPDATE productos SET stock=stock+? WHERE id=?",
-                            new Object[]{i.cantidad, i.productoId});
+                if (i.productoId <= 0) continue;
+                boolean devuelto = devolverLotes(db, i.id);
+                if (!devuelto) {
+                    /* Venta anterior al esquema 5 sin traza de lote: la cantidad
+                       vuelve a un lote de ajuste para que el stock siga cuadrando. */
+                    Modelo.Producto p = producto(i.productoId);
+                    int actual = p == null ? 0 : p.stock;
+                    ajustarStockConLotes(db, i.productoId, actual + i.cantidad,
+                            p == null ? 0 : p.costo);
+                } else {
+                    recalcularStock(db, i.productoId);
                 }
             }
             ContentValues cv = new ContentValues();
@@ -1013,6 +1278,254 @@ public class BD extends SQLiteOpenHelper {
         } finally {
             db.endTransaction();
         }
+    }
+
+    /** Marca una venta «por entregar» como entregada y descuenta el stock en ese momento. */
+    public boolean marcarVentaEntregada(long ventaId) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.beginTransaction();
+        try {
+            Modelo.Venta v = venta(ventaId);
+            if (v == null || v.anulada || v.entregada) {
+                db.setTransactionSuccessful();
+                return false;
+            }
+            long costoTotal = 0;
+            for (Modelo.Item i : itemsVenta(ventaId)) {
+                long costo = i.costoTotal;
+                if (i.productoId > 0) {
+                    costo = consumirLotes(db, i, true);
+                    recalcularStock(db, i.productoId);
+                    if (i.faltante > 0) {
+                        db.execSQL("UPDATE productos SET stock=stock-? WHERE id=?",
+                                new Object[]{i.faltante, i.productoId});
+                    }
+                }
+                costoTotal += costo;
+                ContentValues ci = new ContentValues();
+                ci.put("costo_total", costo);
+                ci.put("costo_unitario", i.cantidad > 0
+                        ? Math.round((double) costo / i.cantidad) : i.costoUnitario);
+                db.update("venta_items", ci, "id=?", new String[]{String.valueOf(i.id)});
+            }
+            ContentValues cv = new ContentValues();
+            cv.put("entrega", 1);
+            cv.put("costo", costoTotal);
+            db.update("ventas", cv, "id=?", new String[]{String.valueOf(ventaId)});
+            db.setTransactionSuccessful();
+            return true;
+        } finally {
+            db.endTransaction();
+        }
+    }
+
+    /** Ventas registradas como «por entregar». */
+    public List<Modelo.Venta> ventasPorEntregar() {
+        List<Modelo.Venta> lista = new ArrayList<>();
+        try (Cursor c = getReadableDatabase().rawQuery(
+                SQL_VENTA + "WHERE v.anulada=0 AND v.entrega=0 ORDER BY v.fecha, v.id", null)) {
+            while (c.moveToNext()) lista.add(leerVenta(c));
+        }
+        return lista;
+    }
+
+    public boolean ventaDescuentaStock() {
+        return ajusteSi("entrega_venta_descuenta_stock", true);
+    }
+
+    // ------------------------------------------------------------------ lotes
+
+    /**
+     * Consume cantidad de los lotes del producto, primero lo que vence antes y,
+     * entre iguales, lo más viejo. Devuelve el costo real consumido.
+     */
+    private long consumirLotes(SQLiteDatabase db, Modelo.Item item, boolean anotar) {
+        long productoId = item.productoId;
+        int falta = item.cantidad;
+        long costo = 0;
+        item.faltante = 0;
+        try (Cursor c = db.rawQuery(
+                "SELECT id, costo_unitario, cantidad_restante FROM producto_lotes " +
+                        "WHERE producto_id=? AND cantidad_restante>0 AND recibido=1 " +
+                        "ORDER BY CASE WHEN vencimiento=0 THEN 1 ELSE 0 END, vencimiento, id",
+                new String[]{String.valueOf(productoId)})) {
+            while (c.moveToNext() && falta > 0) {
+                long loteId = c.getLong(0);
+                long costoUnitario = c.getLong(1);
+                int restante = c.getInt(2);
+                int tomar = Math.min(falta, restante);
+                db.execSQL("UPDATE producto_lotes SET cantidad_restante=cantidad_restante-? WHERE id=?",
+                        new Object[]{tomar, loteId});
+                costo += costoUnitario * tomar;
+                falta -= tomar;
+                if (anotar && item.id > 0) {
+                    ContentValues cv = new ContentValues();
+                    cv.put("item_id", item.id);
+                    cv.put("lote_id", loteId);
+                    cv.put("cantidad", tomar);
+                    cv.put("costo_unitario", costoUnitario);
+                    db.insert("venta_item_lotes", null, cv);
+                }
+            }
+        }
+        /* Si el lote no alcanza (venta sin stock permitida), el resto se costea
+           con el costo actual del producto; nadie queda con costo cero. */
+        if (falta > 0) {
+            Modelo.Producto p = producto(productoId);
+            long costoUnitario = p == null ? 0 : p.costo;
+            costo += costoUnitario * falta;
+            item.faltante = falta;
+        }
+        return costo;
+    }
+
+    /** Costo estimado sin tocar los lotes (para ventas que aún no descuentan stock). */
+    private long costoLotesDisponibles(SQLiteDatabase db, long productoId, int cantidad) {
+        int falta = cantidad;
+        long costo = 0;
+        try (Cursor c = db.rawQuery(
+                "SELECT costo_unitario, cantidad_restante FROM producto_lotes " +
+                        "WHERE producto_id=? AND cantidad_restante>0 AND recibido=1 " +
+                        "ORDER BY CASE WHEN vencimiento=0 THEN 1 ELSE 0 END, vencimiento, id",
+                new String[]{String.valueOf(productoId)})) {
+            while (c.moveToNext() && falta > 0) {
+                int tomar = Math.min(falta, c.getInt(1));
+                costo += c.getLong(0) * tomar;
+                falta -= tomar;
+            }
+        }
+        if (falta > 0) {
+            Modelo.Producto p = producto(productoId);
+            costo += (p == null ? 0 : p.costo) * falta;
+        }
+        return costo;
+    }
+
+    /** Devuelve a sus lotes lo que consumió una línea de venta. */
+    private boolean devolverLotes(SQLiteDatabase db, long itemId) {
+        boolean devolvio = false;
+        try (Cursor c = db.rawQuery(
+                "SELECT lote_id, cantidad FROM venta_item_lotes WHERE item_id=?",
+                new String[]{String.valueOf(itemId)})) {
+            while (c.moveToNext()) {
+                db.execSQL("UPDATE producto_lotes SET cantidad_restante=cantidad_restante+? WHERE id=?",
+                        new Object[]{c.getInt(1), c.getLong(0)});
+                devolvio = true;
+            }
+        }
+        if (devolvio) db.delete("venta_item_lotes", "item_id=?", new String[]{String.valueOf(itemId)});
+        return devolvio;
+    }
+
+    /** El stock del producto es la suma de sus lotes; nadie más lo escribe. */
+    private void recalcularStock(SQLiteDatabase db, long productoId) {
+        long total = 0;
+        try (Cursor c = db.rawQuery(
+                "SELECT COALESCE(SUM(cantidad_restante),0), COUNT(*) FROM producto_lotes " +
+                        "WHERE producto_id=? AND recibido=1",
+                new String[]{String.valueOf(productoId)})) {
+            if (!c.moveToFirst() || c.getInt(1) == 0) return; // sin lotes: se respeta el stock anterior
+            total = c.getLong(0);
+        }
+        db.execSQL("UPDATE productos SET stock=? WHERE id=?",
+                new Object[]{total, productoId});
+    }
+
+    public List<Modelo.Lote> lotes(long productoId) {
+        List<Modelo.Lote> lista = new ArrayList<>();
+        try (Cursor c = getReadableDatabase().rawQuery(
+                "SELECT * FROM producto_lotes WHERE producto_id=? AND cantidad_restante>0 " +
+                        "ORDER BY CASE WHEN vencimiento=0 THEN 1 ELSE 0 END, vencimiento, id",
+                new String[]{String.valueOf(productoId)})) {
+            while (c.moveToNext()) {
+                Modelo.Lote l = new Modelo.Lote();
+                l.id = c.getLong(c.getColumnIndexOrThrow("id"));
+                l.productoId = c.getLong(c.getColumnIndexOrThrow("producto_id"));
+                l.compraId = c.getLong(c.getColumnIndexOrThrow("compra_id"));
+                l.costoUnitario = c.getLong(c.getColumnIndexOrThrow("costo_unitario"));
+                l.cantidadInicial = c.getInt(c.getColumnIndexOrThrow("cantidad_inicial"));
+                l.restante = c.getInt(c.getColumnIndexOrThrow("cantidad_restante"));
+                l.vencimiento = c.getLong(c.getColumnIndexOrThrow("vencimiento"));
+                l.recibido = c.getInt(c.getColumnIndexOrThrow("recibido")) != 0;
+                l.creado = c.getLong(c.getColumnIndexOrThrow("creado"));
+                lista.add(l);
+            }
+        }
+        return lista;
+    }
+
+    /** Costo promedio ponderado de lo que hoy queda en los lotes. */
+    public long costoPromedio(long productoId) {
+        long unidades = 0;
+        long valor = 0;
+        try (Cursor c = getReadableDatabase().rawQuery(
+                "SELECT COALESCE(SUM(cantidad_restante),0), " +
+                        "COALESCE(SUM(cantidad_restante * costo_unitario),0) " +
+                        "FROM producto_lotes WHERE producto_id=? AND cantidad_restante>0 AND recibido=1",
+                new String[]{String.valueOf(productoId)})) {
+            if (c.moveToFirst()) {
+                unidades = c.getLong(0);
+                valor = c.getLong(1);
+            }
+        }
+        return unidades > 0 ? Math.round((double) valor / unidades) : 0;
+    }
+
+    /** Historial de compras del producto, con la variación frente a la anterior. */
+    public List<Modelo.PrecioCompra> historialPrecios(long productoId, int limite) {
+        List<Modelo.PrecioCompra> lista = new ArrayList<>();
+        try (Cursor c = getReadableDatabase().rawQuery(
+                "SELECT c.id, c.fecha, ci.cantidad, ci.costo_unitario, " +
+                        "COALESCE(p.nombre,'') AS proveedor, COALESCE(ci.vencimiento,0) " +
+                        "FROM compra_items ci JOIN compras c ON c.id=ci.compra_id " +
+                        "LEFT JOIN proveedores p ON p.id=c.proveedor_id " +
+                        "WHERE ci.producto_id=? AND c.anulada=0 AND ci.costo_unitario>0 " +
+                        "ORDER BY c.fecha DESC, ci.id DESC LIMIT ?",
+                new String[]{String.valueOf(productoId), String.valueOf(limite)})) {
+            long anterior = 0;
+            while (c.moveToNext()) {
+                Modelo.PrecioCompra pc = new Modelo.PrecioCompra();
+                pc.compraId = c.getLong(0);
+                pc.fecha = c.getLong(1);
+                pc.cantidad = c.getInt(2);
+                pc.costoUnitario = c.getLong(3);
+                pc.proveedor = n(c.getString(4));
+                pc.vencimiento = c.getLong(5);
+                pc.variacion = anterior > 0
+                        ? (int) Math.round((pc.costoUnitario - anterior) * 100.0 / anterior) : 0;
+                anterior = pc.costoUnitario;
+                lista.add(pc);
+            }
+        }
+        return lista;
+    }
+
+    /** Lotes que vencen dentro de los próximos días (0 = sin límite de días). */
+    public List<Modelo.Lote> lotesPorVencer(int dias) {
+        List<Modelo.Lote> lista = new ArrayList<>();
+        long limite = Fechas.ahora() + Math.max(0, dias) * 24L * 60L * 60L * 1000L;
+        try (Cursor c = getReadableDatabase().rawQuery(
+                "SELECT l.*, pr.nombre AS producto_nombre FROM producto_lotes l " +
+                        "JOIN productos pr ON pr.id=l.producto_id " +
+                        "WHERE l.cantidad_restante>0 AND l.recibido=1 AND l.vencimiento>0 " +
+                        "AND l.vencimiento<=? AND pr.activo=1 ORDER BY l.vencimiento, pr.nombre",
+                new String[]{String.valueOf(limite)})) {
+            while (c.moveToNext()) {
+                Modelo.Lote l = new Modelo.Lote();
+                l.id = c.getLong(c.getColumnIndexOrThrow("id"));
+                l.productoId = c.getLong(c.getColumnIndexOrThrow("producto_id"));
+                l.costoUnitario = c.getLong(c.getColumnIndexOrThrow("costo_unitario"));
+                l.cantidadInicial = c.getInt(c.getColumnIndexOrThrow("cantidad_inicial"));
+                l.restante = c.getInt(c.getColumnIndexOrThrow("cantidad_restante"));
+                l.vencimiento = c.getLong(c.getColumnIndexOrThrow("vencimiento"));
+                lista.add(l);
+            }
+        }
+        return lista;
+    }
+
+    public int diasAvisoVencimiento() {
+        return (int) ajusteNumero("aviso_vencimiento_dias", 30);
     }
 
     // ----------------------------------------------------------------- compras
@@ -1029,6 +1542,10 @@ public class BD extends SQLiteOpenHelper {
         p.formaPago = n(c.getString(c.getColumnIndexOrThrow("forma_pago")));
         p.notas = n(c.getString(c.getColumnIndexOrThrow("notas")));
         p.anulada = c.getInt(c.getColumnIndexOrThrow("anulada")) != 0;
+        int idxEntrega = c.getColumnIndex("entrega");
+        p.recibida = idxEntrega < 0 || c.getInt(idxEntrega) != 0;
+        int idxFechaEntrega = c.getColumnIndex("fecha_entrega");
+        p.fechaEntrega = idxFechaEntrega >= 0 ? c.getLong(idxFechaEntrega) : 0;
         int idxUsuario = c.getColumnIndex("usuario_id");
         p.usuarioId = idxUsuario >= 0 ? c.getLong(idxUsuario) : 0;
         int idx = c.getColumnIndex("proveedor_nombre");
@@ -1097,6 +1614,8 @@ public class BD extends SQLiteOpenHelper {
                 i.cantidad = c.getInt(c.getColumnIndexOrThrow("cantidad"));
                 i.costoUnitario = c.getLong(c.getColumnIndexOrThrow("costo_unitario"));
                 i.precioUnitario = i.costoUnitario;
+                int idxVence = c.getColumnIndex("vencimiento");
+                i.vencimiento = idxVence >= 0 ? c.getLong(idxVence) : 0;
                 i.subtotal = c.getLong(c.getColumnIndexOrThrow("subtotal"));
                 lista.add(i);
             }
@@ -1120,9 +1639,14 @@ public class BD extends SQLiteOpenHelper {
             cv.put("forma_pago", compra.formaPago);
             cv.put("notas", compra.notas);
             cv.put("usuario_id", compra.usuarioId > 0 ? compra.usuarioId : usuarioActualId());
+            cv.put("entrega", compra.recibida ? 1 : 0);
+            cv.put("fecha_entrega", compra.fechaEntrega);
             cv.put("anulada", 0);
             cv.put("creado", Fechas.ahora());
             compra.id = db.insert("compras", null, cv);
+            /* Una compra pendiente no suma existencias salvo que el negocio lo
+               haya pedido en Ajustes: la mercancía que no ha llegado no está. */
+            boolean entra = compra.recibida || compraSumaStockInmediato();
             for (Modelo.Item i : items) {
                 ContentValues ci = new ContentValues();
                 ci.put("compra_id", compra.id);
@@ -1131,15 +1655,27 @@ public class BD extends SQLiteOpenHelper {
                 ci.put("descripcion", i.descripcion);
                 ci.put("cantidad", i.cantidad);
                 ci.put("costo_unitario", i.costoUnitario);
+                ci.put("vencimiento", i.vencimiento);
                 ci.put("subtotal", i.subtotal);
                 db.insert("compra_items", null, ci);
                 if (i.productoId > 0) {
-                    db.execSQL("UPDATE productos SET stock=stock+? WHERE id=?",
-                            new Object[]{i.cantidad, i.productoId});
+                    /* Cada línea de compra es un lote: su costo y su vencimiento
+                       quedan guardados para siempre, aunque el precio cambie. */
+                    ContentValues lote = new ContentValues();
+                    lote.put("producto_id", i.productoId);
+                    lote.put("compra_id", compra.id);
+                    lote.put("costo_unitario", Math.max(0, i.costoUnitario));
+                    lote.put("cantidad_inicial", i.cantidad);
+                    lote.put("cantidad_restante", entra ? i.cantidad : 0);
+                    lote.put("vencimiento", i.vencimiento);
+                    lote.put("recibido", entra ? 1 : 0);
+                    lote.put("creado", compra.fecha);
+                    db.insert("producto_lotes", null, lote);
                     if (i.costoUnitario > 0) {
                         db.execSQL("UPDATE productos SET costo=? WHERE id=?",
                                 new Object[]{i.costoUnitario, i.productoId});
                     }
+                    recalcularStock(db, i.productoId);
                 }
             }
             insertarAdjuntos(db, "compra", compra.id, adjuntos);
@@ -1173,8 +1709,11 @@ public class BD extends SQLiteOpenHelper {
             }
             for (Modelo.Item i : itemsCompra(id)) {
                 if (i.productoId > 0) {
-                    db.execSQL("UPDATE productos SET stock=stock-? WHERE id=?",
-                            new Object[]{i.cantidad, i.productoId});
+                    /* Lo que quede de los lotes de esta compra se anula; lo ya
+                       vendido sigue vendido y conserva su costo histórico. */
+                    db.execSQL("UPDATE producto_lotes SET cantidad_restante=0 " +
+                            "WHERE compra_id=? AND producto_id=?", new Object[]{id, i.productoId});
+                    recalcularStock(db, i.productoId);
                     /* El costo del producto lo puso esta compra: al anularla vuelve
                        al de la última compra que siga vigente. */
                     long costo = costoUltimaCompra(db, i.productoId, id);
@@ -1191,6 +1730,49 @@ public class BD extends SQLiteOpenHelper {
         } finally {
             db.endTransaction();
         }
+    }
+
+    // ------------------------------------------------------------------- pagos
+
+    /** Marca una compra pendiente como recibida: hasta ahora entra la mercancía al stock. */
+    public boolean marcarCompraRecibida(long compraId) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.beginTransaction();
+        try {
+            Modelo.Compra c = compra(compraId);
+            if (c == null || c.anulada || c.recibida) {
+                db.setTransactionSuccessful();
+                return false;
+            }
+            db.execSQL("UPDATE producto_lotes SET recibido=1, " +
+                            "cantidad_restante=cantidad_inicial " +
+                            "WHERE compra_id=? AND cantidad_restante=0",
+                    new Object[]{compraId});
+            ContentValues cv = new ContentValues();
+            cv.put("entrega", 1);
+            cv.put("fecha_entrega", Fechas.ahora());
+            db.update("compras", cv, "id=?", new String[]{String.valueOf(compraId)});
+            for (Modelo.Item i : itemsCompra(compraId)) {
+                if (i.productoId > 0) recalcularStock(db, i.productoId);
+            }
+            db.setTransactionSuccessful();
+            return true;
+        } finally {
+            db.endTransaction();
+        }
+    }
+
+    public List<Modelo.Compra> comprasPorRecibir() {
+        List<Modelo.Compra> lista = new ArrayList<>();
+        try (Cursor c = getReadableDatabase().rawQuery(
+                SQL_COMPRA + "WHERE c.anulada=0 AND c.entrega=0 ORDER BY c.fecha, c.id", null)) {
+            while (c.moveToNext()) lista.add(leerCompra(c));
+        }
+        return lista;
+    }
+
+    public boolean compraSumaStockInmediato() {
+        return ajusteSi("entrega_compra_suma_stock", false);
     }
 
     // ------------------------------------------------------------------- pagos
@@ -1702,6 +2284,10 @@ public class BD extends SQLiteOpenHelper {
         r.gastosTotal = suma("SELECT COALESCE(SUM(monto),0) FROM gastos WHERE fecha>=? AND fecha<?", d, h);
         r.utilidadBruta = r.ventasTotal - r.impuestoVentas - r.costoVentas;
         r.utilidadNeta = r.utilidadBruta - r.gastosTotal;
+        r.ventasCredito = suma("SELECT COALESCE(SUM(total),0) FROM ventas " +
+                "WHERE anulada=0 AND estado='credito' AND fecha>=? AND fecha<?", d, h);
+        r.productosActivos = (int) contar("SELECT COUNT(*) FROM productos WHERE activo=1");
+        r.productosAgotados = (int) contar("SELECT COUNT(*) FROM productos WHERE activo=1 AND stock<=0");
         r.porCobrar = porCobrar();
         long hoy = Fechas.inicioDia(Fechas.ahora());
         long enSiete = hoy + 8L * 24L * 60L * 60L * 1000L;
@@ -1743,7 +2329,7 @@ public class BD extends SQLiteOpenHelper {
         List<Modelo.ProductoVendido> lista = new ArrayList<>();
         try (Cursor c = getReadableDatabase().rawQuery(
                 "SELECT vi.producto_id, SUM(vi.cantidad), SUM(vi.subtotal), " +
-                        "SUM(vi.costo_unitario * vi.cantidad) " +
+                        "SUM(vi.costo_total), COUNT(DISTINCT vi.venta_id) " +
                         "FROM venta_items vi JOIN ventas v ON v.id=vi.venta_id " +
                         "WHERE v.anulada=0 AND v.fecha>=? AND v.fecha<? AND vi.producto_id IS NOT NULL " +
                         "GROUP BY vi.producto_id",
@@ -1754,6 +2340,7 @@ public class BD extends SQLiteOpenHelper {
                 p.cantidad = c.getLong(1);
                 p.total = c.getLong(2);
                 p.costo = c.getLong(3);
+                p.transacciones = c.getLong(4);
                 lista.add(p);
             }
         }
@@ -1787,11 +2374,16 @@ public class BD extends SQLiteOpenHelper {
             /* Hijos antes que padres: pago_aplicaciones cae por CASCADE con pagos,
                pero su FK a ventas no tiene CASCADE, así que ventas va después. */
             db.delete("adjuntos", null, null);
+            db.delete("venta_item_lotes", null, null);
             db.delete("venta_items", null, null);
             db.delete("compra_items", null, null);
             db.delete("pagos", null, null);
             db.delete("ventas", null, null);
             db.delete("compras", null, null);
+            db.delete("producto_lotes", null, null);
+            db.delete("cotizacion_items", null, null);
+            db.delete("cotizaciones", null, null);
+            db.delete("agenda", null, null);
             db.delete("gastos", null, null);
             db.delete("productos", null, null);
             db.delete("clientes", null, null);
@@ -1966,19 +2558,419 @@ public class BD extends SQLiteOpenHelper {
         return i;
     }
 
-    public static void calcularVenta(Modelo.Venta v, List<Modelo.Item> items) {
+    // ---------------------------------------------------------------- permisos
+
+    /** ¿Esta cuenta puede abrir este módulo? Vacío = todos; el administrador ve todo. */
+    public boolean permite(Modelo.Usuario u, String modulo) {
+        if (u == null || modulo == null || modulo.isEmpty()) return true;
+        if (u.esAdministrador()) return true;
+        String permisos = u.permisos == null ? "" : u.permisos.trim();
+        if (permisos.isEmpty()) return true;
+        for (String p : permisos.split(",")) {
+            if (p.trim().equalsIgnoreCase(modulo)) return true;
+        }
+        return false;
+    }
+
+    public boolean permite(String modulo) {
+        return permite(usuarioActual(), modulo);
+    }
+
+    public boolean kpisParaEmpleados() {
+        return ajusteSi("kpi_empleados", false);
+    }
+
+    // ------------------------------------------------------------ cotizaciones
+
+    public static void calcularCotizacion(Modelo.Cotizacion c, List<Modelo.Item> items) {
         long subtotal = 0;
+        for (Modelo.Item i : items) {
+            i.subtotal = i.precioUnitario * i.cantidad;
+            subtotal += i.subtotal;
+        }
+        c.subtotal = subtotal;
+        long base = Math.max(0, subtotal - c.descuento);
+        double factor = subtotal > 0 ? (double) base / subtotal : 0;
+        long impuesto = 0;
+        for (Modelo.Item i : items) {
+            double pct = i.impuestoPct >= 0 ? i.impuestoPct : c.impuestoPct;
+            i.impuesto = Math.round(i.subtotal * factor * pct / 100.0);
+            impuesto += i.impuesto;
+        }
+        c.impuesto = impuesto;
+        c.total = base + impuesto;
+    }
+
+    public long guardarCotizacion(Modelo.Cotizacion c, List<Modelo.Item> items) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.beginTransaction();
+        try {
+            if (c.fecha == 0) c.fecha = Fechas.ahora();
+            ContentValues cv = new ContentValues();
+            cv.put("numero", "");
+            cv.put("fecha", c.fecha);
+            if (c.clienteId > 0) cv.put("cliente_id", c.clienteId);
+            else cv.putNull("cliente_id");
+            cv.put("cliente_nombre", c.clienteNombre == null ? "" : c.clienteNombre);
+            cv.put("subtotal", c.subtotal);
+            cv.put("descuento", c.descuento);
+            cv.put("impuesto_pct", c.impuestoPct);
+            cv.put("impuesto", c.impuesto);
+            cv.put("total", c.total);
+            cv.put("valida_hasta", c.validaHasta);
+            cv.put("notas", c.notas);
+            cv.put("estado", c.estado == null || c.estado.isEmpty() ? "abierta" : c.estado);
+            cv.put("usuario_id", c.usuarioId > 0 ? c.usuarioId : usuarioActualId());
+            cv.put("creado", Fechas.ahora());
+            c.id = db.insert("cotizaciones", null, cv);
+            c.numero = "COT-" + String.format(Locale.ROOT, "%05d", c.id);
+            ContentValues num = new ContentValues();
+            num.put("numero", c.numero);
+            db.update("cotizaciones", num, "id=?", new String[]{String.valueOf(c.id)});
+            for (Modelo.Item i : items) {
+                ContentValues ci = new ContentValues();
+                ci.put("cotizacion_id", c.id);
+                if (i.productoId > 0) ci.put("producto_id", i.productoId);
+                else ci.putNull("producto_id");
+                ci.put("descripcion", i.descripcion);
+                ci.put("cantidad", i.cantidad);
+                ci.put("precio_unitario", i.precioUnitario);
+                ci.put("impuesto_pct", i.impuestoPct);
+                ci.put("impuesto", i.impuesto);
+                ci.put("subtotal", i.subtotal);
+                db.insert("cotizacion_items", null, ci);
+            }
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+        return c.id;
+    }
+
+    private static final String SQL_COTIZACION =
+            "SELECT c.*, u.nombre AS usuario_nombre, " +
+                    "(SELECT COUNT(*) FROM cotizacion_items ci WHERE ci.cotizacion_id=c.id) AS num_items " +
+                    "FROM cotizaciones c LEFT JOIN usuarios u ON u.id=c.usuario_id ";
+
+    private Modelo.Cotizacion leerCotizacion(Cursor c) {
+        Modelo.Cotizacion co = new Modelo.Cotizacion();
+        co.id = c.getLong(c.getColumnIndexOrThrow("id"));
+        co.numero = n(c.getString(c.getColumnIndexOrThrow("numero")));
+        co.fecha = c.getLong(c.getColumnIndexOrThrow("fecha"));
+        co.clienteId = c.getLong(c.getColumnIndexOrThrow("cliente_id"));
+        co.clienteNombre = n(c.getString(c.getColumnIndexOrThrow("cliente_nombre")));
+        co.subtotal = c.getLong(c.getColumnIndexOrThrow("subtotal"));
+        co.descuento = c.getLong(c.getColumnIndexOrThrow("descuento"));
+        co.impuestoPct = c.getDouble(c.getColumnIndexOrThrow("impuesto_pct"));
+        co.impuesto = c.getLong(c.getColumnIndexOrThrow("impuesto"));
+        co.total = c.getLong(c.getColumnIndexOrThrow("total"));
+        co.validaHasta = c.getLong(c.getColumnIndexOrThrow("valida_hasta"));
+        co.notas = n(c.getString(c.getColumnIndexOrThrow("notas")));
+        co.estado = n(c.getString(c.getColumnIndexOrThrow("estado")));
+        co.usuarioId = c.getLong(c.getColumnIndexOrThrow("usuario_id"));
+        int idx = c.getColumnIndex("usuario_nombre");
+        co.usuarioNombre = idx >= 0 ? n(c.getString(idx)) : "";
+        idx = c.getColumnIndex("num_items");
+        co.numItems = idx >= 0 ? c.getInt(idx) : 0;
+        return co;
+    }
+
+    public List<Modelo.Cotizacion> cotizaciones() {
+        List<Modelo.Cotizacion> lista = new ArrayList<>();
+        try (Cursor c = getReadableDatabase().rawQuery(
+                SQL_COTIZACION + "ORDER BY c.fecha DESC, c.id DESC", null)) {
+            while (c.moveToNext()) lista.add(leerCotizacion(c));
+        }
+        return lista;
+    }
+
+    public Modelo.Cotizacion cotizacion(long id) {
+        try (Cursor c = getReadableDatabase().rawQuery(SQL_COTIZACION + "WHERE c.id=?",
+                new String[]{String.valueOf(id)})) {
+            if (c.moveToFirst()) return leerCotizacion(c);
+        }
+        return null;
+    }
+
+    public List<Modelo.Item> itemsCotizacion(long cotizacionId) {
+        List<Modelo.Item> lista = new ArrayList<>();
+        try (Cursor c = getReadableDatabase().rawQuery(
+                "SELECT * FROM cotizacion_items WHERE cotizacion_id=? ORDER BY id",
+                new String[]{String.valueOf(cotizacionId)})) {
+            while (c.moveToNext()) {
+                Modelo.Item i = new Modelo.Item();
+                i.id = c.getLong(c.getColumnIndexOrThrow("id"));
+                i.productoId = c.getLong(c.getColumnIndexOrThrow("producto_id"));
+                i.descripcion = n(c.getString(c.getColumnIndexOrThrow("descripcion")));
+                i.cantidad = c.getInt(c.getColumnIndexOrThrow("cantidad"));
+                i.precioUnitario = c.getLong(c.getColumnIndexOrThrow("precio_unitario"));
+                i.impuestoPct = c.getDouble(c.getColumnIndexOrThrow("impuesto_pct"));
+                i.impuesto = c.getLong(c.getColumnIndexOrThrow("impuesto"));
+                i.subtotal = c.getLong(c.getColumnIndexOrThrow("subtotal"));
+                lista.add(i);
+            }
+        }
+        return lista;
+    }
+
+    public void marcarCotizacionVendida(long id, long ventaId) {
+        ContentValues cv = new ContentValues();
+        cv.put("estado", "vendida");
+        cv.put("venta_id", ventaId);
+        getWritableDatabase().update("cotizaciones", cv, "id=?", new String[]{String.valueOf(id)});
+    }
+
+    public void eliminarCotizacion(long id) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.delete("cotizacion_items", "cotizacion_id=?", new String[]{String.valueOf(id)});
+        db.delete("cotizaciones", "id=?", new String[]{String.valueOf(id)});
+    }
+
+    // ------------------------------------------------------------------ agenda
+
+    public long guardarAgenda(Modelo.Agenda a) {
+        ContentValues v = new ContentValues();
+        v.put("tipo", "proveedor".equals(a.tipo) ? "proveedor" : "cliente");
+        v.put("entidad_id", a.entidadId);
+        v.put("fecha", a.fecha);
+        v.put("titulo", a.titulo == null ? "" : a.titulo.trim());
+        v.put("notas", a.notas == null ? "" : a.notas);
+        v.put("aviso_dias", Math.max(0, a.avisoDias));
+        v.put("recurrente", a.recurrente == null ? "" : a.recurrente);
+        v.put("hecho", a.hecho ? 1 : 0);
+        SQLiteDatabase db = getWritableDatabase();
+        if (a.id > 0) {
+            db.update("agenda", v, "id=?", new String[]{String.valueOf(a.id)});
+            return a.id;
+        }
+        v.put("creado", Fechas.ahora());
+        a.id = db.insert("agenda", null, v);
+        return a.id;
+    }
+
+    public void marcarAgendaHecha(long id, boolean hecha) {
+        ContentValues v = new ContentValues();
+        v.put("hecho", hecha ? 1 : 0);
+        getWritableDatabase().update("agenda", v, "id=?", new String[]{String.valueOf(id)});
+    }
+
+    public void eliminarAgenda(long id) {
+        getWritableDatabase().delete("agenda", "id=?", new String[]{String.valueOf(id)});
+    }
+
+    public List<Modelo.Agenda> agendaDe(String tipo, long entidadId) {
+        List<Modelo.Agenda> lista = new ArrayList<>();
+        try (Cursor c = getReadableDatabase().rawQuery(
+                "SELECT a.*, CASE WHEN a.tipo='proveedor' THEN " +
+                        "COALESCE((SELECT nombre FROM proveedores WHERE id=a.entidad_id),'') " +
+                        "ELSE COALESCE((SELECT nombre FROM clientes WHERE id=a.entidad_id),'') END AS nom " +
+                        "FROM agenda a WHERE a.tipo=? AND a.entidad_id=? ORDER BY a.fecha",
+                new String[]{tipo, String.valueOf(entidadId)})) {
+            while (c.moveToNext()) lista.add(leerAgenda(c));
+        }
+        return lista;
+    }
+
+    private Modelo.Agenda leerAgenda(Cursor c) {
+        Modelo.Agenda a = new Modelo.Agenda();
+        a.id = c.getLong(c.getColumnIndexOrThrow("id"));
+        a.tipo = n(c.getString(c.getColumnIndexOrThrow("tipo")));
+        a.entidadId = c.getLong(c.getColumnIndexOrThrow("entidad_id"));
+        a.fecha = c.getLong(c.getColumnIndexOrThrow("fecha"));
+        a.titulo = n(c.getString(c.getColumnIndexOrThrow("titulo")));
+        a.notas = n(c.getString(c.getColumnIndexOrThrow("notas")));
+        a.avisoDias = c.getInt(c.getColumnIndexOrThrow("aviso_dias"));
+        a.recurrente = n(c.getString(c.getColumnIndexOrThrow("recurrente")));
+        a.hecho = c.getInt(c.getColumnIndexOrThrow("hecho")) != 0;
+        int idx = c.getColumnIndex("nom");
+        a.nombre = idx >= 0 ? n(c.getString(idx)) : "";
+        return a;
+    }
+
+    /**
+     * Lo que hay para hoy: las citas de hoy y las que se repiten (semanal,
+     * mensual, anual) que caen en esta fecha. También avisa con anticipación
+     * si la cita tiene días de aviso.
+     */
+    public List<Modelo.Agenda> agendaDeHoy() {
+        List<Modelo.Agenda> lista = new ArrayList<>();
+        long hoy = Fechas.inicioDia(Fechas.ahora());
+        long manana = Fechas.inicioDiaSiguiente(Fechas.ahora());
+        try (Cursor c = getReadableDatabase().rawQuery(
+                "SELECT a.*, CASE WHEN a.tipo='proveedor' THEN " +
+                        "COALESCE((SELECT nombre FROM proveedores WHERE id=a.entidad_id),'') " +
+                        "ELSE COALESCE((SELECT nombre FROM clientes WHERE id=a.entidad_id),'') END AS nom " +
+                        "FROM agenda a WHERE a.hecho=0 AND a.fecha<? ORDER BY a.fecha",
+                new String[]{String.valueOf(manana + 40L * 24L * 60L * 60L * 1000L)})) {
+            while (c.moveToNext()) {
+                Modelo.Agenda a = leerAgenda(c);
+                if (caeHoy(a, hoy)) lista.add(a);
+            }
+        }
+        return lista;
+    }
+
+    private boolean caeHoy(Modelo.Agenda a, long hoy) {
+        long dia = Fechas.inicioDia(a.fecha);
+        if (dia == hoy) return true;
+        Calendar h = Fechas.calendario(hoy);
+        Calendar f = Fechas.calendario(dia);
+        if ("semanal".equals(a.recurrente)) {
+            return h.get(Calendar.DAY_OF_WEEK) == f.get(Calendar.DAY_OF_WEEK);
+        }
+        if ("mensual".equals(a.recurrente)) {
+            return h.get(Calendar.DAY_OF_MONTH) == f.get(Calendar.DAY_OF_MONTH);
+        }
+        if ("anual".equals(a.recurrente)) {
+            return h.get(Calendar.DAY_OF_MONTH) == f.get(Calendar.DAY_OF_MONTH)
+                    && h.get(Calendar.MONTH) == f.get(Calendar.MONTH);
+        }
+        return false;
+    }
+
+    // -------------------------------------------------------------------- KPIs
+
+    /** Los indicadores que guían el negocio, calculados con lo que ya existe. */
+    public Modelo.Kpi kpis() {
+        Modelo.Kpi k = new Modelo.Kpi();
+        long ahora = Fechas.ahora();
+        long hoy = Fechas.inicioDia(ahora);
+        long mes = Fechas.inicioMes(ahora);
+        long mesSiguiente = Fechas.inicioMesSiguiente(ahora);
+        long mesAnterior = Fechas.inicioMesAnterior(ahora);
+        long hace30 = hoy - 30L * 24L * 60L * 60L * 1000L;
+
+        k.ventasHoy = suma("SELECT COALESCE(SUM(total),0) FROM ventas " +
+                "WHERE anulada=0 AND fecha>=? AND fecha<?", String.valueOf(hoy),
+                String.valueOf(Fechas.inicioDiaSiguiente(ahora)));
+        long siete = 0;
+        for (int i = 1; i <= 7; i++) {
+            long desde = hoy - i * 24L * 60L * 60L * 1000L;
+            siete += suma("SELECT COALESCE(SUM(total),0) FROM ventas WHERE anulada=0 " +
+                    "AND fecha>=? AND fecha<?", String.valueOf(desde), String.valueOf(desde + 86400000L));
+        }
+        k.ventasPromedio7 = Math.round(siete / 7.0);
+
+        Modelo.Resumen r = resumen(mes, mesSiguiente);
+        k.ticketPromedio = r.ventas > 0 ? Math.round((double) r.ventasTotal / r.ventas) : 0;
+        k.margenBruto = r.ventasTotal > 0
+                ? (int) Math.round(r.utilidadBruta * 100.0 / r.ventasTotal) : 0;
+        k.utilidadNetaMes = r.utilidadNeta;
+
+        long inventario = inventarioAValorCosto();
+        Calendar c = Fechas.calendario(ahora);
+        int diasDelMes = Math.max(1, c.get(Calendar.DAY_OF_MONTH));
+        k.diasInventario = r.costoVentas > 0
+                ? (int) Math.round(inventario * (double) diasDelMes / r.costoVentas) : 0;
+        k.sinMovimiento30 = (int) contar(
+                "SELECT COUNT(*) FROM productos p WHERE p.activo=1 AND NOT EXISTS (" +
+                        "SELECT 1 FROM venta_items vi JOIN ventas v ON v.id=vi.venta_id " +
+                        "WHERE vi.producto_id=p.id AND v.anulada=0 AND v.fecha>=?)",
+                String.valueOf(hace30));
+
+        k.cartera = porCobrar();
+        long vencida = 0;
+        for (Modelo.Deuda d : deudas()) {
+            if (d.fechaLimite > 0 && d.fechaLimite < hoy) vencida += d.saldo;
+        }
+        k.carteraVencidaPct = k.cartera > 0
+                ? (int) Math.round(vencida * 100.0 / k.cartera) : 0;
+        k.diasCobro = r.ventasCredito > 0
+                ? (int) Math.round(k.cartera * (double) diasDelMes / r.ventasCredito) : 0;
+        k.fiadoSobreVentas = r.ventasTotal > 0
+                ? (int) Math.round(r.ventasCredito * 100.0 / r.ventasTotal) : 0;
+        k.quiebresPct = r.productosActivos > 0
+                ? (int) Math.round(r.productosAgotados * 100.0 / r.productosActivos) : 0;
+
+        long mesPasado = suma("SELECT COALESCE(SUM(total),0) FROM ventas WHERE anulada=0 " +
+                        "AND fecha>=? AND fecha<?", String.valueOf(mesAnterior), String.valueOf(mes));
+        k.crecimientoMes = mesPasado > 0
+                ? (int) Math.round((r.ventasTotal - mesPasado) * 100.0 / mesPasado) : 0;
+        return k;
+    }
+
+    /** Valor del inventario al costo real de los lotes que quedan. */
+    private long inventarioAValorCosto() {
+        long valor = 0;
+        try (Cursor c = getReadableDatabase().rawQuery(
+                "SELECT COALESCE(SUM(l.cantidad_restante * l.costo_unitario),0) " +
+                        "FROM producto_lotes l JOIN productos p ON p.id=l.producto_id " +
+                        "WHERE p.activo=1 AND l.recibido=1 AND l.cantidad_restante>0", null)) {
+            if (c.moveToFirst()) valor = c.getLong(0);
+        }
+        if (valor == 0) {
+            valor = suma("SELECT COALESCE(SUM(MAX(stock,0) * costo),0) FROM productos WHERE activo=1");
+        }
+        return valor;
+    }
+
+    /** Serie de ventas por día para la gráfica de Inicio. */
+    public List<Modelo.PuntoSerie> serieVentas(int dias) {
+        List<Modelo.PuntoSerie> lista = new ArrayList<>();
+        long hoy = Fechas.inicioDia(Fechas.ahora());
+        for (int i = dias - 1; i >= 0; i--) {
+            long desde = hoy - i * 24L * 60L * 60L * 1000L;
+            long hasta = desde + 86400000L;
+            Modelo.PuntoSerie p = new Modelo.PuntoSerie();
+            p.desde = desde;
+            p.etiqueta = Fechas.formato("dd/MM", desde);
+            p.valor = suma("SELECT COALESCE(SUM(total),0) FROM ventas WHERE anulada=0 " +
+                    "AND fecha>=? AND fecha<?", String.valueOf(desde), String.valueOf(hasta));
+            lista.add(p);
+        }
+        return lista;
+    }
+
+    /** Serie de utilidad y gastos por mes, los últimos seis. */
+    public List<Modelo.PuntoSerie> serieUtilidad(int meses) {
+        List<Modelo.PuntoSerie> lista = new ArrayList<>();
+        long base = Fechas.inicioMes(Fechas.ahora());
+        for (int i = meses - 1; i >= 0; i--) {
+            long desde = inicioMesAtras(base, i);
+            long hasta = inicioMesAtras(base, i - 1);
+            Modelo.Resumen r = resumen(desde, hasta);
+            Modelo.PuntoSerie p = new Modelo.PuntoSerie();
+            p.desde = desde;
+            p.etiqueta = Fechas.mesCorto(desde);
+            p.valor = r.utilidadBruta;
+            p.valor2 = r.gastosTotal;
+            lista.add(p);
+        }
+        return lista;
+    }
+
+    private static long inicioMesAtras(long mesActual, int meses) {
+        Calendar c = Fechas.calendario(mesActual);
+        c.add(Calendar.MONTH, -meses);
+        return Fechas.inicioMes(c.getTimeInMillis());
+    }
+
+    /** Productos sin ninguna venta en los últimos días (capital dormido). */
+    public List<Modelo.Producto> productosSinMovimiento(int dias, int limite) {
+        List<Modelo.Producto> lista = new ArrayList<>();
+        long desde = Fechas.inicioDia(Fechas.ahora()) - dias * 24L * 60L * 60L * 1000L;
+        try (Cursor c = getReadableDatabase().rawQuery(
+                "SELECT * FROM productos p WHERE p.activo=1 AND NOT EXISTS (" +
+                        "SELECT 1 FROM venta_items vi JOIN ventas v ON v.id=vi.venta_id " +
+                        "WHERE vi.producto_id=p.id AND v.anulada=0 AND v.fecha>=?) " +
+                        "ORDER BY p.stock DESC, p.nombre LIMIT ?",
+                new String[]{String.valueOf(desde), String.valueOf(limite)})) {
+            while (c.moveToNext()) lista.add(leerProducto(c));
+        }
+        return lista;
+    }
+
+    public static void calcularVenta(Modelo.Venta v, List<Modelo.Item> items) {
         long costo = 0;
         for (Modelo.Item i : items) {
-            subtotal += i.precioUnitario * i.cantidad;
-            costo += i.costoUnitario * i.cantidad;
-            i.subtotal = i.precioUnitario * i.cantidad;
+            if (i.costoTotal <= 0) i.costoTotal = i.costoUnitario * i.cantidad;
+            costo += i.costoTotal;
         }
-        v.subtotal = subtotal;
+        Impuestos.Totales t = Impuestos.calcular(items, v.descuento, v.impuestoPct);
+        v.subtotal = t.subtotal;
         v.costo = costo;
-        long base = Math.max(0, subtotal - v.descuento);
-        v.impuesto = Math.round(base * v.impuestoPct / 100.0);
-        v.total = base + v.impuesto;
+        v.impuesto = t.impuesto;
+        v.total = t.total;
     }
 
     public static void calcularCompra(Modelo.Compra c, List<Modelo.Item> items) {

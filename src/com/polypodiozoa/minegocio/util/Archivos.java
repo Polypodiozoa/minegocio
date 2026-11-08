@@ -14,6 +14,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Locale;
 
 /** Manejo de fotos y documentos: siempre dentro del almacenamiento privado de la app. */
 public final class Archivos {
@@ -51,7 +52,7 @@ public final class Archivos {
             int punto = nombre.lastIndexOf('.');
             if (punto >= 0) {
                 mime = MimeTypeMap.getSingleton()
-                        .getMimeTypeFromExtension(nombre.substring(punto + 1).toLowerCase());
+                        .getMimeTypeFromExtension(nombre.substring(punto + 1).toLowerCase(Locale.ROOT));
             }
         }
         return mime == null ? "application/octet-stream" : mime;
@@ -159,7 +160,7 @@ public final class Archivos {
         if (nombre != null) {
             int punto = nombre.lastIndexOf('.');
             if (punto >= 0 && punto < nombre.length() - 1) {
-                String ext = nombre.substring(punto + 1).toLowerCase();
+                String ext = nombre.substring(punto + 1).toLowerCase(Locale.ROOT);
                 if (ext.matches("[a-z0-9]{2,5}")) return ext;
             }
         }
